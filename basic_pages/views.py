@@ -1,5 +1,5 @@
-from django.http import HttpResponse
+from django.shortcuts import render
 
 # Create your views here.
 def MonkeyPageView(request):
-    return HttpResponse('Kya Bakchodi hai ye Madarchod!')
+    return render(request, 'monkey.html')
