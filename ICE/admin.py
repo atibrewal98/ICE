@@ -4,3 +4,9 @@ from .models import *
 # Register your models here.
 
 admin.site.register(LearnerAccount)
+admin.site.register(LearnerAccount)
+admin.site.register(LearnerAccount)
+admin.site.register(LearnerAccount)
+admin.site.register(LearnerAccount)
+admin.site.register(LearnerAccount)
+admin.site.register(LearnerAccount)
