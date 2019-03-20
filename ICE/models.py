@@ -1,26 +1,30 @@
 from django.db import models
 
 # Create your models here.
-class LearnerAccount(models.Model):
-    staffID = models.IntegerField(primary_key = True)
+
+class User(models.Model):
+    userID = models.AutoField(primary_key=True)
     firstName = models.CharField(max_length=50)
     lastName = models.CharField(max_length=50)
-    emailID = models.EmailField(max_length=50)
-    userName = models.CharField(max_length=50, unique = True)
-    password = models.CharField(max_length=50)
+    emailID = models.EmailField(max_length=50, null=True)
+    userName = models.CharField(max_length=50, unique=True, null = True)
+    password = models.CharField(max_length=50, null = True)
+    def __str__(self):
+        return self.userName
+    
+class Learner(models.Model):
+    #learnerID = models.AutoField(primary_key = True)
+    userID = models.ForeignKey(User, on_delete=models.CASCADE, primary_key = True)
     totalCECU = models.IntegerField()
     def __str__(self):
-        return self.userName
+        return self.learnerID
 
-class InstructorAccount(models.Model):
-    instructorID = models.AutoField(primary_key = True)
-    firstName = models.CharField(max_length=50)
-    lastName = models.CharField(max_length=50)
-    userName = models.CharField(max_length=50, unique = True)
-    password = models.CharField(max_length=50)
+class Instructor(models.Model):
+    #instructorID = models.AutoField(primary_key = True)
+    userID = models.ForeignKey(User, on_delete=models.CASCADE, primary_key = True)
     biography = models.CharField(max_length=250)
     def __str__(self):
-        return self.userName
+        return self.instructorID
 
 class Category(models.Model):
     categoryID = models.AutoField(primary_key = True)
@@ -28,9 +32,9 @@ class Category(models.Model):
     def __str__(self):
         return self.categoryName
 
-class Courses(models.Model):
+class Course(models.Model):
     courseID = models.AutoField(primary_key = True)
-    instructorID = models.ForeignKey(InstructorAccount, on_delete=models.CASCADE)
+    instructorID = models.ForeignKey(Instructor, on_delete=models.CASCADE)
     categoryID = models.ForeignKey(Category, on_delete=models.CASCADE)
     courseName = models.CharField(max_length=100)
     courseCECU = models.IntegerField()
@@ -44,9 +48,9 @@ class Courses(models.Model):
     def __str__(self):
         return self.courseName
 
-class LearnerCourses(models.Model):
-    staffID = models.ForeignKey(LearnerAccount, on_delete=models.CASCADE)
-    courseID = models.ForeignKey(Courses, on_delete=models.CASCADE)
+class LearnerCourse(models.Model):
+    learnerID = models.ForeignKey(Learner, on_delete=models.CASCADE)
+    courseID = models.ForeignKey(Course, on_delete=models.CASCADE)
     # 'Y' for completed
     # 'N' for course under process
     completeStatus = models.CharField(max_length=1)
@@ -55,9 +59,9 @@ class LearnerCourses(models.Model):
     def __str__(self):
         return f'{self.staffID} ({self.courseID})'
 
-class Modules(models.Model):
+class Module(models.Model):
     moduleID = models.AutoField(primary_key = True)
-    courseID = models.ForeignKey(Courses, on_delete=models.CASCADE)
+    courseID = models.ForeignKey(Course, on_delete=models.CASCADE)
     moduleTitle = models.CharField(max_length=100)
     orderNumber = models.IntegerField()
     numOfComponents = models.IntegerField(default = 0)
@@ -66,9 +70,9 @@ class Modules(models.Model):
     def __str__(self):
         return self.moduleTitle
 
-class Components(models.Model):
+class Component(models.Model):
     componentID = models.AutoField(primary_key = True)
-    moduleID = models.ForeignKey(Modules, on_delete=models.CASCADE)
+    moduleID = models.ForeignKey(Module, on_delete=models.CASCADE)
     componentTitle = models.CharField(max_length=100)
     componentText = models.CharField(max_length=100, null=True)
     componentImage = models.CharField(max_length=100, null = True)
@@ -80,7 +84,7 @@ class Components(models.Model):
 
 class QuestionBank(models.Model):
     questionID = models.AutoField(primary_key = True)
-    moduleID = models.ForeignKey(Modules, on_delete=models.CASCADE)
+    moduleID = models.ForeignKey(Module, on_delete=models.CASCADE)
     question = models.CharField(max_length=200)
     qAnswer1 = models.CharField(max_length=50)
     qAnswer2 = models.CharField(max_length=50)
