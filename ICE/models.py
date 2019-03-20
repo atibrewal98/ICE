@@ -14,17 +14,17 @@ class User(models.Model):
     
 class Learner(models.Model):
     #learnerID = models.AutoField(primary_key = True)
-    userID = models.ForeignKey(User, on_delete=models.CASCADE, primary_key = True)
+    userID = models.OneToOneField(User, on_delete=models.CASCADE, primary_key = True)
     totalCECU = models.IntegerField()
     def __str__(self):
-        return self.learnerID
+        return self.userID
 
 class Instructor(models.Model):
     #instructorID = models.AutoField(primary_key = True)
-    userID = models.ForeignKey(User, on_delete=models.CASCADE, primary_key = True)
+    userID = models.OneToOneField(User, on_delete=models.CASCADE, primary_key = True)
     biography = models.CharField(max_length=250)
     def __str__(self):
-        return self.instructorID
+        return self.userID
 
 class Category(models.Model):
     categoryID = models.AutoField(primary_key = True)
