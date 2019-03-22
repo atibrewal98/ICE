@@ -8,7 +8,12 @@ def monkeyPageView(request):
     return render(request, 'ICE/monkey.html')
 
 def courseView(request):
-    return render(request, 'ICE/courseContent.html')
+    all_modules=Module.objects.all()
+    template=loader.get_template("ICE/courseContent.html")
+    context ={
+        'all_modules':all_modules,
+    }
+    return HttpResponse(template.render(context,request))
 
 def category_list_view(request):
     all_categories=Category.objects.all()

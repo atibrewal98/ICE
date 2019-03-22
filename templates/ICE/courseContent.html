@@ -26,17 +26,18 @@
 
             <div id="moduleList">
                 <table>
-                    <tr>
-                        <td>Module 1</td>
-                        <td rowspan="3">icon</td>
-                    </tr>
-                    <tr>
-                        <td>Module title</td>
-                    </tr>
-                    <tr>
-                        <td>Take end of module quiz</td>
-                    </tr>
-                    <tr>
+                    {% for modules in all_modules %}
+                        <tr>
+                            <td>Module {{modules.orderNumber}}</td>
+                            <td rowspan="3">icon</td>
+                        </tr>
+                        <tr>
+                            <td>{{modules.moduleTitle}}</td>
+                        </tr>
+                        <tr>
+                            <td>Take end of module quiz</td>
+                        </tr>
+                    <!-- <tr>
                             <td>Module 2</td>
                             <td rowspan="3">icon</td>
                         </tr>
@@ -55,7 +56,8 @@
                         </tr>
                         <tr>
                             <td>Take end of module quiz</td>
-                        </tr>
+                        </tr> -->
+                        {% endfor %}
                 </table>
             </div>    
         </div>
