@@ -1,0 +1,14 @@
+{% load static %}
+<h1>Modules</h1>
+<ul>
+    {% for modules in module_list %}
+        <li>
+            <a href ="../modules_component/{{modules.pk}}">
+                {{modules.moduleTitle}} {{modules.pk}}
+            </a>
+            - {{modules.list_set.all | length }}
+        </li>
+    {% empty %}
+        <li> No modules yet.</li>
+    {% endfor %}
+</ul>

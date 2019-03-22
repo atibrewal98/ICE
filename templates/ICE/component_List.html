@@ -1,0 +1,11 @@
+{% load static %}
+<!-- <h1>Components of {{module.moduleTitle}}</h1> -->
+<ul>
+    {% for component in component_list %}
+        <li>
+            {{component.componentTitle}}
+        </li>
+    {% empty %}
+        <li> No component yet.</li>
+    {% endfor %}
+</ul>
