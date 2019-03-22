@@ -15,14 +15,14 @@ class User(models.Model):
     
 class Learner(models.Model):
     #learnerID = models.AutoField(primary_key = True)
-    userID = models.OneToOneField(User, on_delete=models.CASCADE, primary_key = True)
-    totalCECU = models.IntegerField()
+    staffID = models.OneToOneField(User, on_delete=models.CASCADE, primary_key = True)
+    totalCECU = models.PositiveIntegerField()
     def __str__(self):
         return self.userID
 
 class Instructor(models.Model):
     #instructorID = models.AutoField(primary_key = True)
-    userID = models.OneToOneField(User, on_delete=models.CASCADE, primary_key = True)
+    instructorID = models.OneToOneField(User, on_delete=models.CASCADE, primary_key = True)
     biography = models.CharField(max_length=250)
     def __str__(self):
         return self.userID
@@ -38,19 +38,21 @@ class Course(models.Model):
     instructorID = models.ForeignKey(Instructor, on_delete=models.CASCADE)
     categoryID = models.ForeignKey(Category, on_delete=models.CASCADE)
     courseName = models.CharField(max_length=100)
-    courseCECU = models.IntegerField()
-    courseDesc = models.CharField(max_length=200)
+    courseCECU = models.PositiveIntegerField()
+    courseDescription = models.CharField(max_length=200)
     # 'L' for live
     # 'U' for course under development
     # 'R' for under review by HR
     # 'N' for course not live and unavailable
     courseStatus = models.CharField(max_length=1)
     numOfModules = models.IntegerField(default = 0)
+    totalEnrolled = models.IntegerField(default = 0)
+    currentEnrolled = models.IntegerField(default = 0)
     def __str__(self):
         return self.courseName
 
-class LearnerCourse(models.Model):
-    learnerID = models.ForeignKey(Learner, on_delete=models.CASCADE)
+class LearnerTakesCourse(models.Model):
+    staffID = models.ForeignKey(Learner, on_delete=models.CASCADE)
     courseID = models.ForeignKey(Course, on_delete=models.CASCADE)
     # 'Y' for completed
     # 'N' for course under process
@@ -83,18 +85,18 @@ class Component(models.Model):
     def __str__(self):
         return self.componentTitle
 
-class QuestionBank(models.Model):
+class Question(models.Model):
     questionID = models.AutoField(primary_key = True)
     moduleID = models.ForeignKey(Module, on_delete=models.CASCADE)
-    question = models.CharField(max_length=200)
-    qAnswer1 = models.CharField(max_length=50)
-    qAnswer2 = models.CharField(max_length=50)
-    qAnswer3 = models.CharField(max_length=50)
-    qAnswer4 = models.CharField(max_length=50)
+    questionStatement = models.CharField(max_length=200)
+    qOption1 = models.CharField(max_length=50)
+    qOption2 = models.CharField(max_length=50)
+    qOption3 = models.CharField(max_length=50)
+    qOption4 = models.CharField(max_length=50)
     # answer is 'i' where i is 1, 2, 3, 4
     answer = models.CharField(max_length=1)
     def __str__(self):
-        return self.question
+        return self.questionStatement
 
 class Token(models.Model):
     def generateToken():
@@ -105,4 +107,4 @@ class Token(models.Model):
     token = models.CharField(max_length=6, default=generateToken(), editable=False)
 
     def __str__(self):
-        return self.email
+        return (self.email + ":" + self.token)
