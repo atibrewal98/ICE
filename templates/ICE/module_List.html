@@ -1,10 +1,10 @@
 {% load static %}
 <h1>Modules</h1>
 <ul>
-    {% for modules in module_list %}
+    {% for modules in all_modules %}
         <li>
-            <a href ="../modules_component/{{modules.pk}}">
-                {{modules.moduleTitle}} {{modules.pk}}
+            <a href ="../modules_component1/{{modules.pk}}">
+                {{ modules.moduleTitle }}
             </a>
             - {{modules.list_set.all | length }}
         </li>
