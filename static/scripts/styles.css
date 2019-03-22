@@ -1,30 +1,82 @@
+body {
+    margin: 0;
+}
+
+#background {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background-image: linear-gradient(#68C2E8 0%, #E5E5E5 100%);
+}
+
+#navBar {
+    position: fixed;
+    top: 0px;
+    width: 100%;
+    height: 50px;
+    box-shadow: 0px 0px 5px 5px rgba(0, 0, 0, 0.25);
+    background: #FFFFFF;
+    font-family: sans-serif;
+}
+
 #navBar ul {
     list-style-type: none;
     margin: 0;
     padding: 0;
     overflow: hidden;
-    background-color: #333;
-    position: fixed;
-    top: 0;
-    width: 100%;
+    height: 100%;
 }
   
-li {
+#navBar li {
+    height: 100%;
     float: left;
 }
   
-li a {
+#navBar .navText {
     display: block;
-    color: white;
     text-align: center;
+    font-size: 19px;
     padding: 14px 16px;
     text-decoration: none;
+    color: #646464;
+}
+
+#navBar .right {
+    float: right;
 }
   
-li a:hover:not(.active) {
-    background-color: #111;
+#navBar li a:hover:not(.active) {
+    background-color: #E5E5E5;
 }
-  
-.active {
-    background-color: #4CAF50;
+
+#frame {
+    position: fixed;
+    left: 50px;
+    right: 50px;
+    top: 100px;
+    bottom: 50px;
+    background-color: #FFFFFF;
+    box-shadow: 0px 0px 5px 5px rgba(0, 0, 0, 0.25);
+}
+
+#left {
+    position: absolute;
+    top: 50px;
+    left: 50px;
+    width: 400px;
+    bottom: 50px;
+}
+
+#right {
+    position: absolute;
+    top: 50px;
+    left: 500px;
+    right: 50px;
+    bottom: 50px;
+}
+
+#left h1 {
+    margin: 0px;
+    font-family: Helvetica;
+
 }
