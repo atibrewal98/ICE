@@ -1,0 +1,14 @@
+{% load static %}
+<h1>Modules</h1>
+<ul>
+    {% for modules in module_list %}
+        <li>
+            <a href ="{% url 'module-list' module.pk %">
+                {{module.moduleTitle}}
+            </a>
+            - {{module.list_set.all | length }}
+        </li>
+    {% empty %}
+        <li> No customer yet.</li>
+    {% endfor %}
+</ul>

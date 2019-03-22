@@ -11,21 +11,21 @@ class User(models.Model):
     userName = models.CharField(max_length=50, unique=True, null = True)
     password = models.CharField(max_length=50, null = True)
     def __str__(self):
-        return self.userName
+        return str(self.userID)
     
-class Learner(models.Model):
+class Learner(User):
     #learnerID = models.AutoField(primary_key = True)
-    staffID = models.OneToOneField(User, on_delete=models.CASCADE, primary_key = True)
-    totalCECU = models.PositiveIntegerField()
+    #staffID = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
+    totalCECU = models.PositiveIntegerField(default=0)
     def __str__(self):
-        return self.userID
+        return self.firstName + " " + self.lastName
 
-class Instructor(models.Model):
+class Instructor(User):
     #instructorID = models.AutoField(primary_key = True)
-    instructorID = models.OneToOneField(User, on_delete=models.CASCADE, primary_key = True)
+    #instructorID = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
     biography = models.CharField(max_length=250)
     def __str__(self):
-        return self.userID
+        return self.firstName + " " + self.lastName
 
 class Category(models.Model):
     categoryID = models.AutoField(primary_key = True)
@@ -38,7 +38,7 @@ class Course(models.Model):
     instructorID = models.ForeignKey(Instructor, on_delete=models.CASCADE)
     categoryID = models.ForeignKey(Category, on_delete=models.CASCADE)
     courseName = models.CharField(max_length=100)
-    courseCECU = models.PositiveIntegerField()
+    courseCECU = models.PositiveIntegerField(default=0)
     courseDescription = models.CharField(max_length=200)
     # 'L' for live
     # 'U' for course under development
@@ -58,7 +58,7 @@ class LearnerTakesCourse(models.Model):
     # 'N' for course under process
     completeStatus = models.CharField(max_length=1)
     completionDate = models.DateField(auto_now=False, auto_now_add=False, null=True)
-    currentModule = models.IntegerField(null=True)
+    currentModule = models.IntegerField(null=True, blank = True)
     def __str__(self):
         return f'{self.staffID} ({self.courseID})'
 
@@ -68,8 +68,8 @@ class Module(models.Model):
     moduleTitle = models.CharField(max_length=100)
     orderNumber = models.IntegerField()
     numOfComponents = models.IntegerField(default = 0)
-    numOfQuestions = models.IntegerField(null = True)
-    passingMark = models.IntegerField(null = True)
+    numOfQuestions = models.IntegerField(null = True, blank = True)
+    passingMark = models.IntegerField(null = True, blank = True)
     def __str__(self):
         return self.moduleTitle
 
@@ -77,8 +77,8 @@ class Component(models.Model):
     componentID = models.AutoField(primary_key = True)
     moduleID = models.ForeignKey(Module, on_delete=models.CASCADE)
     componentTitle = models.CharField(max_length=100)
-    componentText = models.CharField(max_length=100, null=True)
-    componentImage = models.CharField(max_length=100, null = True)
+    componentText = models.CharField(max_length=100, null=True, blank = True)
+    componentImage = models.CharField(max_length=100, null = True, blank = True)
     orderNumber = models.IntegerField()
     createdAt = models.DateField(auto_now=False, auto_now_add=True)
     updatedAt = models.DateField(auto_now=True)
