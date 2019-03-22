@@ -1,4 +1,5 @@
 from django.db import models
+import random, string
 
 # Create your models here.
 
@@ -6,7 +7,7 @@ class User(models.Model):
     userID = models.AutoField(primary_key=True)
     firstName = models.CharField(max_length=50)
     lastName = models.CharField(max_length=50)
-    emailID = models.EmailField(max_length=50, null=True)
+    emailID = models.EmailField(max_length=50, null=True, unique = True)
     userName = models.CharField(max_length=50, unique=True, null = True)
     password = models.CharField(max_length=50, null = True)
     def __str__(self):
@@ -94,3 +95,14 @@ class QuestionBank(models.Model):
     answer = models.CharField(max_length=1)
     def __str__(self):
         return self.question
+
+class Token(models.Model):
+    def generateToken():
+        characters = string.ascii_letters + string.digits
+        return ''.join(random.choice(characters) for i in range(6))
+    
+    email = models.EmailField(max_length=50, unique = True)
+    token = models.CharField(max_length=6, default=generateToken(), editable=False)
+
+    def __str__(self):
+        return self.email
