@@ -71,7 +71,7 @@ class Module(models.Model):
     numOfQuestions = models.IntegerField(null = True, blank = True)
     passingMark = models.IntegerField(null = True, blank = True)
     def __str__(self):
-        return self.moduleTitle
+        return str(self.moduleID) + " : " + self.moduleTitle
 
 class Component(models.Model):
     componentID = models.AutoField(primary_key = True)

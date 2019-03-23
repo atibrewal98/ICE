@@ -3,17 +3,17 @@
 <html>
 <head>
     <link rel="stylesheet" type="text/css" href="{% static 'scripts/styles.css' %}">
-<title>Page Title</title>
+<title>ICE</title>
 </head>
 <body>
 
 <div id="background">
     <div id="navBar">
             <ul>
-                <li>icon</li>
+                <li><img src="{% static 'images/owl.png' %}"></li>
                 <li><a href="" class="navText">Dashboard</a></li>
                 <li><a href="#categories" class="navText">Categories</a></li>
-                <li class="right"><a href="#user" class="navText">User</a></li>
+                <li class="right"><img src="{% static 'images/user.png' %}"></li>
             </ul>
     </div>
         
@@ -55,8 +55,6 @@
                 {% for com in components %}
                     <tr>Component {{com.orderNumber}} - {{com.componentTitle}}</tr>
                     <tr><p>{{com.componentText}}</p></tr>
-                    <!-- <tr>Component 2</tr>
-                    <tr><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p></tr> -->
                 {% endfor %}
             </table>
         </div>
