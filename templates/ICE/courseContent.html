@@ -11,7 +11,7 @@
     <div id="navBar">
             <ul>
                 <li>icon</li>
-                <li><a href="#dashboard" class="navText">Dashboard</a></li>
+                <li><a href="" class="navText">Dashboard</a></li>
                 <li><a href="#categories" class="navText">Categories</a></li>
                 <li class="right"><a href="#user" class="navText">User</a></li>
             </ul>
@@ -20,8 +20,12 @@
     <div id="frame">
         <div id="left">
             <div id="leftHeader">
-                <h1>Course title</h1>
-                <p>Course Instructor: Subhayan Roy</p>    
+                {% for c in course %}
+                    <h1>{{c.courseName}}</h1>
+                {% endfor %}
+                {% for i in instructor %}
+                    <p>Course Instructor: {{i.firstName}} {{i.lastName}}</p>
+                {% endfor %} 
             </div>
 
             <div id="moduleList">
@@ -32,31 +36,11 @@
                             <td rowspan="3">icon</td>
                         </tr>
                         <tr>
-                            <td>{{modules.moduleTitle}}</td>
+                            <td><a href ="../../course/{{modules.pk}}">{{modules.moduleTitle}}</a></td>
                         </tr>
                         <tr>
                             <td>Take end of module quiz</td>
                         </tr>
-                    <!-- <tr>
-                            <td>Module 2</td>
-                            <td rowspan="3">icon</td>
-                        </tr>
-                        <tr>
-                            <td>Module title</td>
-                        </tr>
-                        <tr>
-                            <td>Take end of module quiz</td>
-                    </tr>
-                    <tr>
-                            <td>Module 3</td>
-                            <td rowspan="3">icon</td>
-                        </tr>
-                        <tr>
-                            <td>Module title</td>
-                        </tr>
-                        <tr>
-                            <td>Take end of module quiz</td>
-                        </tr> -->
                         {% endfor %}
                 </table>
             </div>    
@@ -64,12 +48,14 @@
             
         <div id="right">
             <button type="button" onclick="alert('Hello world!')">Course Info</button><button type="button" onclick="alert('Hello world!')">Drop Course</button>
-            <h1>Module title</h1>
+            {% for modules in title %}
+                <h1>{{modules.moduleTitle}}</h1>
+            {% endfor %}
             <table>
-                <tr>Component 1</tr>
-                <tr><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p></tr>
-                <tr>Component 2</tr>
-                <tr><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p></tr>
+                {% for com in components %}
+                    <tr>Component {{com.orderNumber}} - {{com.componentTitle}}</tr>
+                    <tr><p>{{com.componentText}}</p></tr>
+                {% endfor %}
             </table>
         </div>
     </div>

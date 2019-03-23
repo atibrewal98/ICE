@@ -18,7 +18,7 @@ class Learner(User):
     #staffID = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
     totalCECU = models.PositiveIntegerField(default=0)
     def __str__(self):
-        return self.firstName + " " + self.lastName
+        return self.firstName + " " + self.lastName + " " + str(self.userID)
 
 class Instructor(User):
     #instructorID = models.AutoField(primary_key = True)
@@ -57,7 +57,7 @@ class LearnerTakesCourse(models.Model):
     # 'Y' for completed
     # 'N' for course under process
     completeStatus = models.CharField(max_length=1)
-    completionDate = models.DateField(auto_now=False, auto_now_add=False, null=True)
+    completionDate = models.DateField(auto_now=False, auto_now_add=False, null=True, blank=True)
     currentModule = models.IntegerField(null=True, blank = True)
     def __str__(self):
         return f'{self.staffID} ({self.courseID})'
