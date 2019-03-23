@@ -19,10 +19,12 @@ def quiz_form(request,id):
     return render(request, 'quizform.html', {'quizform': quizform})
 
 
-def module_form(request):
+def module_form(request, id):
 
     if request.method == 'POST':
-        form = ModuleForm(request.POST)
+        instance=Course.objects.get(courseID=id)
+        print(instance.courseName)
+        form = ModuleForm(request.POST, instance=instance)
         if form.is_valid():
             form.save()
     form=ModuleForm()
@@ -31,7 +33,7 @@ def module_form(request):
 def monkeyPageView(request):
     return render(request, 'ICE/monkey.html')
 
-def courseView(request, course_ID, module_ID, learner_ID):
+def learnerCourseView(request, course_ID, module_ID, learner_ID):
     all_modules=Module.objects.filter(courseID = course_ID)
     course=Course.objects.filter(courseID = course_ID)
     instructor = ''
@@ -44,6 +46,26 @@ def courseView(request, course_ID, module_ID, learner_ID):
         title=Module.objects.filter(moduleID = m.currentModule)
         components=Component.objects.filter(moduleID = m.currentModule)
     template=loader.get_template("ICE/courseContent.html")
+    context ={
+        'all_modules':all_modules,
+        'title': title,
+        'instructor': instructor,
+        'course': course,
+        'components': components
+    }
+    return HttpResponse(template.render(context,request))
+
+def instructorCourseView(request, course_ID, module_ID):
+    all_modules=Module.objects.filter(courseID = course_ID)
+    course=Course.objects.filter(courseID = course_ID)
+    instructor = ''
+    title = ''
+    components = ''
+    for c in course:
+        instructor=Instructor.objects.filter(pk = c.instructorID)
+    title=Module.objects.filter(moduleID = module_ID)
+    components=Component.objects.filter(moduleID = module_ID)
+    template=loader.get_template("ICE/instructorCourse.html")
     context ={
         'all_modules':all_modules,
         'title': title,

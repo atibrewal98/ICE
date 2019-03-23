@@ -49,7 +49,7 @@ class Course(models.Model):
     totalEnrolled = models.IntegerField(default = 0)
     currentEnrolled = models.IntegerField(default = 0)
     def __str__(self):
-        return self.courseName
+        return str(self.courseID) + " " + self.courseName
 
 class LearnerTakesCourse(models.Model):
     staffID = models.ForeignKey(Learner, on_delete=models.CASCADE)
@@ -71,7 +71,7 @@ class Module(models.Model):
     numOfQuestions = models.IntegerField(null = True, blank = True)
     passingMark = models.IntegerField(null = True, blank = True)
     def __str__(self):
-        return str(self.moduleID) + " : " + self.moduleTitle
+        return str(self.courseID) + ":" + str(self.moduleID) + " : " + self.moduleTitle
 
 class Component(models.Model):
     componentID = models.AutoField(primary_key = True)

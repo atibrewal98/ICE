@@ -1,0 +1,67 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="{% static 'scripts/styles.css' %}">
+<title>ICE</title>
+</head>
+<body>
+
+<div id="background">
+    <div id="navBar">
+            <ul>
+                <li><img src="{% static 'images/owl.png' %}"></li>
+                <li><a href="" class="navText">Dashboard</a></li>
+                <li><a href="#categories" class="navText">Categories</a></li>
+                <li class="right"><img src="{% static 'images/user.png' %}"></li>
+            </ul>
+    </div>
+        
+    <div id="frame">
+        <div id="left">
+            <div id="leftHeader">
+                {% for c in course %}
+                    <h1>{{c.courseName}}</h1>
+                {% endfor %}
+                {% for i in instructor %}
+                    <p>Course Instructor: {{i.firstName}} {{i.lastName}}</p>
+                {% endfor %} 
+            </div>
+
+            <div id="moduleList">
+                <table>
+                    {% for modules in all_modules %}
+                        <tr>
+                            <td>Module {{modules.orderNumber}}</td>
+                            <td rowspan="3">icon</td>
+                        </tr>
+                        <tr>
+                            <td><a href ="../../course/{{modules.pk}}">{{modules.moduleTitle}}</a></td>
+                        </tr>
+                        <tr>
+                            <td>Take end of module quiz</td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>    
+        </div>
+            
+        <div id="right">
+            {% for modules in title %}
+                <button type="button" onclick = "window.location.href = '../../addModule/{{modules.courseID}}';">Add Module</button>
+                <button type="button" onclick = "window.location.href = '../../addModuleQuiz/{{modules.pk}}';">Add Quiz</button>
+                <h1>{{modules.moduleTitle}}</h1>
+            {% endfor %}
+            <table>
+                {% for com in components %}
+                    <tr>Component {{com.orderNumber}} - {{com.componentTitle}}</tr>
+                    <tr><p>{{com.componentText}}</p></tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+</div>
+
+
+</body>
+</html>
