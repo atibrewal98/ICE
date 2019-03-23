@@ -5,17 +5,18 @@ from ICE.models import Module, Category, Component, Course, Instructor, LearnerT
 
 
 
-from .forms import ContactForm,ModuleForm
+from .forms import ModuleForm,QuizForm
 
-def contact(request):
-    form=ContactForm()
+def quiz_form(request,id):
 
-    if request.method=='POST':
-        form=ContactForm(request.POST)
-        if form.is_valid():
-            title=form.cleaned_data['title']
-            print(title)
-    return  render(request,'form.html',{'form': form})
+    if request.method == 'POST':
+        instance=Module.objects.get(moduleID=id)
+        print(instance.numOfComponents)
+        quizform = QuizForm(request.POST,instance=instance)
+        if quizform.is_valid():
+            quizform.save()
+    quizform=QuizForm()
+    return render(request, 'quizform.html', {'quizform': quizform})
 
 
 def module_form(request):
