@@ -3,6 +3,29 @@ from django.views.generic.list import ListView
 from django.template import loader
 from ICE.models import Module, Category, Component, Course, Instructor, LearnerTakesCourse
 
+
+
+from .forms import ContactForm,ModuleForm
+
+def contact(request):
+    form=ContactForm()
+
+    if request.method=='POST':
+        form=ContactForm(request.POST)
+        if form.is_valid():
+            title=form.cleaned_data['title']
+            print(title)
+    return  render(request,'form.html',{'form': form})
+
+
+def module_form(request):
+
+    if request.method == 'POST':
+        form = ModuleForm(request.POST)
+        if form.is_valid():
+            form.save()
+    form=ModuleForm()
+    return render(request, 'form.html', {'form': form})
 # Create your views here.
 def monkeyPageView(request):
     return render(request, 'ICE/monkey.html')
