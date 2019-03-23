@@ -47,8 +47,10 @@
         </div>
             
         <div id="right">
-            {% for modules in title %}
-                <button type="button" onclick = "window.location.href = '../../addModule/{{modules.courseID}}';">Add Module</button>
+            {% for c in course %}
+                <button type="button" onclick = "window.location.href = '../../addModule/{{c.pk}}';">Add Module</button>
+            {% endfor %}
+            {% for modules in title %} 
                 <button type="button" onclick = "window.location.href = '../../addModuleQuiz/{{modules.pk}}';">Add Quiz</button>
                 <h1>{{modules.moduleTitle}}</h1>
             {% endfor %}
