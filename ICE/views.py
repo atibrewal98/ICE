@@ -22,8 +22,9 @@ def quiz_form(request,id):
 def module_form(request, id):
 
     if request.method == 'POST':
-        instance=Course.objects.get(courseID=id)
-        print(instance.courseName)
+        instance1=Course.objects.get(courseID=id)
+        instance=Module()
+        instance.courseID=instance1.pk
         form = ModuleForm(request.POST, instance=instance)
         if form.is_valid():
             form.save()

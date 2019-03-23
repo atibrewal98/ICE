@@ -49,7 +49,7 @@ class Course(models.Model):
     totalEnrolled = models.IntegerField(default = 0)
     currentEnrolled = models.IntegerField(default = 0)
     def __str__(self):
-        return str(self.courseID) + " " + self.courseName
+        return str(self.courseID)
 
 class LearnerTakesCourse(models.Model):
     staffID = models.ForeignKey(Learner, on_delete=models.CASCADE)
