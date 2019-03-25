@@ -78,7 +78,7 @@ class Component(models.Model):
     moduleID = models.ForeignKey(Module, on_delete=models.CASCADE)
     componentTitle = models.CharField(max_length=100)
     componentText = models.CharField(max_length=100, null=True, blank = True)
-    componentImage = models.CharField(max_length=100, null = True, blank = True)
+    componentImage = models.ImageField(upload_to='images/',null=True, blank=True)
     orderNumber = models.IntegerField()
     createdAt = models.DateField(auto_now=False, auto_now_add=True)
     updatedAt = models.DateField(auto_now=True)

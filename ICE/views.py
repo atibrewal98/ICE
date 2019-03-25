@@ -8,7 +8,6 @@ from ICE.models import Module, Category, Component, Course, Instructor, LearnerT
 from .forms import ModuleForm,QuizForm
 
 def quiz_form(request,id):
-
     if request.method == 'POST':
         instance=Module.objects.get(moduleID=id)
         print(instance.numOfComponents)
@@ -20,16 +19,33 @@ def quiz_form(request,id):
 
 
 def module_form(request, id):
-
+    print("Course ID inherited: ", id)
     if request.method == 'POST':
-        instance1=Course.objects.get(courseID=id)
-        instance=Module()
-        instance.courseID=instance1.pk
-        form = ModuleForm(request.POST, instance=instance)
+        instance=Course.objects.get(courseID=id)
+        print("Instance: ", instance)
+        form = ModuleForm(request.POST)
         if form.is_valid():
             form.save()
     form=ModuleForm()
     return render(request, 'form.html', {'form': form})
+
+def component_form(request):
+
+    if request.method == 'POST':
+        form = ComponentForm(request.POST,request.FILES)
+        if form.is_valid():
+            form.save()
+    componentform=ComponentForm()
+    return render(request, 'component.html', {'componentform': componentform})
+
+def component(request):
+    component=Component.objects.all()
+    template=loader.get_template("ICE/component.html")
+    context ={
+        'component':component,
+    }
+    return HttpResponse(template.render(context,request))
+
 # Create your views here.
 def monkeyPageView(request):
     return render(request, 'ICE/monkey.html')

@@ -1,0 +1,19 @@
+{% load static %}
+<h1>Modules</h1>
+<ul>
+    {% for c in component %}
+        <li>
+
+                {{ c.componentID }}
+                {{ c.moduleID }}
+                {{ c.componentTitle }}
+                {{ c.componentText }}
+                <img src="{{c.componentImage.url}}">
+
+            </a>
+            - {{modules.list_set.all | length }}
+        </li>
+    {% empty %}
+        <li> No modules yet.</li>
+    {% endfor %}
+</ul>

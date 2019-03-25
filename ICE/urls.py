@@ -11,5 +11,7 @@ urlpatterns = [
     path('modules/', views.module_list_view),
     url(r'^addModule/(?P<id>[0-9]+)/$', views.module_form),
     url(r'^addModuleQuiz/(?P<id>[0-9]+)/$',views.quiz_form),
+    path('component/',views.component_form),
+    path('comp/', views.component),
     url(r'^modules_component/(?P<module_ID>[0-9]+)/$',views.component_list_view)
 ]
