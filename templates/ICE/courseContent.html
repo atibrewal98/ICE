@@ -33,7 +33,7 @@
                     {% for modules in done_Modules %}
                         <tr>
                             <td>Module {{modules.orderNumber}}</td>
-                            <td rowspan="3">icon</td>
+                            <td rowspan="2">icon</td>
                         </tr>
                         <tr>
                             {% for learner in learnerDetails %}
@@ -55,13 +55,13 @@
                             {% endfor %}
                         </tr>
                         <tr>
-                            <td><a href ="../../learnerCourse/courseID={{modules.courseID}}&learnerID={{learner.userID}}&moduleID={{modules.pk}}">End of Module Quiz</a></td>
+                            <td><a href ="../../learnerCourse/courseID={{modules.courseID}}&learnerID={{learner.userID}}&moduleID={{modules.pk}}">Module Quiz</a></td>
                         </tr>
                     {% endfor %}
                     {% for modules in left_Modules %}
                         <tr>
                             <td>Module {{modules.orderNumber}}</td>
-                            <td rowspan="3">icon</td>
+                            <td rowspan="2">icon</td>
                         </tr>
                         <tr>
                             {% for learner in learnerDetails %}

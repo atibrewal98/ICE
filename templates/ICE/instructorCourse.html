@@ -50,6 +50,7 @@
             {% for c in course %}
                 <button type="button" onclick = "window.location.href = '../../addModule/{{c.pk}}';">Add Module</button>
             {% endfor %}
+            <button type="button" onclick = "window.location.href = '../../component/';">Add Component</button>
             {% for modules in title %} 
                 <button type="button" onclick = "window.location.href = '../../addModuleQuiz/{{modules.pk}}';">Add Quiz</button>
                 <h1>{{modules.moduleTitle}}</h1>

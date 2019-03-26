@@ -4,7 +4,7 @@ from .models import Module, Component
 class ModuleForm(forms.ModelForm):
     class Meta:
         model=Module
-        fields=('moduleTitle', 'courseID', 'orderNumber','numOfComponents',)
+        fields=('moduleTitle', 'orderNumber','numOfComponents',)
 
 class QuizForm(forms.ModelForm):
     class Meta:
