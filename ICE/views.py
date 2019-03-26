@@ -1,7 +1,7 @@
 from django.shortcuts import render, HttpResponse
 from django.views.generic.list import ListView
 from django.template import loader
-from ICE.models import Module, Category, Component, Course, Instructor, LearnerTakesCourse
+from ICE.models import Module, Category, Component, Course, Instructor, LearnerTakesCourse, Learner
 
 
 
@@ -63,6 +63,7 @@ def learnerCourseView(request, course_ID, learner_ID):
     components = ''
     for c in course:
         instructor=Instructor.objects.filter(pk = c.instructorID)
+    learnerDetails= Learner.objects.filter(userID=learner_ID)
     currModule=LearnerTakesCourse.objects.filter(courseID = course_ID, staffID = learner_ID)
     for m in currModule:
         title=Module.objects.filter(moduleID = m.currentModule)
@@ -73,7 +74,30 @@ def learnerCourseView(request, course_ID, learner_ID):
         'title': title,
         'instructor': instructor,
         'course': course,
-        'components': components
+        'components': components,
+        'learnerDetails': learnerDetails,
+    }
+    return HttpResponse(template.render(context,request))
+
+def learnerModuleCourseView(request, course_ID, learner_ID, module_ID):
+    all_modules=Module.objects.filter(courseID = course_ID)
+    course=Course.objects.filter(courseID = course_ID)
+    instructor = ''
+    title = ''
+    components = ''
+    learnerDetails= Learner.objects.filter(userID=learner_ID)
+    for c in course:
+        instructor=Instructor.objects.filter(pk = c.instructorID)
+    title=Module.objects.filter(moduleID = module_ID)
+    components=Component.objects.filter(moduleID = module_ID)
+    template=loader.get_template("ICE/courseContent.html")
+    context ={
+        'all_modules':all_modules,
+        'title': title,
+        'instructor': instructor,
+        'course': course,
+        'components': components,
+        'learnerDetails': learnerDetails,
     }
     return HttpResponse(template.render(context,request))
 
