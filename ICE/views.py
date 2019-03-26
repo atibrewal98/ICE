@@ -5,7 +5,7 @@ from ICE.models import Module, Category, Component, Course, Instructor, LearnerT
 
 
 
-from .forms import ModuleForm,QuizForm
+from .forms import ModuleForm,QuizForm, ComponentForm
 
 def quiz_form(request,id):
     if request.method == 'POST':
