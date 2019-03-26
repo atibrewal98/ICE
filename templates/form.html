@@ -11,6 +11,9 @@
 <form method="post">
     {% csrf_token %}
 {{ form }}
+<!-- {% for m in course %}
+    <button type="button" onclick = "window.location.href = '../../instructorCourse/courseID={{m.pk}}';"> Submit</button>
+{% endfor %} -->
 <button> Submit</button>
 </form>
 

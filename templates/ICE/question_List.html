@@ -1,0 +1,18 @@
+{% load static %}
+<h1>End of Module Quiz </h1>
+<ul>
+    {% for question in all_questions %}
+        <li>
+
+            - {{ question.questionStatement }} <br>
+               <input type="radio" value="1"> {{ question.qOption1 }} <br>
+               <input type="radio" value="2"> {{ question.qOption2 }} <br>
+               <input type="radio" value="3"> {{ question.qOption3 }} <br>
+               <input type="radio" value="4"> {{ question.qOption4 }} <br>
+
+
+
+        </li>
+
+    {% endfor %}
+</ul>

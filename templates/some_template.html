@@ -1,0 +1,10 @@
+<form method='post'>
+        {% csrf_token %}
+        {% for question in questions %}
+    
+        {{ question.questionStatement }}
+        {{ form }}
+        {% endfor %}
+    
+        <input type='submit' value='submit'>
+    </form>

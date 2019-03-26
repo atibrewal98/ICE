@@ -1,11 +1,11 @@
 from django.shortcuts import render, HttpResponse
 from django.views.generic.list import ListView
 from django.template import loader
-from ICE.models import Module, Category, Component, Course, Instructor, LearnerTakesCourse, Learner
+from ICE.models import Module, Category, Component, Course, Instructor, LearnerTakesCourse, Learner, Question
 
 
 
-from .forms import ModuleForm,QuizForm, ComponentForm
+from .forms import ModuleForm,QuizForm, ComponentForm, SomeForm
 
 def quiz_form(request,id):
     if request.method == 'POST':
@@ -15,7 +15,8 @@ def quiz_form(request,id):
         if quizform.is_valid():
             quizform.save()
     quizform=QuizForm()
-    return render(request, 'quizform.html', {'quizform': quizform})
+    module = Module.objects.filter(moduleID=id)
+    return render(request, 'quizform.html', {'quizform': quizform, 'module': module})
 
 
 def module_form(request, id):
@@ -32,7 +33,8 @@ def module_form(request, id):
             instance.save()
 
     form=ModuleForm()
-    return render(request, 'form.html', {'form': form})
+    module = Course.objects.filter(courseID=id)
+    return render(request, 'form.html', {'form': form, 'course': module})
 
 def component_form(request):
 
@@ -136,7 +138,30 @@ def learnerModuleCourseView(request, course_ID, learner_ID, module_ID):
     }
     return HttpResponse(template.render(context,request))
 
-def instructorCourseView(request, course_ID, module_ID):
+def instructorCourseView(request, course_ID):
+    all_modules=Module.objects.filter(courseID = course_ID)
+    course=Course.objects.filter(courseID = course_ID)
+    instructor = ''
+    title = Module.objects.none()
+    components = ''
+    for c in course:
+        instructor=Instructor.objects.filter(pk = c.instructorID)
+    for m in all_modules:
+        title = Module.objects.filter(moduleID = m.moduleID).union(title)
+        break
+    for t in title:
+        components=Component.objects.filter(moduleID = t.moduleID)
+    template=loader.get_template("ICE/instructorCourse.html")
+    context ={
+        'all_modules':all_modules,
+        'title': title,
+        'instructor': instructor,
+        'course': course,
+        'components': components
+    }
+    return HttpResponse(template.render(context,request))
+
+def instructorCourseModuleView(request, course_ID, module_ID):
     all_modules=Module.objects.filter(courseID = course_ID)
     course=Course.objects.filter(courseID = course_ID)
     instructor = ''
@@ -194,3 +219,36 @@ def course_list_view(request, learner_ID):
         'learnerDetails':learnerDetails,
     }
     return HttpResponse(template.render(context,request))
+
+def intructor_view_quiz(request, id):
+    all_questions = Question.objects.filter(moduleID=id)
+    template = loader.get_template("ICE/question_list.html")
+    context = {
+        'all_questions': all_questions,
+    }
+    return HttpResponse(template.render(context, request))
+
+def some_view(request):
+    questions=Question.objects.filter(moduleID=1)
+    if request.method == 'POST':
+
+
+            form = SomeForm(request.POST)
+            if form.is_valid():
+                choices = form.cleaned_data.get('choices')
+
+                if (choices[0] == form.correct):
+                    learner=LearnerTakesCourse.objects.get(staffID=2, courseID=1)
+                    learner.currentModule=learner.currentModule+1
+                    learner.save()
+                    ans = "Congrats you have passed"
+                    return render(request, 'quiz_result.html', {'ans': ans})
+
+                else:
+                    ans = "Sorry try again"
+                    return render(request, 'quiz_result.html', {'ans': ans})
+
+    else:
+        form = SomeForm
+
+    return render(request,'some_template.html', {'form':form, 'questions': questions })

@@ -11,7 +11,9 @@
 <form method="post">
     {% csrf_token %}
 {{ quizform }}
-<button> Submit</button>
+{% for m in module %}
+    <button type="button" onclick = "window.location.href = '../../moduleQuiz/{{m.pk}}';"> Submit</button>
+{% endfor %}
 </form>
 
 </body>
