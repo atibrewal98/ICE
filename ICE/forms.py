@@ -15,3 +15,4 @@ class ComponentForm(forms.ModelForm):
     class Meta:
         model=Component
         fields=('componentID','moduleID','componentTitle','componentText','componentImage','orderNumber',)
+
