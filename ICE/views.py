@@ -61,6 +61,9 @@ def learnerCourseView(request, course_ID, learner_ID):
     instructor = ''
     title = ''
     components = ''
+    done_Modules=Module.objects.none()
+    left_Modules=Module.objects.none()
+    curr_Modules=Module.objects.none()
     for c in course:
         instructor=Instructor.objects.filter(pk = c.instructorID)
     learnerDetails= Learner.objects.filter(userID=learner_ID)
@@ -68,6 +71,16 @@ def learnerCourseView(request, course_ID, learner_ID):
     for m in currModule:
         title=Module.objects.filter(moduleID = m.currentModule)
         components=Component.objects.filter(moduleID = m.currentModule)
+        curr_Modules=Module.objects.filter(moduleID = m.currentModule)
+    for m in all_modules:
+        for t in curr_Modules:
+            if(m.pk < int(t.moduleID)):
+                done_Modules = Module.objects.filter(moduleID = m.moduleID).union(done_Modules)
+    for m in all_modules:
+        for t in curr_Modules:
+            if(m.pk > int(t.moduleID)):
+                left_Modules = Module.objects.filter(moduleID = m.moduleID).union(left_Modules)
+      
     template=loader.get_template("ICE/courseContent.html")
     context ={
         'all_modules':all_modules,
@@ -76,6 +89,9 @@ def learnerCourseView(request, course_ID, learner_ID):
         'course': course,
         'components': components,
         'learnerDetails': learnerDetails,
+        'left_Modules':left_Modules,
+        'done_Modules':done_Modules,
+        'currModule':curr_Modules,
     }
     return HttpResponse(template.render(context,request))
 
@@ -85,11 +101,27 @@ def learnerModuleCourseView(request, course_ID, learner_ID, module_ID):
     instructor = ''
     title = ''
     components = ''
+    done_Modules=Module.objects.none()
+    left_Modules=Module.objects.none()
+    curr_Modules=Module.objects.none()
     learnerDetails= Learner.objects.filter(userID=learner_ID)
     for c in course:
         instructor=Instructor.objects.filter(pk = c.instructorID)
     title=Module.objects.filter(moduleID = module_ID)
     components=Component.objects.filter(moduleID = module_ID)
+    currModule=LearnerTakesCourse.objects.filter(courseID = course_ID, staffID = learner_ID)
+    
+    for m in currModule:
+        curr_Modules=Module.objects.filter(moduleID = m.currentModule)
+    for m in all_modules:
+        for t in curr_Modules:
+            if(m.pk < int(t.moduleID)):
+                done_Modules = Module.objects.filter(moduleID = m.moduleID).union(done_Modules)
+    for m in all_modules:
+        for t in curr_Modules:
+            if(m.pk > int(t.moduleID)):
+                left_Modules = Module.objects.filter(moduleID = m.moduleID).union(left_Modules)
+
     template=loader.get_template("ICE/courseContent.html")
     context ={
         'all_modules':all_modules,
@@ -98,6 +130,9 @@ def learnerModuleCourseView(request, course_ID, learner_ID, module_ID):
         'course': course,
         'components': components,
         'learnerDetails': learnerDetails,
+        'left_Modules':left_Modules,
+        'done_Modules':done_Modules,
+        'currModule':curr_Modules,
     }
     return HttpResponse(template.render(context,request))
 
@@ -147,8 +182,15 @@ def component_list_view(request, module_ID):
 
 def course_list_view(request, learner_ID):
     all_courses=LearnerTakesCourse.objects.filter(staffID = learner_ID)
+    courseDetails = Course.objects.none()
+    learnerDetails= Learner.objects.filter(userID=learner_ID)
+    for c in all_courses:
+        print(c.courseID)
+        courseDetails = Course.objects.filter(courseID = str(c.courseID)).union(courseDetails)
     template=loader.get_template("ICE/courseList.html")
     context ={
         'all_courses':all_courses,
+        'courseDetails':courseDetails,
+        'learnerDetails':learnerDetails,
     }
     return HttpResponse(template.render(context,request))

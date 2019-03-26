@@ -1,11 +1,13 @@
 {% load static %}
 <h1>Course List</h1>
 <ul>
-    {% for course in all_courses %}
-        <li>
-            <a href ="../../learnerCourse/courseID={{course.courseID}}&learnerID={{course.staffID}}/">{{course.courseID}}</a>
-        </li>
+    {% for course in courseDetails %}
+        {% for learner in learnerDetails %}
+            <li>
+                    <a href ="../../learnerCourse/courseID={{course.courseID}}&learnerID={{learner.userID}}/">{{course.courseID}} - {{course.courseName}}</a>
+            </li>
+        {% endfor %}
     {% empty %}
-        <li> No component yet.</li>
+        <li> No Courses yet.</li>
     {% endfor %}
 </ul>

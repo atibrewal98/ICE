@@ -30,7 +30,21 @@
 
             <div id="moduleList">
                 <table>
-                    {% for modules in all_modules %}
+                    {% for modules in done_Modules %}
+                        <tr>
+                            <td>Module {{modules.orderNumber}}</td>
+                            <td rowspan="3">icon</td>
+                        </tr>
+                        <tr>
+                            {% for learner in learnerDetails %}
+                                <td><a href ="../../learnerCourse/courseID={{modules.courseID}}&learnerID={{learner.userID}}&moduleID={{modules.pk}}">{{modules.moduleTitle}}</a></td>
+                            {% endfor %}
+                        </tr>
+                        <!-- <tr>
+                            <td>Take end of module quiz</td>
+                        </tr> -->
+                    {% endfor %}
+                    {% for modules in currModule %}
                         <tr>
                             <td>Module {{modules.orderNumber}}</td>
                             <td rowspan="3">icon</td>
@@ -41,9 +55,23 @@
                             {% endfor %}
                         </tr>
                         <tr>
-                            <td>Take end of module quiz</td>
+                            <td><a href ="../../learnerCourse/courseID={{modules.courseID}}&learnerID={{learner.userID}}&moduleID={{modules.pk}}">End of Module Quiz</a></td>
                         </tr>
-                        {% endfor %}
+                    {% endfor %}
+                    {% for modules in left_Modules %}
+                        <tr>
+                            <td>Module {{modules.orderNumber}}</td>
+                            <td rowspan="3">icon</td>
+                        </tr>
+                        <tr>
+                            {% for learner in learnerDetails %}
+                                <td>{{modules.moduleTitle}}</td>
+                            {% endfor %}
+                        </tr>
+                        <!-- <tr>
+                            <td>Take end of module quiz</td>
+                        </tr> -->
+                    {% endfor %}
                 </table>
             </div>    
         </div>
