@@ -1,0 +1,11 @@
+{% load static %}
+<!-- <h1>Components of {{module.moduleTitle}}</h1> -->
+<ul>
+    {% for course in all_courses %}
+        <li>
+            <a href ="../../learnerCourse/courseID={{course.courseID}}&learnerID={{course.staffID}}">{{course.courseID}}</a>
+        </li>
+    {% empty %}
+        <li> No component yet.</li>
+    {% endfor %}
+</ul>

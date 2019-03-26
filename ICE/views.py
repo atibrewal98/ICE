@@ -55,7 +55,7 @@ def component(request):
 def monkeyPageView(request):
     return render(request, 'ICE/monkey.html')
 
-def learnerCourseView(request, course_ID, module_ID, learner_ID):
+def learnerCourseView(request, course_ID, learner_ID):
     all_modules=Module.objects.filter(courseID = course_ID)
     course=Course.objects.filter(courseID = course_ID)
     instructor = ''
@@ -118,5 +118,13 @@ def component_list_view(request, module_ID):
     template=loader.get_template("ICE/component_List.html")
     context ={
         'all_components':all_components,
+    }
+    return HttpResponse(template.render(context,request))
+
+def course_list_view(request, learner_ID):
+    all_courses=LearnerTakesCourse.objects.filter(staffID = learner_ID)
+    template=loader.get_template("ICE/courseList.html")
+    context ={
+        'all_courses':all_courses,
     }
     return HttpResponse(template.render(context,request))

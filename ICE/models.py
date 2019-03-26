@@ -18,7 +18,7 @@ class Learner(User):
     #staffID = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
     totalCECU = models.PositiveIntegerField(default=0)
     def __str__(self):
-        return self.firstName + " " + self.lastName + " " + str(self.userID)
+        return str(self.userID)
 
 class Instructor(User):
     #instructorID = models.AutoField(primary_key = True)
