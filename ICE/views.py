@@ -21,11 +21,16 @@ def quiz_form(request,id):
 def module_form(request, id):
     print("Course ID inherited: ", id)
     if request.method == 'POST':
-        instance=Course.objects.get(courseID=id)
-        print("Instance: ", instance)
+
+
         form = ModuleForm(request.POST)
+
         if form.is_valid():
-            form.save()
+            instance=form.save(commit=False)
+            course = Course.objects.get(courseID=id)
+            instance.courseID=course
+            instance.save()
+
     form=ModuleForm()
     return render(request, 'form.html', {'form': form})
 
