@@ -70,7 +70,10 @@ def learnerCourseView(request, course_ID, learner_ID):
         instructor=Instructor.objects.filter(pk = c.instructorID)
     learnerDetails= Learner.objects.filter(userID=learner_ID)
     currModule=LearnerTakesCourse.objects.filter(courseID = course_ID, staffID = learner_ID)
+    # components=Component.objects.filter(componentID = 1)
+    # components1=Component.objects.filter(componentID = 2)
     for m in currModule:
+        print(m.currentModule)
         title=Module.objects.filter(moduleID = m.currentModule)
         components=Component.objects.filter(moduleID = m.currentModule)
         curr_Modules=Module.objects.filter(moduleID = m.currentModule)
@@ -94,6 +97,7 @@ def learnerCourseView(request, course_ID, learner_ID):
         'left_Modules':left_Modules,
         'done_Modules':done_Modules,
         'currModule':curr_Modules,
+        # 'components1': components1,
     }
     return HttpResponse(template.render(context,request))
 
@@ -111,6 +115,7 @@ def learnerModuleCourseView(request, course_ID, learner_ID, module_ID):
         instructor=Instructor.objects.filter(pk = c.instructorID)
     title=Module.objects.filter(moduleID = module_ID)
     components=Component.objects.filter(moduleID = module_ID)
+    # components1=Component.objects.filter(componentID = 2)
     currModule=LearnerTakesCourse.objects.filter(courseID = course_ID, staffID = learner_ID)
     
     for m in currModule:
@@ -135,6 +140,7 @@ def learnerModuleCourseView(request, course_ID, learner_ID, module_ID):
         'left_Modules':left_Modules,
         'done_Modules':done_Modules,
         'currModule':curr_Modules,
+        # 'components1': components1,
     }
     return HttpResponse(template.render(context,request))
 
@@ -151,13 +157,15 @@ def instructorCourseView(request, course_ID):
         break
     for t in title:
         components=Component.objects.filter(moduleID = t.moduleID)
+    # components1=Component.objects.filter(componentID = 2)
     template=loader.get_template("ICE/instructorCourse.html")
     context ={
         'all_modules':all_modules,
         'title': title,
         'instructor': instructor,
         'course': course,
-        'components': components
+        'components': components,
+        # 'components1': components1,
     }
     return HttpResponse(template.render(context,request))
 
@@ -171,13 +179,15 @@ def instructorCourseModuleView(request, course_ID, module_ID):
         instructor=Instructor.objects.filter(pk = c.instructorID)
     title=Module.objects.filter(moduleID = module_ID)
     components=Component.objects.filter(moduleID = module_ID)
+    # components1=Component.objects.filter(componentID = 2)
     template=loader.get_template("ICE/instructorCourse.html")
     context ={
         'all_modules':all_modules,
         'title': title,
         'instructor': instructor,
         'course': course,
-        'components': components
+        'components': components,
+        # 'components1': components1,
     }
     return HttpResponse(template.render(context,request))
 

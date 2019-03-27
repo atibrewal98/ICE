@@ -83,7 +83,7 @@ class Component(models.Model):
     createdAt = models.DateField(auto_now=False, auto_now_add=True)
     updatedAt = models.DateField(auto_now=True)
     def __str__(self):
-        return self.componentTitle
+        return str(self.componentID)
 
 class Question(models.Model):
     questionID = models.AutoField(primary_key = True)

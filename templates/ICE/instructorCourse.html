@@ -33,14 +33,14 @@
                     {% for modules in all_modules %}
                         <tr>
                             <td>Module {{modules.orderNumber}}</td>
-                            <td rowspan="3">icon</td>
+                            <td rowspan="2">icon</td>
                         </tr>
                         <tr>
                             <td><a href ="../../instructorCourse/courseID={{modules.courseID}}&moduleID={{modules.pk}}">{{modules.moduleTitle}}</a></td>
                         </tr>
-                        <tr>
+                        <!-- <tr>
                             <td>Take end of module quiz</td>
-                        </tr>
+                        </tr> -->
                     {% endfor %}
                 </table>
             </div>    
@@ -58,8 +58,16 @@
             <table>
                 {% for com in components %}
                     <tr>Component {{com.orderNumber}} - {{com.componentTitle}}</tr>
-                    <tr><p>{{com.componentText}}</p></tr>
+                    {% if com.componentText is not Null %}
+                        <tr><p>{{com.componentText}}</p></tr>
+                    {% else %}
+                        <tr><img src="{{com.componentImage.url}}" width="400" height="200"></tr>
+                    {% endif %}
                 {% endfor %}
+                <!-- {% for com in components1 %}
+                    <tr>Component {{com.orderNumber}} - {{com.componentTitle}}</tr>
+                    <tr><img src="{{com.componentImage.url}}" width="100" height="100"></tr>
+                {% endfor %} -->
             </table>
         </div>
     </div>
