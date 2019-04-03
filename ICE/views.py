@@ -77,8 +77,6 @@ def component(request):
     return HttpResponse(template.render(context,request))
 
 # Create your views here.
-def monkeyPageView(request):
-    return render(request, 'ICE/monkey.html')
 
 def learnerModuleCourseView(request, course_ID, learner_ID, module_ID):
     all_modules=Module.objects.filter(courseID = course_ID)
@@ -247,6 +245,11 @@ def some_view(request):
 '''
     Redundant Code
 '''
+
+# def monkeyPageView(request):
+#     return render(request, 'ICE/monkey.html')
+
+
 
 # def learnerCourseView(request, course_ID, learner_ID):
 #     all_modules=Module.objects.filter(courseID = course_ID)

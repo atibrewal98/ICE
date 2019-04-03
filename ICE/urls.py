@@ -4,7 +4,7 @@ from django.conf.urls import url
 from . import views
 
 urlpatterns = [
-    path('', views.monkeyPageView),
+    # path('', views.monkeyPageView),
     #url(r'^learnerCourse/courseID=(?P<course_ID>[0-9]+)&learnerID=(?P<learner_ID>[0-9]+)/$',views.learnerCourseView),
     #url(r'^instructorCourse/courseID=(?P<course_ID>[0-9]+)/$',views.instructorCourseView),
     url(r'^learnerCourse/learnerID=(?P<learner_ID>[0-9]+)&courseID=(?P<course_ID>[0-9]+)&moduleID=(?P<module_ID>[0-9]+)/$',views.learnerModuleCourseView),
