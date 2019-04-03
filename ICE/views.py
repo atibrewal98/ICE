@@ -1,11 +1,33 @@
-from django.shortcuts import render, HttpResponse
+from django.shortcuts import render, HttpResponse, redirect
+from django.contrib.auth import authenticate, login
 from django.views.generic.list import ListView
+from django.views.generic import View
 from django.template import loader
 from ICE.models import Module, Category, Component, Course, Instructor, LearnerTakesCourse, Learner, Question
+from .forms import ModuleForm,QuizForm, ComponentForm, UserForm #SomeForm
 
+class UserFormView(View):	
+	userform = UserForm
+	template = 'userform.html'
 
+	def get(self,request):
+		form = self.userform(None)
+		return render(request, self.template, {'userform':form})
 
-from .forms import ModuleForm,QuizForm, ComponentForm, SomeForm
+	def post(self,request):
+		form = self.userform(request.POST)
+		if form.is_valid():
+			user = form.save(commit=False)
+			username = form.cleaned_data['userName']
+			password = form.cleaned_data['password']
+			user.save()
+			user = authenticate(request, userName=username, password=password)
+			if user is not None:
+
+				if user.is_active:
+					login(request, user)
+					return redirect('comp')
+		return render(request, self.template, {'userform':form})
 
 def quiz_form(request,id):
     if request.method == 'POST':
