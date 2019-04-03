@@ -6,8 +6,8 @@ from . import views
 urlpatterns = [
     path('', views.monkeyPageView),
     #url(r'^learnerCourse/courseID=(?P<course_ID>[0-9]+)&learnerID=(?P<learner_ID>[0-9]+)/$',views.learnerCourseView),
-    url(r'^learnerCourse/learnerID=(?P<learner_ID>[0-9]+)&courseID=(?P<course_ID>[0-9]+)&moduleID=(?P<module_ID>[0-9]+)/$',views.learnerModuleCourseView),
     #url(r'^instructorCourse/courseID=(?P<course_ID>[0-9]+)/$',views.instructorCourseView),
+    url(r'^learnerCourse/learnerID=(?P<learner_ID>[0-9]+)&courseID=(?P<course_ID>[0-9]+)&moduleID=(?P<module_ID>[0-9]+)/$',views.learnerModuleCourseView),
     url(r'^instructorCourse/instructorID=(?P<instructor_ID>[0-9]+)&courseID=(?P<course_ID>[0-9]+)&moduleID=(?P<module_ID>[0-9]+)/$',views.instructorCourseModuleView),
     url(r'^moduleQuiz/(?P<id>[0-9]+)/$', views.intructor_view_quiz),
     path('category/', views.category_list_view),

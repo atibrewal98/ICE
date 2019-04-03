@@ -80,50 +80,6 @@ def component(request):
 def monkeyPageView(request):
     return render(request, 'ICE/monkey.html')
 
-def learnerCourseView(request, course_ID, learner_ID):
-    all_modules=Module.objects.filter(courseID = course_ID)
-    course=Course.objects.filter(courseID = course_ID)
-    instructor = ''
-    title = ''
-    components = ''
-    done_Modules=Module.objects.none()
-    left_Modules=Module.objects.none()
-    curr_Modules=Module.objects.none()
-    for c in course:
-        instructor=Instructor.objects.filter(pk = c.instructorID)
-    learnerDetails= Learner.objects.filter(userID=learner_ID)
-    currModule=LearnerTakesCourse.objects.filter(courseID = course_ID, staffID = learner_ID)
-    # components=Component.objects.filter(componentID = 1)
-    # components1=Component.objects.filter(componentID = 2)
-    for m in currModule:
-        print(m.currentModule)
-        title=Module.objects.filter(moduleID = m.currentModule)
-        components=Component.objects.filter(moduleID = m.currentModule)
-        curr_Modules=Module.objects.filter(moduleID = m.currentModule)
-    for m in all_modules:
-        for t in curr_Modules:
-            if(m.pk < int(t.moduleID)):
-                done_Modules = Module.objects.filter(moduleID = m.moduleID).union(done_Modules)
-    for m in all_modules:
-        for t in curr_Modules:
-            if(m.pk > int(t.moduleID)):
-                left_Modules = Module.objects.filter(moduleID = m.moduleID).union(left_Modules)
-      
-    template=loader.get_template("ICE/courseContent.html")
-    context ={
-        'all_modules':all_modules,
-        'title': title,
-        'instructor': instructor,
-        'course': course,
-        'components': components,
-        'learnerDetails': learnerDetails,
-        'left_Modules':left_Modules,
-        'done_Modules':done_Modules,
-        'currModule':curr_Modules,
-        # 'components1': components1,
-    }
-    return HttpResponse(template.render(context,request))
-
 def learnerModuleCourseView(request, course_ID, learner_ID, module_ID):
     all_modules=Module.objects.filter(courseID = course_ID)
     course=Course.objects.filter(courseID = course_ID)
@@ -163,31 +119,6 @@ def learnerModuleCourseView(request, course_ID, learner_ID, module_ID):
         'left_Modules':left_Modules,
         'done_Modules':done_Modules,
         'currModule':curr_Modules,
-        # 'components1': components1,
-    }
-    return HttpResponse(template.render(context,request))
-
-def instructorCourseView(request, course_ID):
-    all_modules=Module.objects.filter(courseID = course_ID)
-    course=Course.objects.filter(courseID = course_ID)
-    instructor = ''
-    title = Module.objects.none()
-    components = ''
-    for c in course:
-        instructor=Instructor.objects.filter(pk = c.instructorID)
-    for m in all_modules:
-        title = Module.objects.filter(moduleID = m.moduleID).union(title)
-        break
-    for t in title:
-        components=Component.objects.filter(moduleID = t.moduleID)
-    # components1=Component.objects.filter(componentID = 2)
-    template=loader.get_template("ICE/instructorCourse.html")
-    context ={
-        'all_modules':all_modules,
-        'title': title,
-        'instructor': instructor,
-        'course': course,
-        'components': components,
         # 'components1': components1,
     }
     return HttpResponse(template.render(context,request))
@@ -311,3 +242,76 @@ def some_view(request):
         form = SomeForm
 
     return render(request,'some_template.html', {'form':form, 'questions': questions })
+
+
+'''
+    Redundant Code
+'''
+
+# def learnerCourseView(request, course_ID, learner_ID):
+#     all_modules=Module.objects.filter(courseID = course_ID)
+#     course=Course.objects.filter(courseID = course_ID)
+#     instructor = ''
+#     title = ''
+#     components = ''
+#     done_Modules=Module.objects.none()
+#     left_Modules=Module.objects.none()
+#     curr_Modules=Module.objects.none()
+#     for c in course:
+#         instructor=Instructor.objects.filter(pk = c.instructorID)
+#     learnerDetails= Learner.objects.filter(userID=learner_ID)
+#     currModule=LearnerTakesCourse.objects.filter(courseID = course_ID, staffID = learner_ID)
+
+#     for m in currModule:
+#         print(m.currentModule)
+#         title=Module.objects.filter(moduleID = m.currentModule)
+#         components=Component.objects.filter(moduleID = m.currentModule)
+#         curr_Modules=Module.objects.filter(moduleID = m.currentModule)
+#     for m in all_modules:
+#         for t in curr_Modules:
+#             if(m.pk < int(t.moduleID)):
+#                 done_Modules = Module.objects.filter(moduleID = m.moduleID).union(done_Modules)
+#     for m in all_modules:
+#         for t in curr_Modules:
+#             if(m.pk > int(t.moduleID)):
+#                 left_Modules = Module.objects.filter(moduleID = m.moduleID).union(left_Modules)
+      
+#     template=loader.get_template("ICE/courseContent.html")
+#     context ={
+#         'all_modules':all_modules,
+#         'title': title,
+#         'instructor': instructor,
+#         'course': course,
+#         'components': components,
+#         'learnerDetails': learnerDetails,
+#         'left_Modules':left_Modules,
+#         'done_Modules':done_Modules,
+#         'currModule':curr_Modules,
+#         # 'components1': components1,
+#     }
+#     return HttpResponse(template.render(context,request))
+
+
+
+# def instructorCourseView(request, course_ID):
+#     all_modules=Module.objects.filter(courseID = course_ID)
+#     course=Course.objects.filter(courseID = course_ID)
+#     instructor = ''
+#     title = Module.objects.none()
+#     components = ''
+#     for c in course:
+#         instructor=Instructor.objects.filter(pk = c.instructorID)
+#     for m in all_modules:
+#         title = Module.objects.filter(moduleID = m.moduleID).union(title)
+#         break
+#     for t in title:
+#         components=Component.objects.filter(moduleID = t.moduleID)
+#     template=loader.get_template("ICE/instructorCourse.html")
+#     context ={
+#         'all_modules':all_modules,
+#         'title': title,
+#         'instructor': instructor,
+#         'course': course,
+#         'components': components,
+#     }
+#     return HttpResponse(template.render(context,request))
