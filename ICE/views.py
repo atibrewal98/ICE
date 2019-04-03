@@ -21,12 +21,14 @@ class UserFormView(View):
 			username = form.cleaned_data['userName']
 			password = form.cleaned_data['password']
 			user.save()
-			user = authenticate(request, userName=username, password=password)
+			print("User: ",username," ",password)
+			user = authenticate(username=username, password=password)
+			print("User: ",user)
+			
 			if user is not None:
-
 				if user.is_active:
 					login(request, user)
-					return redirect('comp')
+					return redirect('../comp/')
 		return render(request, self.template, {'userform':form})
 
 def quiz_form(request,id):
@@ -40,23 +42,18 @@ def quiz_form(request,id):
     module = Module.objects.filter(moduleID=id)
     return render(request, 'quizform.html', {'quizform': quizform, 'module': module})
 
-
-def module_form(request, id):
-    print("Course ID inherited: ", id)
-    if request.method == 'POST':
-
-
-        form = ModuleForm(request.POST)
-
-        if form.is_valid():
-            instance=form.save(commit=False)
-            course = Course.objects.get(courseID=id)
-            instance.courseID=course
-            instance.save()
-
-    form=ModuleForm()
-    module = Course.objects.filter(courseID=id)
-    return render(request, 'form.html', {'form': form, 'course': module})
+def module_form(request,instructor_id,course_id):
+	if request.method=='POST':
+		form = ModuleForm(request.POST)
+		if form.is_valid():
+			instance=form.save(commit=False)
+			course=Course.objects.get(courseID=course_id)
+			instance.courseID=course
+			instance.save()
+			return redirect('../../instructorCourse/instructorID='+instructor_id+'&courseID='+course_id+'&moduleID=1/')
+	form=ModuleForm()
+	module=Course.objects.filter(courseID=course_id)
+	return render(request,'form.html',{'form': form, 'course': module})
 
 def component_form(request):
 
@@ -191,14 +188,13 @@ def instructorCourseView(request, course_ID):
     }
     return HttpResponse(template.render(context,request))
 
-def instructorCourseModuleView(request, course_ID, module_ID):
+def instructorCourseModuleView(request, instructor_ID,course_ID, module_ID):
     all_modules=Module.objects.filter(courseID = course_ID)
-    course=Course.objects.filter(courseID = course_ID)
+    course=Course.objects.get(courseID = course_ID)
     instructor = ''
     title = ''
     components = ''
-    for c in course:
-        instructor=Instructor.objects.filter(pk = c.instructorID)
+    instructor=Instructor.objects.get(pk = course.instructorID)
     title=Module.objects.filter(moduleID = module_ID)
     components=Component.objects.filter(moduleID = module_ID)
     # components1=Component.objects.filter(componentID = 2)
@@ -240,15 +236,21 @@ def component_list_view(request, module_ID):
 def course_list_view(request, learner_ID):
     all_courses=LearnerTakesCourse.objects.filter(staffID = learner_ID)
     courseDetails = Course.objects.none()
-    learnerDetails= Learner.objects.filter(userID=learner_ID)
+    currModules = LearnerTakesCourse.objects.none()
+    #learnerDetails= Learner.objects.filter(userID=learner_ID)
+    learnerDetails= Learner.objects.get(userID=learner_ID)
     for c in all_courses:
-        print(c.courseID)
+        # print(c.courseID)
         courseDetails = Course.objects.filter(courseID = str(c.courseID)).union(courseDetails)
+        currModules=LearnerTakesCourse.objects.filter(courseID = str(c.courseID), staffID = learner_ID).union(currModules)
+        # print(currModules)
+
     template=loader.get_template("ICE/courseList.html")
     context ={
         'all_courses':all_courses,
         'courseDetails':courseDetails,
         'learnerDetails':learnerDetails,
+		'currModules':currModules,
     }
     return HttpResponse(template.render(context,request))
 

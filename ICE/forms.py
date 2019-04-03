@@ -4,7 +4,7 @@ from .models import Module, Component, Question, User
 class UserForm(forms.ModelForm):
     class Meta:
         model=User
-        fields=('userName', 'emailID','password',)
+        fields=('emailID','firstName','lastName','userName','password')
 
 class ModuleForm(forms.ModelForm):
     class Meta:

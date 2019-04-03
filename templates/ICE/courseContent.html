@@ -37,7 +37,7 @@
                         </tr>
                         <tr>
                             {% for learner in learnerDetails %}
-                                <td><a href ="../../learnerCourse/courseID={{modules.courseID}}&learnerID={{learner.userID}}&moduleID={{modules.pk}}">{{modules.moduleTitle}}</a></td>
+                                <td><a href ="../../learnerCourse/learnerID={{learner.userID}}&courseID={{modules.courseID}}&moduleID={{modules.pk}}">{{modules.moduleTitle}}</a></td>
                             {% endfor %}
                         </tr>
                         <!-- <tr>
@@ -51,7 +51,7 @@
                         </tr>
                         <tr>
                             {% for learner in learnerDetails %}
-                                <td><a href ="../../learnerCourse/courseID={{modules.courseID}}&learnerID={{learner.userID}}&moduleID={{modules.pk}}">{{modules.moduleTitle}}</a></td>
+                                <td><a href ="../../learnerCourse/learnerID={{learner.userID}}&courseID={{modules.courseID}}&moduleID={{modules.pk}}">{{modules.moduleTitle}}</a></td>
                             {% endfor %}
                         </tr>
                         <tr>

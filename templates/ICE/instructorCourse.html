@@ -20,12 +20,8 @@
     <div id="frame">
         <div id="left">
             <div id="leftHeader">
-                {% for c in course %}
-                    <h1>{{c.courseName}}</h1>
-                {% endfor %}
-                {% for i in instructor %}
-                    <p>Course Instructor: {{i.firstName}} {{i.lastName}}</p>
-                {% endfor %} 
+                <h1>{{c.courseName}}</h1>
+                <p>Course Instructor: {{instructor.firstName}} {{instructor.lastName}}</p>
             </div>
 
             <div id="moduleList">
@@ -36,7 +32,7 @@
                             <td rowspan="2">icon</td>
                         </tr>
                         <tr>
-                            <td><a href ="../../instructorCourse/courseID={{modules.courseID}}&moduleID={{modules.pk}}">{{modules.moduleTitle}}</a></td>
+                            <td><a href ="../../instructorCourse/instructorID={{instructor.userID}}&courseID={{modules.courseID}}&moduleID={{modules.pk}}">{{modules.moduleTitle}}</a></td>
                         </tr>
                         <!-- <tr>
                             <td>Take end of module quiz</td>
@@ -47,9 +43,7 @@
         </div>
             
         <div id="right">
-            {% for c in course %}
-                <button type="button" onclick = "window.location.href = '../../addModule/{{c.pk}}';">Add Module</button>
-            {% endfor %}
+            <button type="button" onclick = "window.location.href = '../../addModule/instructorID={{instructor.userID}}&courseID={{course.pk}}';">Add Module</button>
             <button type="button" onclick = "window.location.href = '../../component/';">Add Component</button>
             {% for modules in title %} 
                 <button type="button" onclick = "window.location.href = '../../addModuleQuiz/{{modules.pk}}';">Add Quiz</button>

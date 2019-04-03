@@ -2,10 +2,12 @@
 <h1>Course List</h1>
 <ul>
     {% for course in courseDetails %}
-        {% for learner in learnerDetails %}
-            <li>
-                    <a href ="../../learnerCourse/courseID={{course.courseID}}&learnerID={{learner.userID}}/">{{course.courseID}} - {{course.courseName}}</a>
-            </li>
+        {% for m in currModules %}
+            {% if course.courseID|slugify == m.courseID|slugify %}
+                <li>
+                        <a href ="../../learnerCourse/learnerID={{learnerDetails.userID}}&courseID={{course.courseID}}&moduleID={{m.currentModule}}/">{{course.courseID}} - {{course.courseName}}</a>
+                </li>
+            {% endif %}
         {% endfor %}
     {% empty %}
         <li> No Courses yet.</li>
