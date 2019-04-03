@@ -1,0 +1,15 @@
+{% load static %}
+<h1>Course List</h1>
+<ul>
+    {% for course in all_courses %}
+        {% for m in currModules %}
+            {% if course.courseID|slugify == m.courseID|slugify %}
+                <li>
+                        <a href ="../../instructorCourse/instructorID={{learnerDetails.userID}}&courseID={{course.courseID}}&moduleID={{m.pk}}/">{{course.courseID}} - {{course.courseName}}</a>
+                </li>
+            {% endif %}
+        {% endfor %}
+    {% empty %}
+        <li> No Courses yet.</li>
+    {% endfor %}
+</ul>

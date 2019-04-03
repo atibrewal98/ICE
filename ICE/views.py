@@ -237,7 +237,7 @@ def component_list_view(request, module_ID):
     }
     return HttpResponse(template.render(context,request))
 
-def course_list_view(request, learner_ID):
+def course_learner_view(request, learner_ID):
     all_courses=LearnerTakesCourse.objects.filter(staffID = learner_ID)
     courseDetails = Course.objects.none()
     currModules = LearnerTakesCourse.objects.none()
@@ -249,10 +249,31 @@ def course_list_view(request, learner_ID):
         currModules=LearnerTakesCourse.objects.filter(courseID = str(c.courseID), staffID = learner_ID).union(currModules)
         # print(currModules)
 
-    template=loader.get_template("ICE/courseList.html")
+    template=loader.get_template("ICE/learnerCourseList.html")
     context ={
         'all_courses':all_courses,
         'courseDetails':courseDetails,
+        'learnerDetails':learnerDetails,
+		'currModules':currModules,
+    }
+    return HttpResponse(template.render(context,request))
+
+def course_instructor_view(request, instructor_id):
+    all_courses=Course.objects.filter(instructorID = instructor_id)
+    currModules = Module.objects.none()
+    #learnerDetails= Learner.objects.filter(userID=learner_ID)
+    learnerDetails= Instructor.objects.get(userID=instructor_id)
+    for c in all_courses:
+        # print(c.courseID)
+        currModule=Module.objects.filter(courseID = str(c.courseID))
+        for c in currModule:
+            currModules = Module.objects.filter(moduleID = c.moduleID).union(currModules)
+            break
+        # print(currModules)
+
+    template=loader.get_template("ICE/instructorCourseList.html")
+    context ={
+        'all_courses':all_courses,
         'learnerDetails':learnerDetails,
 		'currModules':currModules,
     }
