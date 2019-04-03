@@ -19,7 +19,7 @@ class QuizForm(forms.ModelForm):
 class ComponentForm(forms.ModelForm):
     class Meta:
         model=Component
-        fields=('componentID','moduleID','componentTitle','componentText','componentImage','orderNumber',)
+        fields=('componentTitle','componentText','componentImage','orderNumber',)
 
 #class SomeForm(forms.Form):
     #Q = Question.objects.filter(moduleID=1)

@@ -14,7 +14,7 @@ urlpatterns = [
     path('modules/', views.module_list_view),
     url(r'^addModule/instructorID=(?P<instructor_id>[0-9]+)&courseID=(?P<course_id>[0-9]+)/$', views.module_form),
     url(r'^addModuleQuiz/(?P<id>[0-9]+)/$',views.quiz_form),
-    path('component/',views.component_form),
+    url(r'^addComponent/instructorID=(?P<instructor_id>[0-9]+)&moduleID=(?P<module_id>[0-9]+)/',views.component_form),
     path('comp/', views.component),
     url(r'^modules_component/(?P<module_ID>[0-9]+)/$',views.component_list_view),
     url(r'^dashboard/learnerID=(?P<learner_ID>[0-9]+)/$',views.course_list_view),

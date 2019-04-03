@@ -55,12 +55,16 @@ def module_form(request,instructor_id,course_id):
 	module=Course.objects.filter(courseID=course_id)
 	return render(request,'form.html',{'form': form, 'course': module})
 
-def component_form(request):
+def component_form(request,instructor_id,module_id):
 
     if request.method == 'POST':
         form = ComponentForm(request.POST,request.FILES)
         if form.is_valid():
-            form.save()
+            instance=form.save(commit=False)
+            module=Module.objects.get(moduleID=module_id)
+            instance.moduleID=module
+            instance.save()
+            return redirect('../../instructorCourse/instructorID='+instructor_id+'&courseID=1'+'&moduleID='+module_id+'/')
     componentform=ComponentForm()
     return render(request, 'component.html', {'componentform': componentform})
 
@@ -195,7 +199,7 @@ def instructorCourseModuleView(request, instructor_ID,course_ID, module_ID):
     title = ''
     components = ''
     instructor=Instructor.objects.get(pk = course.instructorID)
-    title=Module.objects.filter(moduleID = module_ID)
+    title=Module.objects.get(moduleID = module_ID)
     components=Component.objects.filter(moduleID = module_ID)
     # components1=Component.objects.filter(componentID = 2)
     template=loader.get_template("ICE/instructorCourse.html")

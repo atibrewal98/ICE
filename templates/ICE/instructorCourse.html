@@ -44,11 +44,9 @@
             
         <div id="right">
             <button type="button" onclick = "window.location.href = '../../addModule/instructorID={{instructor.userID}}&courseID={{course.pk}}';">Add Module</button>
-            <button type="button" onclick = "window.location.href = '../../component/';">Add Component</button>
-            {% for modules in title %} 
-                <button type="button" onclick = "window.location.href = '../../addModuleQuiz/{{modules.pk}}';">Add Quiz</button>
-                <h1>{{modules.moduleTitle}}</h1>
-            {% endfor %}
+            <button type="button" onclick = "window.location.href = '../../addComponent/instructorID={{instructor.userID}}&moduleID={{title.pk}}';">Add Component</button>
+            <button type="button" onclick = "window.location.href = '../../addModuleQuiz/{{title.pk}}';">Add Quiz</button>
+            <h1>{{title.moduleTitle}}</h1>
             <table>
                 {% for com in components %}
                     <tr>Component {{com.orderNumber}} - {{com.componentTitle}}</tr>
