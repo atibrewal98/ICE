@@ -66,7 +66,7 @@ class Module(models.Model):
     moduleID = models.AutoField(primary_key = True)
     courseID = models.ForeignKey(Course, on_delete=models.CASCADE)
     moduleTitle = models.CharField(max_length=100)
-    orderNumber = models.IntegerField()
+    orderNumber = models.IntegerField(null = True)
     numOfComponents = models.IntegerField(default = 0)
     numOfQuestions = models.IntegerField(null = True, blank = True)
     passingMark = models.IntegerField(null = True, blank = True)
