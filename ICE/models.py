@@ -79,7 +79,7 @@ class Component(models.Model):
     componentTitle = models.CharField(max_length=100)
     componentText = models.CharField(max_length=100, null=True, blank = True)
     componentImage = models.ImageField(upload_to='images/',null=True, blank=True)
-    orderNumber = models.IntegerField()
+    orderNumber = models.IntegerField(null = True, blank = True)
     createdAt = models.DateField(auto_now=False, auto_now_add=True)
     updatedAt = models.DateField(auto_now=True)
     def __str__(self):

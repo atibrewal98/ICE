@@ -99,7 +99,30 @@ def component_form(request,instructor_id,module_id):
         if form.is_valid():
             instance=form.save(commit=False)
             module=Module.objects.get(moduleID=module_id)
+            module.numOfComponents = module.numOfComponents+1
+            module.save()
             instance.moduleID=module
+            if form.instance.orderNumber is None:
+                instance.orderNumber=module.numOfComponents
+            else:
+                components = Component.objects.filter(moduleID=module_id)
+                maxOrd = 0
+                sameOrd = 0
+                for c in components:
+                    if c.orderNumber > maxOrd:
+                        maxOrd = c.orderNumber
+                print(maxOrd)
+                if maxOrd < form.instance.orderNumber:
+                    instance.orderNumber=module.numOfComponents
+                for c in components:
+                    if c.orderNumber == form.instance.orderNumber:
+                        sameOrd = c.orderNumber
+                if sameOrd != 0:
+                    for c in components:
+                        if c.orderNumber >= sameOrd:
+                            com = Component.objects.get(componentID=c.componentID)
+                            com.orderNumber = com.orderNumber + 1
+                            com.save()
             instance.save()
             return redirect('../../instructorCourse/instructorID='+instructor_id+'&courseID=1'+'&moduleID='+module_id+'/')
     componentform=ComponentForm()
@@ -117,6 +140,7 @@ def component(request):
 
 def learnerModuleCourseView(request, course_ID, learner_ID, module_ID):
     all_modules=Module.objects.filter(courseID = course_ID)
+    all_modules = sorted(all_modules, key=operator.attrgetter('orderNumber'))
     course=Course.objects.filter(courseID = course_ID)
     instructor = ''
     title = ''
@@ -129,6 +153,7 @@ def learnerModuleCourseView(request, course_ID, learner_ID, module_ID):
         instructor=Instructor.objects.filter(pk = c.instructorID)
     title=Module.objects.filter(moduleID = module_ID)
     components=Component.objects.filter(moduleID = module_ID)
+    components = sorted(components, key=operator.attrgetter('orderNumber'))
     currModule=LearnerTakesCourse.objects.filter(courseID = course_ID, staffID = learner_ID)
     
     for m in currModule:
@@ -166,6 +191,7 @@ def instructorCourseModuleView(request, instructor_ID,course_ID, module_ID):
     instructor=Instructor.objects.get(pk = course.instructorID)
     title=Module.objects.get(moduleID = module_ID)
     components=Component.objects.filter(moduleID = module_ID)
+    components = sorted(components, key=operator.attrgetter('orderNumber'))
     template=loader.get_template("ICE/instructorCourse.html")
     context ={
         'all_modules':all_modules,
