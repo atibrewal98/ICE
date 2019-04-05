@@ -61,9 +61,31 @@ def module_form(request,instructor_id,course_id):
         if form.is_valid():
             instance=form.save(commit=False)
             course=Course.objects.get(courseID=course_id)
+            course.numOfModules = course.numOfModules+1
+            course.save()
             instance.courseID=course
             if form.instance.orderNumber is None:
-                instance.orderNumber=course.numOfModules+1
+                instance.orderNumber=course.numOfModules
+            else:
+                modules = Module.objects.filter(courseID=course_id)
+                maxOrd = 0
+                sameOrd = 0
+                for m in modules:
+                    if m.orderNumber > maxOrd:
+                        maxOrd = m.orderNumber
+                print(maxOrd)
+                if maxOrd < form.instance.orderNumber:
+                    instance.orderNumber=course.numOfModules
+                for m in modules:
+                    if m.orderNumber == form.instance.orderNumber:
+                        sameOrd = m.orderNumber
+                if sameOrd != 0:
+                    for m in modules:
+                        if m.orderNumber >= sameOrd:
+                            mod = Module.objects.get(moduleID=m.moduleID)
+                            mod.orderNumber = mod.orderNumber + 1
+                            mod.save()
+            
             instance.save()
             return redirect('../../instructorCourse/instructorID='+instructor_id+'&courseID='+course_id+'&moduleID='+str(instance.moduleID)+'/')
     form=ModuleForm()
