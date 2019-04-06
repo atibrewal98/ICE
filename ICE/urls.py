@@ -10,7 +10,7 @@ urlpatterns = [
     url(r'^learnerCourse/learnerID=(?P<learner_ID>[0-9]+)&courseID=(?P<course_ID>[0-9]+)&moduleID=(?P<module_ID>[0-9]+)/$',views.learnerModuleCourseView),
     url(r'^instructorCourse/instructorID=(?P<instructor_ID>[0-9]+)&courseID=(?P<course_ID>[0-9]+)&moduleID=(?P<module_ID>[0-9]+)/$',views.instructorCourseModuleView),
     url(r'^moduleQuiz/(?P<id>[0-9]+)/$', views.intructor_view_quiz),
-    path('category/', views.category_list_view),
+    url(r'category/categoryID=(?P<category_id>[0-9]+)/$', views.category_list_view),
     path('modules/', views.module_list_view),
     url(r'^addCourse/instructorID=(?P<instructor_id>[0-9]+)/$', views.course_form),
     url(r'^addModule/instructorID=(?P<instructor_id>[0-9]+)&courseID=(?P<course_id>[0-9]+)/$', views.module_form),
