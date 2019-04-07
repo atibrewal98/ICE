@@ -4,7 +4,7 @@ from django.views.generic.list import ListView
 from django.views.generic import View
 from django.template import loader
 from ICE.models import Module, Category, Component, Course, Instructor, LearnerTakesCourse, Learner, Question, User, Staff
-from .forms import ModuleForm,QuizForm, ComponentForm, UserForm, InviteForm, SignupFormInstructor, LearnerGetTokenForm#, SignupFormLearner  #SomeForm
+from .forms import ModuleForm,QuizForm, ComponentForm, UserForm, InviteForm, SignupFormInstructor, LearnerGetTokenForm, SignupFormLearner  #SomeForm
 """
 FOR AUTHENTICATION
 """
