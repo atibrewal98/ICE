@@ -276,9 +276,11 @@ def intructor_view_quiz(request, id):
 
 def courseDescriptionView(request, course_id):
     courseDetails = Course.objects.get(courseID=course_id)
-    template = loader.get_template("ICE/question_list.html")
+    instructorDetails = Instructor.objects.get(userID=str(courseDetails.instructorID))
+    template = loader.get_template("ICE/courseDescription.html")
     context = {
         'courseDetails': courseDetails,
+        'instructorDetails': instructorDetails,
     }
     return HttpResponse(template.render(context, request))
 

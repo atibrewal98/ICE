@@ -25,7 +25,7 @@ class Instructor(User):
     #instructorID = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
     biography = models.CharField(max_length=250)
     def __str__(self):
-        return self.firstName + " " + self.lastName
+        return str(self.userID)
 
 class Category(models.Model):
     categoryID = models.AutoField(primary_key = True)
