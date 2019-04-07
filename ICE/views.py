@@ -204,9 +204,18 @@ def instructorCourseModuleView(request, instructor_ID,course_ID, module_ID):
 
 def category_list_view(request, category_id, learner_id):
     all_categories=Category.objects.all()
+    all_learnerCourses=LearnerTakesCourse.objects.filter(staffID=learner_id)
+    courseList = Course.objects.none()
     if category_id == '0':
-        # print(category_id)
-        courseList=Course.objects.all()
+        courses=Course.objects.all()
+        for lc in all_learnerCourses:
+            flag = True
+            for c in courses:
+                if(str(lc.courseID) == str(c.courseID)):
+                    flag = False
+                    break
+            if(flag):
+                courseList = Course.objects.filter(courseID = str(lc.courseID)).union(courseList)
         learnerDetails=Learner.objects.get(userID=learner_id)
         template=loader.get_template("ICE/category.html")
         context ={
@@ -216,7 +225,15 @@ def category_list_view(request, category_id, learner_id):
             'learnerDetails': learnerDetails,
         }
         return HttpResponse(template.render(context,request))
-    courseList=Course.objects.filter(categoryID = category_id)
+    courses=Course.objects.filter(categoryID = category_id)
+    for c in courses:
+        flag = True
+        for lc in all_learnerCourses:
+            if(str(lc.courseID) == str(c.courseID)):
+                flag = False
+                break
+        if(flag):
+            courseList = Course.objects.filter(courseID = str(c.courseID)).union(courseList)
     categoryCurr=Category.objects.get(categoryID=category_id)
     learnerDetails=Learner.objects.get(userID=learner_id)
     template=loader.get_template("ICE/category.html")
