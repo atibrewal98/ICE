@@ -24,6 +24,10 @@
             </div>
 
             <div id="categoryList">
+                <tr>
+                    <td><a href ="../../category/learnerID={{learnerDetails.userID}}&categoryID=0">All Categories</a></td>
+                    <!-- <td rowspan="2">icon</td> -->
+                </tr>
                 <table>
                     {% for category in all_categories %}
                         <tr>
@@ -45,7 +49,7 @@
             <!-- <button type="button" onclick = "window.location.href = '../../addModule/instructorID={{instructor.userID}}&courseID={{course.pk}}';">Add Module</button>
             <button type="button" onclick = "window.location.href = '../../addComponent/instructorID={{instructor.userID}}&moduleID={{title.pk}}';">Add Component</button>
             <button type="button" onclick = "window.location.href = '../../addModuleQuiz/{{title.pk}}';">Add Quiz</button> -->
-            <h1>Courses for {{categoryCurr.categoryName}}</h1>
+            <h1>Courses for {{categoryCurr}}</h1>
             <table>
                 {% for course in courseList %}
                 <tr>

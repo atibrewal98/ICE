@@ -204,6 +204,18 @@ def instructorCourseModuleView(request, instructor_ID,course_ID, module_ID):
 
 def category_list_view(request, category_id, learner_id):
     all_categories=Category.objects.all()
+    if category_id == '0':
+        # print(category_id)
+        courseList=Course.objects.all()
+        learnerDetails=Learner.objects.get(userID=learner_id)
+        template=loader.get_template("ICE/category.html")
+        context ={
+            'all_categories':all_categories,
+            'courseList': courseList,
+            'categoryCurr': 'All Categories',
+            'learnerDetails': learnerDetails,
+        }
+        return HttpResponse(template.render(context,request))
     courseList=Course.objects.filter(categoryID = category_id)
     categoryCurr=Category.objects.get(categoryID=category_id)
     learnerDetails=Learner.objects.get(userID=learner_id)
@@ -211,7 +223,7 @@ def category_list_view(request, category_id, learner_id):
     context ={
         'all_categories':all_categories,
         'courseList': courseList,
-        'categoryCurr': categoryCurr,
+        'categoryCurr': categoryCurr.categoryName,
         'learnerDetails': learnerDetails,
     }
     return HttpResponse(template.render(context,request))
