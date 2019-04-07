@@ -44,7 +44,7 @@
         <div id="right">
             <form method="post">
                 {% csrf_token %}
-                <button>Enroll Course</button>
+                <button>{{type}}</button>
             </form>
             <h1>{{courseDetails.courseName}}</h1>
             <h4>Course Instructor: {{instructorDetails.firstName}} {{instructorDetails.lastName}}</h4>
