@@ -48,7 +48,9 @@
             <h1>Courses for {{categoryCurr.categoryName}}</h1>
             <table>
                 {% for course in courseList %}
+                <tr>
                     <td>{{course.courseName}}</td>
+                </tr>
                 {% endfor %}
             </table>
         </div>
