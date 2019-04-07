@@ -1,5 +1,5 @@
 from django.urls import path
-from django.conf.urls import url
+from django.conf.urls import url, include
 
 from . import views
 
@@ -20,5 +20,10 @@ urlpatterns = [
     url(r'^dashboard/learnerID=(?P<learner_ID>[0-9]+)/$',views.course_learner_view),
     url(r'^instructorDashboard/instructorID=(?P<instructor_id>[0-9]+)/$',views.course_instructor_view),
     url(r'^quizform/$', views.some_view),
-	url(r'^register/$', views.UserFormView.as_view(), name='register')
+    path('accounts/', include('django.contrib.auth.urls')),
+
+	# url(r'^register/$', views.UserFormView.as_view(), name='register')
+    #path('invite/', views.invite, name='invite'),
+    #path('signup/<uidb64>/<token>', views.signup, name='signup'),
+
 ]
