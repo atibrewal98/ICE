@@ -23,7 +23,8 @@ urlpatterns = [
     path('accounts/', include('django.contrib.auth.urls')),
     url(r'login_success/$', views.login_success, name='login_success'),
 	# url(r'^register/$', views.UserFormView.as_view(), name='register')
-    path('invite/', views.invite, name='invite'),
+    path('invite/', views.invite, name='invite'), #for admin to invite instructors
+    path('learner_get_token/', views.learner_get_token, name='learner_get_token'), #for learner to get token
     path('signup/<uidb64>/<token>', views.signup, name='signup'),
 
 ]

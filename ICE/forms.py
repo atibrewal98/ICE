@@ -30,6 +30,17 @@ class SignupFormInstructor(forms.ModelForm):
         fields = ('userName', 'firstName', 'lastName', 'biography', 'password')
 
 
+class SignupFormInstructor(forms.ModelForm):
+    firstName = forms.CharField(max_length=30, required=True)
+    lastName = forms.CharField(max_length=30, required=True)
+    userName = forms.CharField(max_length=30, required=True)
+    password = forms.CharField(max_length=50, required = True)
+    class Meta:
+        model = Learner
+        fields = ('userName', 'firstName', 'lastName', 'password')
+
+
+
 
 class UserForm(forms.ModelForm):
     class Meta:

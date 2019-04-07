@@ -3,7 +3,7 @@ from django.contrib.auth import authenticate, login
 from django.views.generic.list import ListView
 from django.views.generic import View
 from django.template import loader
-from ICE.models import Module, Category, Component, Course, Instructor, LearnerTakesCourse, Learner, Question, User
+from ICE.models import Module, Category, Component, Course, Instructor, LearnerTakesCourse, Learner, Question, User, Staff
 from .forms import ModuleForm,QuizForm, ComponentForm, UserForm, InviteForm, SignupFormInstructor#, SignupFormLearner  #SomeForm
 """
 FOR AUTHENTICATION
@@ -320,8 +320,8 @@ def signup(request, uidb64, token):
     
     if user.role == User.INSTRUCTOR:
         SignupForm = SignupFormInstructor
-    # else:
-    #     SignupForm = SignupFormLearner
+    else:
+         SignupForm = SignupFormLearner
 
     if request.method == 'POST':
         form = SignupForm(request.POST)
@@ -347,7 +347,41 @@ def signup(request, uidb64, token):
             form = SignupForm()    
     return render(request, 'ICE/signup.html', {'title': "Sign Up", 'form': form})
 
+def learner_get_token(request):
+    if request.method == 'POST':
+        form = LearnerGetTokenForm(request.POST)
+        if form.is_valid():
+            user = Learner(
+                emailID = form.cleaned_data.get('emailID'),
+                # username = 'n',
+                role = 1,
+                is_active = False
+            )
+            user.save()
 
+            email = EmailMessage(
+                'Sign up for your ICE Account',
+                render_to_string('ICE/send_email.html', {
+                    'domain': get_current_site(request).domain,
+                    'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+                    'token': account_activation_token.make_token(user),
+                }),
+                to=[form.cleaned_data.get('emailID')]
+            )
+
+            # subject = "ICE Instructor Registration Token"
+            # message = "".format()
+
+
+            email.send()
+            context={
+                #'sidebar': access[request.user.role],
+                'message': "Registration invite has been sent to " + user.emailID + "."
+            }
+            return render(request, 'ICE/message.html', context)
+    else:
+        form = InviteForm()
+    return render(request, 'ICE/signup.html', {'title':'Invite Users','form':form})
     
 
 '''

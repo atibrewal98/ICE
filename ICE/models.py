@@ -60,8 +60,8 @@ class User(AbstractBaseUser):
     emailID = models.EmailField(max_length=50, null=True, unique = True)
     userName = models.CharField(max_length=50, unique=True, null = True)
     password = models.CharField(max_length=50, null = True)
-    is_staff = models.BooleanField(default=False)
-    is_active = models.BooleanField(default=False)
+    is_staff = models.BooleanField(default=False) #for django admin
+    is_active = models.BooleanField(default=False) #for django admin
     role = models.PositiveSmallIntegerField(choices=ROLE_CHOICES, null=True)
 
     USERNAME_FIELD = 'emailID'
@@ -76,13 +76,22 @@ class User(AbstractBaseUser):
     def has_module_perms(self, app_label):
         return True
 
-    
+class Staff(models.Model):
+    staffID = models.AutoField(primary_key = True)
+    emailID = models.EmailField(max_length=50, null=True, unique = True)
+    firstName = models.CharField(max_length=50, null=True)
+    lastName = models.CharField(max_length=50, null = True)
+
 class Learner(User):
     #learnerID = models.AutoField(primary_key = True)
     #staffID = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
     totalCECU = models.PositiveIntegerField(default=0)
+    staff = models.OneToOneField(Staff, on_delete=models.CASCADE)
+    
     def __str__(self):
         return str(self.userID)
+
+
 
 class Instructor(User):
     #instructorID = models.AutoField(primary_key = True)
