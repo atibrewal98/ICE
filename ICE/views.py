@@ -208,14 +208,14 @@ def category_list_view(request, category_id, learner_id):
     courseList = Course.objects.none()
     if category_id == '0':
         courses=Course.objects.all()
-        for lc in all_learnerCourses:
+        for c in courses:
             flag = True
-            for c in courses:
+            for lc in all_learnerCourses:
                 if(str(lc.courseID) == str(c.courseID)):
                     flag = False
                     break
             if(flag):
-                courseList = Course.objects.filter(courseID = str(lc.courseID)).union(courseList)
+                courseList = Course.objects.filter(courseID = str(c.courseID)).union(courseList)
         learnerDetails=Learner.objects.get(userID=learner_id)
         template=loader.get_template("ICE/category.html")
         context ={
