@@ -202,15 +202,17 @@ def instructorCourseModuleView(request, instructor_ID,course_ID, module_ID):
     }
     return HttpResponse(template.render(context,request))
 
-def category_list_view(request, category_id):
+def category_list_view(request, category_id, learner_id):
     all_categories=Category.objects.all()
     courseList=Course.objects.filter(categoryID = category_id)
     categoryCurr=Category.objects.get(categoryID=category_id)
+    learnerDetails=Learner.objects.get(userID=learner_id)
     template=loader.get_template("ICE/category.html")
     context ={
         'all_categories':all_categories,
         'courseList': courseList,
         'categoryCurr': categoryCurr,
+        'learnerDetails': learnerDetails,
     }
     return HttpResponse(template.render(context,request))
 
@@ -277,9 +279,11 @@ def intructor_view_quiz(request, id):
 def courseDescriptionView(request, course_id, learner_id):
 
     if request.method == 'POST':
-        if(LearnerTakesCourse.objects.get(staffID=learner_id, courseID=course_id) is not None):
-            learnerCourse = LearnerTakesCourse.objects.get(staffID=learner_id, courseID=course_id)
-            return redirect('../../learnerCourse/learnerID='+learner_id+'&courseID='+course_id+'&moduleID='+str(learnerCourse.currentModule)+'/')
+        learnerC = LearnerTakesCourse.objects.all()
+        for l in learnerC:
+            if(str(l.courseID) == str(course_id) and str(l.staffID) == str(learner_id)):
+                learnerCourse = LearnerTakesCourse.objects.get(staffID=learner_id, courseID=course_id)
+                return redirect('../../learnerCourse/learnerID='+learner_id+'&courseID='+course_id+'&moduleID='+str(learnerCourse.currentModule)+'/')
         courseDet = Course.objects.get(courseID=course_id)
         courseDet.currentEnrolled = courseDet.currentEnrolled+1
         courseDet.totalEnrolled = courseDet.totalEnrolled+1
@@ -294,7 +298,12 @@ def courseDescriptionView(request, course_id, learner_id):
     courseDetails = Course.objects.get(courseID=course_id)
     instructorDetails = Instructor.objects.get(userID=str(courseDetails.instructorID))
     template = loader.get_template("ICE/courseDescription.html")
-    if(LearnerTakesCourse.objects.get(staffID=learner_id, courseID=course_id) is not None):
+    learnerC = LearnerTakesCourse.objects.all()
+    flag = True
+    for l in learnerC:
+        if(str(l.courseID) == str(course_id) and str(l.staffID) == str(learner_id)):
+            flag = False
+    if(flag == False):
         context = {
             'courseDetails': courseDetails,
             'instructorDetails': instructorDetails,
