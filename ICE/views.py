@@ -6,6 +6,7 @@ from django.template import loader
 from ICE.models import Module, Category, Component, Course, Instructor, LearnerTakesCourse, Learner, Question
 from .forms import ModuleForm,QuizForm, ComponentForm, UserForm #SomeForm
 
+from django.shortcuts import redirect
 class UserFormView(View):	
 	userform = UserForm
 	template = 'userform.html'
@@ -240,6 +241,16 @@ def some_view(request):
         form = SomeForm
 
     return render(request,'some_template.html', {'form':form, 'questions': questions })
+
+def login_success(request):
+    if request.user.role == 1:
+        #instructor
+        return redirect("course_instructor", instructor_id = user.userID)
+    elif request.user.role == 2:
+        #learner
+        return redirect("course_learner", learner_ID = user.userID)
+    else:
+        return redirect("/")
 
 
 '''

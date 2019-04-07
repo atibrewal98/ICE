@@ -46,6 +46,14 @@ class MyUserManager(BaseUserManager):
 
 
 class User(AbstractBaseUser):
+    ADMIN = 0
+    INSTRUCTOR = 1
+    LEARNER = 2
+    ROLE_CHOICES = (
+        (ADMIN, 'Admin'),
+        (INSTRUCTOR, 'Instructor'),
+        (LEARNER, 'Learner'),
+    )
     userID = models.AutoField(primary_key=True)
     firstName = models.CharField(max_length=50, null=True)
     lastName = models.CharField(max_length=50, null = True)
@@ -54,6 +62,8 @@ class User(AbstractBaseUser):
     password = models.CharField(max_length=50, null = True)
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=False)
+    role = models.PositiveSmallIntegerField(choices=ROLE_CHOICES, null=True)
+
     USERNAME_FIELD = 'emailID'
     REQUIRED_FIELDS = []
 
