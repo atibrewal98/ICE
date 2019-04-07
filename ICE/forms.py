@@ -26,14 +26,14 @@ class ComponentForm(forms.ModelForm):
         model=Component
         fields=('componentTitle','componentText','componentImage','orderNumber',)
 
-class SomeForm(forms.Form):
-    Q = Question.objects.filter(moduleID=1)
-    CHOICES=[]
-    for q in Q:
-        CHOICES.append(('1', q.qOption1))
-        CHOICES.append(('2', q.qOption2))
-        CHOICES.append(('3', q.qOption3))
-        CHOICES.append(('4', q.qOption4))
-        choices = forms.MultipleChoiceField(choices=CHOICES, widget=forms.CheckboxSelectMultiple())
-        correct=q.answer
-        CHOICES = []
+# class SomeForm(forms.Form):
+#     Q = Question.objects.filter(moduleID=1)
+#     CHOICES=[]
+#     for q in Q:
+#         CHOICES.append(('1', q.qOption1))
+#         CHOICES.append(('2', q.qOption2))
+#         CHOICES.append(('3', q.qOption3))
+#         CHOICES.append(('4', q.qOption4))
+#         choices = forms.MultipleChoiceField(choices=CHOICES, widget=forms.CheckboxSelectMultiple())
+#         correct=q.answer
+#         CHOICES = []

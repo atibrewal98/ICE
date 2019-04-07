@@ -205,10 +205,12 @@ def instructorCourseModuleView(request, instructor_ID,course_ID, module_ID):
 def category_list_view(request, category_id):
     all_categories=Category.objects.all()
     courseList=Course.objects.filter(categoryID = category_id)
+    categoryCurr=Category.objects.get(categoryID=category_id)
     template=loader.get_template("ICE/category.html")
     context ={
         'all_categories':all_categories,
         'courseList': courseList,
+        'categoryCurr': categoryCurr,
     }
     return HttpResponse(template.render(context,request))
 
