@@ -42,9 +42,10 @@
         </div> -->
             
         <div id="right">
-            <button type="button" onclick = "window.location.href = '../../addModule/instructorID={{instructor.userID}}&courseID={{course.pk}}';">Add Module</button>
-            <button type="button" onclick = "window.location.href = '../../addComponent/instructorID={{instructor.userID}}&moduleID={{title.pk}}';">Add Component</button>
-            <button type="button" onclick = "window.location.href = '../../addModuleQuiz/{{title.pk}}';">Add Quiz</button>
+            <form method="post">
+                {% csrf_token %}
+                <button>Enroll Course</button>
+            </form>
             <h1>{{courseDetails.courseName}}</h1>
             <h4>Course Instructor: {{instructorDetails.firstName}} {{instructorDetails.lastName}}</h4>
             <h2>Course Description:</h2>

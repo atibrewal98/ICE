@@ -274,7 +274,25 @@ def intructor_view_quiz(request, id):
     }
     return HttpResponse(template.render(context, request))
 
-def courseDescriptionView(request, course_id):
+def courseDescriptionView(request, course_id, learner_id):
+
+    if request.method == 'POST':
+        courseDet = Course.objects.get(courseID=course_id)
+        courseDet.currentEnrolled = courseDet.currentEnrolled+1
+        courseDet.totalEnrolled = courseDet.totalEnrolled+1
+        courseDet.save()
+        print(type(courseDet))
+        learnerCourseDet = LearnerTakesCourse()
+        print(type(learnerCourseDet))
+        if(LearnerTakesCourse.objects.get(staffID=learner_id, courseID=course_id) is not None):
+            learnerCourse = LearnerTakesCourse.objects.get(staffID=learner_id, courseID=course_id)
+            return redirect('../../learnerCourse/learnerID='+learner_id+'&courseID='+course_id+'&moduleID='+learnerCourse.currentModule+'/')
+        learnerCourseDet.staffID = Learner.objects.get(userID=learner_id)
+        learnerCourseDet.courseID = Course.objects.get(courseID=course_id)
+        learnerCourseDet.completeStatus = 'N'
+        learnerCourseDet.currentModule = 1
+        learnerCourseDet.save()
+        return redirect('../../learnerCourse/learnerID='+learner_id+'&courseID='+course_id+'&moduleID=1/')
     courseDetails = Course.objects.get(courseID=course_id)
     instructorDetails = Instructor.objects.get(userID=str(courseDetails.instructorID))
     template = loader.get_template("ICE/courseDescription.html")
