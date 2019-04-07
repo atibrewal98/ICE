@@ -4,7 +4,7 @@ from django.views.generic.list import ListView
 from django.views.generic import View
 from django.template import loader
 from ICE.models import Module, Category, Component, Course, Instructor, LearnerTakesCourse, Learner, Question, User, Staff
-from .forms import ModuleForm,QuizForm, ComponentForm, UserForm, InviteForm, SignupFormInstructor#, SignupFormLearner  #SomeForm
+from .forms import ModuleForm,QuizForm, ComponentForm, UserForm, InviteForm, SignupFormInstructor, LearnerGetTokenForm#, SignupFormLearner  #SomeForm
 """
 FOR AUTHENTICATION
 """
@@ -380,8 +380,8 @@ def learner_get_token(request):
             }
             return render(request, 'ICE/message.html', context)
     else:
-        form = InviteForm()
-    return render(request, 'ICE/signup.html', {'title':'Invite Users','form':form})
+        form = LearnerGetTokenForm()
+    return render(request, 'ICE/signup.html', {'title':'Get Learner Token','form':form})
     
 
 '''

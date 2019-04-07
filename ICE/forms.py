@@ -4,19 +4,16 @@ from django.contrib.auth.forms import UserCreationForm
 
 class InviteForm(forms.Form):
     emailID = forms.EmailField(max_length=200, help_text='Required')
-
     def clean_email(self):
         # Get the email
         emailID = self.cleaned_data.get('emailID')
-
-        # Check to see if any users already exist with this email as a username.
+        # Check to see if there's any user with the same email.
         try:
             match = User.objects.get(emailID=emailID)
         except User.DoesNotExist:
-            # Unable to find a user, this is fine
+            # no duplicates 
             return emailID
-
-        # A user was found with this as a username, raise an error.
+        # duplicate exists - raise an error.
         raise forms.ValidationError('This email address is already in use.')
 
 class SignupFormInstructor(forms.ModelForm):
@@ -30,15 +27,16 @@ class SignupFormInstructor(forms.ModelForm):
         fields = ('userName', 'firstName', 'lastName', 'biography', 'password')
 
 
-class SignupFormInstructor(forms.ModelForm):
-    firstName = forms.CharField(max_length=30, required=True)
-    lastName = forms.CharField(max_length=30, required=True)
+class SignupFormLearner(forms.ModelForm):
     userName = forms.CharField(max_length=30, required=True)
     password = forms.CharField(max_length=50, required = True)
     class Meta:
         model = Learner
-        fields = ('userName', 'firstName', 'lastName', 'password')
+        fields = ('userName', 'password')
 
+class LearnerGetTokenForm(forms.Form):
+    staffID = forms.IntegerField(max_value=9999)
+    
 
 
 
