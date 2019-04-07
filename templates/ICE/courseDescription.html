@@ -1,0 +1,60 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="{% static 'scripts/styles.css' %}">
+<title>{{c.courseName}}</title>
+</head>
+<body>
+
+<div id="background">
+    <div id="navBar">
+            <ul>
+                <li><img src="{% static 'images/owl.png' %}"></li>
+                <li><a href="" class="navText">Dashboard</a></li>
+                <li><a href="#categories" class="navText">Categories</a></li>
+                <li class="right"><img src="{% static 'images/user.png' %}"></li>
+            </ul>
+    </div>
+        
+    <div id="frame">
+        <div id="left">
+            <div id="leftHeader">
+                <h1>Categories</h1>
+            </div>
+
+            <div id="categoryList">
+                <table>
+                    {% for category in all_categories %}
+                        <tr>
+                            <td><a href ="../../category/categoryID={{category.categoryID}}">{{category.categoryName}}</a></td>
+                            <!-- <td rowspan="2">icon</td> -->
+                        </tr>
+                        <!-- <tr>
+                            <td><a href ="../../instructorCourse/instructorID={{instructor.userID}}&courseID={{modules.courseID}}&moduleID={{modules.pk}}">{{modules.moduleTitle}}</a></td>
+                        </tr> -->
+                        <!-- <tr>
+                            <td>Take end of module quiz</td>
+                        </tr> -->
+                    {% endfor %}
+                </table>
+            </div>    
+        </div>
+            
+        <div id="right">
+            <!-- <button type="button" onclick = "window.location.href = '../../addModule/instructorID={{instructor.userID}}&courseID={{course.pk}}';">Add Module</button>
+            <button type="button" onclick = "window.location.href = '../../addComponent/instructorID={{instructor.userID}}&moduleID={{title.pk}}';">Add Component</button>
+            <button type="button" onclick = "window.location.href = '../../addModuleQuiz/{{title.pk}}';">Add Quiz</button> -->
+            <h1>Courses for {{categoryCurr.categoryName}}</h1>
+            <table>
+                {% for course in courseList %}
+                <tr>
+                    <td>{{course.courseName}}</td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>
