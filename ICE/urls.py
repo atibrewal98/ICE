@@ -21,9 +21,9 @@ urlpatterns = [
     url(r'^instructorDashboard/instructorID=(?P<instructor_id>[0-9]+)/$',views.course_instructor_view, name="course_instructor"),
     url(r'^quizform/$', views.some_view),
     path('accounts/', include('django.contrib.auth.urls')),
-    url(r'login_success/$', views.login_success, name='login_success')
+    url(r'login_success/$', views.login_success, name='login_success'),
 	# url(r'^register/$', views.UserFormView.as_view(), name='register')
-    #path('invite/', views.invite, name='invite'),
-    #path('signup/<uidb64>/<token>', views.signup, name='signup'),
+    path('invite/', views.invite, name='invite'),
+    path('signup/<uidb64>/<token>', views.signup, name='signup'),
 
 ]

@@ -1,6 +1,22 @@
 from django import forms
 from .models import Module, Component, Question, User
 
+class InviteForm(forms.Form):
+    emailID = forms.EmailField(max_length=200, help_text='Required')
+
+    def clean_email(self):
+        # Get the email
+        emailID = self.cleaned_data.get('emailID')
+
+        # Check to see if any users already exist with this email as a username.
+        try:
+            match = User.objects.get(emailID=emailID)
+        except User.DoesNotExist:
+            # Unable to find a user, this is fine
+            return emailID
+
+        # A user was found with this as a username, raise an error.
+        raise forms.ValidationError('This email address is already in use.')
 class UserForm(forms.ModelForm):
     class Meta:
         model=User

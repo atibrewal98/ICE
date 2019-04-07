@@ -3,10 +3,22 @@ from django.contrib.auth import authenticate, login
 from django.views.generic.list import ListView
 from django.views.generic import View
 from django.template import loader
-from ICE.models import Module, Category, Component, Course, Instructor, LearnerTakesCourse, Learner, Question
-from .forms import ModuleForm,QuizForm, ComponentForm, UserForm #SomeForm
-
+from ICE.models import Module, Category, Component, Course, Instructor, LearnerTakesCourse, Learner, Question, User
+from .forms import ModuleForm,QuizForm, ComponentForm, UserForm, InviteForm #SomeForm
+"""
+FOR AUTHENTICATION
+"""
+from django.contrib.auth.decorators import login_required
+from django.core.mail import EmailMessage, send_mail
+from django.conf import settings
+from django.template.loader import render_to_string
+from django.contrib.auth import login, authenticate
+from django.contrib.sites.shortcuts import get_current_site
+from django.utils.encoding import force_bytes, force_text
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.shortcuts import redirect
+from .tokens import account_activation_token
+
 class UserFormView(View):	
 	userform = UserForm
 	template = 'userform.html'
@@ -242,6 +254,9 @@ def some_view(request):
 
     return render(request,'some_template.html', {'form':form, 'questions': questions })
 
+"""
+FOR AUTHENTICATION
+"""
 def login_success(request):
     if request.user.role == 1:
         #instructor
@@ -252,6 +267,55 @@ def login_success(request):
     else:
         return redirect("/")
 
+@login_required
+# @admin_required
+def invite(request):
+    if request.method == 'POST':
+        form = InviteForm(request.POST)
+        if form.is_valid():
+            
+            user = User(
+                emailID = form.cleaned_data.get('emailID'),
+                # username = 'n',
+                is_active = False
+            )
+            user.save()
+
+            email = EmailMessage(
+                'Sign up for your ICE Account',
+                render_to_string('ICE/send_email.html', {
+                    'domain': get_current_site(request).domain,
+                    'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+                    'token': account_activation_token.make_token(user),
+                }),
+                to=[form.cleaned_data.get('emailID')]
+            )
+
+            # subject = "ICE Instructor Registration Token"
+            # message = "".format()
+
+
+            email.send()
+            context={
+                #'sidebar': access[request.user.role],
+                'message': "Registration invite has been sent to " + user.emailID + "."
+            }
+            return render(request, 'ICE/message.html', context)
+    else:
+        form = InviteForm()
+    return render(request, 'ICE/signup.html', {'title':'Invite Users','form':form})
+
+
+
+def signup(request, uidb64, token):
+    try:
+        uid = urlsafe_base64_decode(uid64).decode()
+        user = User.objects.get(pk=uid)
+    except(TypeError, ValueError, OverflowError, User.DoesNotExist):
+        context = {
+            'message': "Activation link is invalid!"
+        }
+    return render(request, 'message.html', context)
 
 '''
     Redundant Code
