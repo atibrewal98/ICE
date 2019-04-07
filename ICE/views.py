@@ -274,6 +274,14 @@ def intructor_view_quiz(request, id):
     }
     return HttpResponse(template.render(context, request))
 
+def courseDescriptionView(request, course_id):
+    courseDetails = Course.objects.get(courseID=course_id)
+    template = loader.get_template("ICE/question_list.html")
+    context = {
+        'courseDetails': courseDetails,
+    }
+    return HttpResponse(template.render(context, request))
+
 def some_view(request):
     questions=Question.objects.filter(moduleID=1)
     if request.method == 'POST':
