@@ -351,14 +351,27 @@ def learner_get_token(request):
     if request.method == 'POST':
         form = LearnerGetTokenForm(request.POST)
         if form.is_valid():
+            staffID = form.cleaned_data.get('staffID')
+            try:
+                staff = Staff.objects.get(staffID = staffID)
+            except:
+                context={
+                    'message': "StaffID is invalid! There's no staff record with the staffID you input."
+                }
+                return render(request, 'ICE/message.html', context)
+            staff_firstName = staff.firstName
+            staff_lastName = staff.lastName
+            staff_emailID = staff.emailID
+            # staff = Group
             user = Learner(
-                emailID = form.cleaned_data.get('emailID'),
-                # username = 'n',
-                role = 1,
+                emailID = staff_emailID,
+                staff = staff,
+                firstName = staff_firstName,
+                lastName = staff_lastName,
+                role = 2,
                 is_active = False
             )
             user.save()
-
             email = EmailMessage(
                 'Sign up for your ICE Account',
                 render_to_string('ICE/send_email.html', {
@@ -366,13 +379,10 @@ def learner_get_token(request):
                     'uid': urlsafe_base64_encode(force_bytes(user.pk)),
                     'token': account_activation_token.make_token(user),
                 }),
-                to=[form.cleaned_data.get('emailID')]
+                to=[staff_emailID]
             )
-
             # subject = "ICE Instructor Registration Token"
             # message = "".format()
-
-
             email.send()
             context={
                 #'sidebar': access[request.user.role],
