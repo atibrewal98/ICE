@@ -1,5 +1,6 @@
 from django import forms
-from .models import Module, Component, Question, User
+from .models import Module, Component, Question, User, Instructor, Learner
+from django.contrib.auth.forms import UserCreationForm
 
 class InviteForm(forms.Form):
     emailID = forms.EmailField(max_length=200, help_text='Required')
@@ -17,6 +18,19 @@ class InviteForm(forms.Form):
 
         # A user was found with this as a username, raise an error.
         raise forms.ValidationError('This email address is already in use.')
+
+class SignupFormInstructor(forms.ModelForm):
+    firstName = forms.CharField(max_length=30, required=True)
+    lastName = forms.CharField(max_length=30, required=True)
+    biography = forms.CharField(max_length=250, required=True)
+    userName = forms.CharField(max_length=30, required=True)
+    password = forms.CharField(max_length=50, required = True)
+    class Meta:
+        model = Instructor
+        fields = ('userName', 'firstName', 'lastName', 'biography', 'password')
+
+
+
 class UserForm(forms.ModelForm):
     class Meta:
         model=User
