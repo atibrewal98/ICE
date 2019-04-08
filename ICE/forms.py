@@ -11,6 +11,13 @@ class CourseForm(forms.ModelForm):
         model=Course
         fields=('categoryID','courseName','courseCECU','courseDescription',)
 
+    def __init__(self, *args, **kwargs):
+        super(CourseForm, self).__init__(*args, **kwargs)
+        self.fields['courseName'].widget.attrs['placeholder'] = 'Course Title'
+        self.fields['courseCECU'].widget.attrs['placeholder'] = 'CECU Value'
+        # not showing placeholder cecu as positive integer field instead of integer field
+        self.fields['courseDescription'].widget.attrs['placeholder'] = 'Course Description'
+
 class ModuleForm(forms.ModelForm):
     class Meta:
         model=Module
@@ -25,6 +32,13 @@ class ComponentForm(forms.ModelForm):
     class Meta:
         model=Component
         fields=('componentTitle','componentText','componentImage','orderNumber',)
+
+    def __init__(self, *args, **kwargs):
+        super(ComponentForm, self).__init__(*args, **kwargs)
+        self.fields['componentTitle'].widget.attrs['placeholder'] = 'Component Title'
+        self.fields['componentText'].widget.attrs['placeholder'] = 'Component Text Content'
+        # self.fields['componentImage'].widget.attrs['placeholder'] = 'No Image chosen'
+        self.fields['orderNumber'].widget.attrs['placeholder'] = 'Component#'
 
 # class SomeForm(forms.Form):
 #     Q = Question.objects.filter(moduleID=1)

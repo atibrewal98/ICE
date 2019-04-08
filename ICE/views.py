@@ -52,8 +52,8 @@ def course_form(request,instructor_id):
             instance.instructorID = instructor
             instance.save()
             return redirect('../../addModule/instructorID='+instructor_id+'&courseID='+str(instance.courseID)+'/')
-    form=CourseForm()
-    return render(request,'courseform.html',{'form': form})
+    form = CourseForm()
+    return render(request,'add_course.html',{'courseform': form})
 
 def module_form(request,instructor_id,course_id):
     if request.method=='POST':
