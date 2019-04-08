@@ -4,7 +4,8 @@ from django.views.generic.list import ListView
 from django.views.generic import View
 from django.template import loader
 from ICE.models import Module, Category, Component, Course, Instructor, LearnerTakesCourse, Learner, Question
-from .forms import ModuleForm,QuizForm, ComponentForm, UserForm #SomeForm
+from .forms import ModuleForm,QuizForm, ComponentForm, UserForm, CourseForm #SomeForm
+import operator
 
 class UserFormView(View):	
 	userform = UserForm
@@ -42,18 +43,54 @@ def quiz_form(request,id):
     module = Module.objects.filter(moduleID=id)
     return render(request, 'quizform.html', {'quizform': quizform, 'module': module})
 
+def course_form(request,instructor_id):
+    if request.method=='POST':
+        form = CourseForm(request.POST)
+        if form.is_valid():
+            instance =form.save(commit=False)
+            instructor=Instructor.objects.get(userID=instructor_id)
+            instance.instructorID = instructor
+            instance.save()
+            return redirect('../../addModule/instructorID='+instructor_id+'&courseID='+str(instance.courseID)+'/')
+    form=CourseForm()
+    return render(request,'courseform.html',{'form': form})
+
 def module_form(request,instructor_id,course_id):
-	if request.method=='POST':
-		form = ModuleForm(request.POST)
-		if form.is_valid():
-			instance=form.save(commit=False)
-			course=Course.objects.get(courseID=course_id)
-			instance.courseID=course
-			instance.save()
-			return redirect('../../instructorCourse/instructorID='+instructor_id+'&courseID='+course_id+'&moduleID=1/')
-	form=ModuleForm()
-	module=Course.objects.filter(courseID=course_id)
-	return render(request,'form.html',{'form': form, 'course': module})
+    if request.method=='POST':
+        form = ModuleForm(request.POST)
+        if form.is_valid():
+            instance=form.save(commit=False)
+            course=Course.objects.get(courseID=course_id)
+            course.numOfModules = course.numOfModules+1
+            course.save()
+            instance.courseID=course
+            if form.instance.orderNumber is None:
+                instance.orderNumber=course.numOfModules
+            else:
+                modules = Module.objects.filter(courseID=course_id)
+                maxOrd = 0
+                sameOrd = 0
+                for m in modules:
+                    if m.orderNumber > maxOrd:
+                        maxOrd = m.orderNumber
+                print(maxOrd)
+                if maxOrd < form.instance.orderNumber:
+                    instance.orderNumber=course.numOfModules
+                for m in modules:
+                    if m.orderNumber == form.instance.orderNumber:
+                        sameOrd = m.orderNumber
+                if sameOrd != 0:
+                    for m in modules:
+                        if m.orderNumber >= sameOrd:
+                            mod = Module.objects.get(moduleID=m.moduleID)
+                            mod.orderNumber = mod.orderNumber + 1
+                            mod.save()
+            
+            instance.save()
+            return redirect('../../instructorCourse/instructorID='+instructor_id+'&courseID='+course_id+'&moduleID='+str(instance.moduleID)+'/')
+    form=ModuleForm()
+    module=Course.objects.filter(courseID=course_id)
+    return render(request,'form.html',{'form': form, 'course': module})
 
 def component_form(request,instructor_id,module_id):
 
@@ -62,7 +99,30 @@ def component_form(request,instructor_id,module_id):
         if form.is_valid():
             instance=form.save(commit=False)
             module=Module.objects.get(moduleID=module_id)
+            module.numOfComponents = module.numOfComponents+1
+            module.save()
             instance.moduleID=module
+            if form.instance.orderNumber is None:
+                instance.orderNumber=module.numOfComponents
+            else:
+                components = Component.objects.filter(moduleID=module_id)
+                maxOrd = 0
+                sameOrd = 0
+                for c in components:
+                    if c.orderNumber > maxOrd:
+                        maxOrd = c.orderNumber
+                print(maxOrd)
+                if maxOrd < form.instance.orderNumber:
+                    instance.orderNumber=module.numOfComponents
+                for c in components:
+                    if c.orderNumber == form.instance.orderNumber:
+                        sameOrd = c.orderNumber
+                if sameOrd != 0:
+                    for c in components:
+                        if c.orderNumber >= sameOrd:
+                            com = Component.objects.get(componentID=c.componentID)
+                            com.orderNumber = com.orderNumber + 1
+                            com.save()
             instance.save()
             return redirect('../../instructorCourse/instructorID='+instructor_id+'&courseID=1'+'&moduleID='+module_id+'/')
     componentform=ComponentForm()
@@ -80,6 +140,7 @@ def component(request):
 
 def learnerModuleCourseView(request, course_ID, learner_ID, module_ID):
     all_modules=Module.objects.filter(courseID = course_ID)
+    all_modules = sorted(all_modules, key=operator.attrgetter('orderNumber'))
     course=Course.objects.filter(courseID = course_ID)
     instructor = ''
     title = ''
@@ -92,7 +153,7 @@ def learnerModuleCourseView(request, course_ID, learner_ID, module_ID):
         instructor=Instructor.objects.filter(pk = c.instructorID)
     title=Module.objects.filter(moduleID = module_ID)
     components=Component.objects.filter(moduleID = module_ID)
-    # components1=Component.objects.filter(componentID = 2)
+    components = sorted(components, key=operator.attrgetter('orderNumber'))
     currModule=LearnerTakesCourse.objects.filter(courseID = course_ID, staffID = learner_ID)
     
     for m in currModule:
@@ -117,12 +178,12 @@ def learnerModuleCourseView(request, course_ID, learner_ID, module_ID):
         'left_Modules':left_Modules,
         'done_Modules':done_Modules,
         'currModule':curr_Modules,
-        # 'components1': components1,
     }
     return HttpResponse(template.render(context,request))
 
 def instructorCourseModuleView(request, instructor_ID,course_ID, module_ID):
     all_modules=Module.objects.filter(courseID = course_ID)
+    all_modules = sorted(all_modules, key=operator.attrgetter('orderNumber'))
     course=Course.objects.get(courseID = course_ID)
     instructor = ''
     title = ''
@@ -130,7 +191,7 @@ def instructorCourseModuleView(request, instructor_ID,course_ID, module_ID):
     instructor=Instructor.objects.get(pk = course.instructorID)
     title=Module.objects.get(moduleID = module_ID)
     components=Component.objects.filter(moduleID = module_ID)
-    # components1=Component.objects.filter(componentID = 2)
+    components = sorted(components, key=operator.attrgetter('orderNumber'))
     template=loader.get_template("ICE/instructorCourse.html")
     context ={
         'all_modules':all_modules,
@@ -138,15 +199,49 @@ def instructorCourseModuleView(request, instructor_ID,course_ID, module_ID):
         'instructor': instructor,
         'course': course,
         'components': components,
-        # 'components1': components1,
     }
     return HttpResponse(template.render(context,request))
 
-def category_list_view(request):
+def category_list_view(request, category_id, learner_id):
     all_categories=Category.objects.all()
+    all_learnerCourses=LearnerTakesCourse.objects.filter(staffID=learner_id)
+    courseList = Course.objects.none()
+    if category_id == '0':
+        courses=Course.objects.all()
+        for c in courses:
+            flag = True
+            for lc in all_learnerCourses:
+                if(str(lc.courseID) == str(c.courseID)):
+                    flag = False
+                    break
+            if(flag):
+                courseList = Course.objects.filter(courseID = str(c.courseID)).union(courseList)
+        learnerDetails=Learner.objects.get(userID=learner_id)
+        template=loader.get_template("ICE/category.html")
+        context ={
+            'all_categories':all_categories,
+            'courseList': courseList,
+            'categoryCurr': 'All Categories',
+            'learnerDetails': learnerDetails,
+        }
+        return HttpResponse(template.render(context,request))
+    courses=Course.objects.filter(categoryID = category_id)
+    for c in courses:
+        flag = True
+        for lc in all_learnerCourses:
+            if(str(lc.courseID) == str(c.courseID)):
+                flag = False
+                break
+        if(flag):
+            courseList = Course.objects.filter(courseID = str(c.courseID)).union(courseList)
+    categoryCurr=Category.objects.get(categoryID=category_id)
+    learnerDetails=Learner.objects.get(userID=learner_id)
     template=loader.get_template("ICE/category.html")
     context ={
         'all_categories':all_categories,
+        'courseList': courseList,
+        'categoryCurr': categoryCurr.categoryName,
+        'learnerDetails': learnerDetails,
     }
     return HttpResponse(template.render(context,request))
 
@@ -170,13 +265,10 @@ def course_learner_view(request, learner_ID):
     all_courses=LearnerTakesCourse.objects.filter(staffID = learner_ID)
     courseDetails = Course.objects.none()
     currModules = LearnerTakesCourse.objects.none()
-    #learnerDetails= Learner.objects.filter(userID=learner_ID)
     learnerDetails= Learner.objects.get(userID=learner_ID)
     for c in all_courses:
-        # print(c.courseID)
         courseDetails = Course.objects.filter(courseID = str(c.courseID)).union(courseDetails)
         currModules=LearnerTakesCourse.objects.filter(courseID = str(c.courseID), staffID = learner_ID).union(currModules)
-        # print(currModules)
 
     template=loader.get_template("ICE/learnerCourseList.html")
     context ={
@@ -190,15 +282,12 @@ def course_learner_view(request, learner_ID):
 def course_instructor_view(request, instructor_id):
     all_courses=Course.objects.filter(instructorID = instructor_id)
     currModules = Module.objects.none()
-    #learnerDetails= Learner.objects.filter(userID=learner_ID)
     learnerDetails= Instructor.objects.get(userID=instructor_id)
     for c in all_courses:
-        # print(c.courseID)
         currModule=Module.objects.filter(courseID = str(c.courseID))
         for c in currModule:
             currModules = Module.objects.filter(moduleID = c.moduleID).union(currModules)
             break
-        # print(currModules)
 
     template=loader.get_template("ICE/instructorCourseList.html")
     context ={
@@ -215,6 +304,48 @@ def intructor_view_quiz(request, id):
         'all_questions': all_questions,
     }
     return HttpResponse(template.render(context, request))
+
+def courseDescriptionView(request, course_id, learner_id):
+
+    if request.method == 'POST':
+        learnerC = LearnerTakesCourse.objects.all()
+        for l in learnerC:
+            if(str(l.courseID) == str(course_id) and str(l.staffID) == str(learner_id)):
+                learnerCourse = LearnerTakesCourse.objects.get(staffID=learner_id, courseID=course_id)
+                return redirect('../../learnerCourse/learnerID='+learner_id+'&courseID='+course_id+'&moduleID='+str(learnerCourse.currentModule)+'/')
+        courseDet = Course.objects.get(courseID=course_id)
+        courseDet.currentEnrolled = courseDet.currentEnrolled+1
+        courseDet.totalEnrolled = courseDet.totalEnrolled+1
+        courseDet.save()
+        learnerCourseDet = LearnerTakesCourse()
+        learnerCourseDet.staffID = Learner.objects.get(userID=learner_id)
+        learnerCourseDet.courseID = Course.objects.get(courseID=course_id)
+        learnerCourseDet.completeStatus = 'N'
+        learnerCourseDet.currentModule = 1
+        learnerCourseDet.save()
+        return redirect('../../learnerCourse/learnerID='+learner_id+'&courseID='+course_id+'&moduleID=1/')
+    courseDetails = Course.objects.get(courseID=course_id)
+    instructorDetails = Instructor.objects.get(userID=str(courseDetails.instructorID))
+    template = loader.get_template("ICE/courseDescription.html")
+    learnerC = LearnerTakesCourse.objects.all()
+    flag = True
+    for l in learnerC:
+        if(str(l.courseID) == str(course_id) and str(l.staffID) == str(learner_id)):
+            flag = False
+    if(flag == False):
+        context = {
+            'courseDetails': courseDetails,
+            'instructorDetails': instructorDetails,
+            'type': 'View Course',
+        }
+        return HttpResponse(template.render(context, request))
+    else:
+        context = {
+            'courseDetails': courseDetails,
+            'instructorDetails': instructorDetails,
+            'type': 'Enroll Course',
+        }
+        return HttpResponse(template.render(context, request))
 
 def some_view(request):
     questions=Question.objects.filter(moduleID=1)

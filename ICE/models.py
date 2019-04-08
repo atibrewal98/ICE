@@ -25,7 +25,7 @@ class Instructor(User):
     #instructorID = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
     biography = models.CharField(max_length=250)
     def __str__(self):
-        return self.firstName + " " + self.lastName
+        return str(self.userID)
 
 class Category(models.Model):
     categoryID = models.AutoField(primary_key = True)
@@ -66,7 +66,7 @@ class Module(models.Model):
     moduleID = models.AutoField(primary_key = True)
     courseID = models.ForeignKey(Course, on_delete=models.CASCADE)
     moduleTitle = models.CharField(max_length=100)
-    orderNumber = models.IntegerField()
+    orderNumber = models.IntegerField(null = True, blank = True)
     numOfComponents = models.IntegerField(default = 0)
     numOfQuestions = models.IntegerField(null = True, blank = True)
     passingMark = models.IntegerField(null = True, blank = True)
@@ -79,7 +79,7 @@ class Component(models.Model):
     componentTitle = models.CharField(max_length=100)
     componentText = models.CharField(max_length=100, null=True, blank = True)
     componentImage = models.ImageField(upload_to='images/',null=True, blank=True)
-    orderNumber = models.IntegerField()
+    orderNumber = models.IntegerField(null = True, blank = True)
     createdAt = models.DateField(auto_now=False, auto_now_add=True)
     updatedAt = models.DateField(auto_now=True)
     def __str__(self):
