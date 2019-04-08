@@ -165,11 +165,12 @@ class Question(models.Model):
         
     def get_options(self):
         choices=[]
-        choices.append((str(self.questionID)+'1',self.qOption1))
-        choices.append((str(self.questionID)+'2',self.qOption2))
-        choices.append((str(self.questionID)+'3',self.qOption3))
-        choices.append((str(self.questionID)+'4',self.qOption4))
+        choices.append(self.qOption1)
+        choices.append(self.qOption2)
+        choices.append(self.qOption3)
+        choices.append(self.qOption4)
         return choices
+
     def __str__(self):
         return self.questionStatement
 
