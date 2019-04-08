@@ -3,7 +3,7 @@
 <html>
 <head>
     <link rel="stylesheet" type="text/css" href="{% static 'scripts/styles.css' %}">
-<title>ICE</title>
+<title>{{c.courseName}}</title>
 </head>
 <body>
 
@@ -20,7 +20,7 @@
     <div id="frame">
         <div id="left">
             <div id="leftHeader">
-                <h1>{{c.courseName}}</h1>
+                <h1>{{course.courseName}}</h1>
                 <p>Course Instructor: {{instructor.firstName}} {{instructor.lastName}}</p>
             </div>
 
