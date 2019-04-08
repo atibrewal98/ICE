@@ -162,14 +162,6 @@ def component_form(request, module_id):
     form = ComponentForm()
     return render(request, 'add_component.html', {'componentform': form})
 
-def component(request):
-    component=Component.objects.all()
-    template=loader.get_template("ICE/component.html")
-    context ={
-        'component':component,
-    }
-    return HttpResponse(template.render(context,request))
-
 # Create your views here.
 
 @login_required
@@ -300,22 +292,6 @@ def category_list_view(request, category_id):
         'courseList': courseList,
         'categoryCurr': categoryCurr.categoryName,
         'learnerDetails': learnerDetails,
-    }
-    return HttpResponse(template.render(context,request))
-
-def module_list_view(request):
-    all_modules=Module.objects.all()
-    template=loader.get_template("ICE/module_List.html")
-    context ={
-        'all_modules':all_modules,
-    }
-    return HttpResponse(template.render(context,request))
-
-def component_list_view(request, module_ID):
-    all_components=Component.objects.filter(moduleID = module_ID)
-    template=loader.get_template("ICE/component_List.html")
-    context ={
-        'all_components':all_components,
     }
     return HttpResponse(template.render(context,request))
 
