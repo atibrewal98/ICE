@@ -263,6 +263,12 @@ def component_list_view(request, module_ID):
 
 @login_required
 def course_learner_view(request):
+    if request.user.role == 1:
+        context={
+            #'sidebar': access[request.user.role],
+            'message': "You do not have access to this page."
+        }
+        return render(request, 'ICE/message.html', context)
     learner_ID = request.user.userID
     all_courses=LearnerTakesCourse.objects.filter(staffID = learner_ID)
     courseDetails = Course.objects.none()

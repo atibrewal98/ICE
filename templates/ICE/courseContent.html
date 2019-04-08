@@ -77,7 +77,12 @@
         </div>
             
         <div id="right">
-            <button type="button" onclick="alert('Hello world!')">Course Info</button><button type="button" onclick="alert('Hello world!')">Drop Course</button>
+            {% for learner in learnerDetails %}
+                {% for c in course %}
+                    <button type="button" onclick="window.location.href = '../../courseDescription/learnerID={{learner.userID}}&courseID={{c.courseID}}'">Course Info</button>
+                {% endfor %}
+            {% endfor %}
+            <button type="button" onclick="alert('Hello world!')">Drop Course</button>
             {% for modules in title %}
                 <h1>{{modules.moduleTitle}}</h1>
             {% endfor %}
