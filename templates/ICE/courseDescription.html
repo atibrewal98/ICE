@@ -18,45 +18,47 @@
     </div>
         
     <div id="frame">
-        <div id="left">
+        <!-- <div id="left">
             <div id="leftHeader">
                 <h1>Categories</h1>
             </div>
 
             <div id="categoryList">
-                <tr>
-                    <td><a href ="../../category/learnerID={{learnerDetails.userID}}&categoryID=0">All Categories</a></td>
-                    <!-- <td rowspan="2">icon</td> -->
-                </tr>
                 <table>
                     {% for category in all_categories %}
                         <tr>
-                            <td><a href ="../../category/learnerID={{learnerDetails.userID}}&categoryID={{category.categoryID}}">{{category.categoryName}}</a></td>
-                            <!-- <td rowspan="2">icon</td> -->
+                            <td><a href ="../../category/categoryID={{category.categoryID}}">{{category.categoryName}}</a></td>
+                            <td rowspan="2">icon</td>
                         </tr>
-                        <!-- <tr>
+                        <tr>
                             <td><a href ="../../instructorCourse/instructorID={{instructor.userID}}&courseID={{modules.courseID}}&moduleID={{modules.pk}}">{{modules.moduleTitle}}</a></td>
-                        </tr> -->
-                        <!-- <tr>
+                        </tr>
+                        <tr>
                             <td>Take end of module quiz</td>
-                        </tr> -->
+                        </tr>
                     {% endfor %}
                 </table>
             </div>    
-        </div>
+        </div> -->
             
         <div id="right">
-            <!-- <button type="button" onclick = "window.location.href = '../../addModule/instructorID={{instructor.userID}}&courseID={{course.pk}}';">Add Module</button>
-            <button type="button" onclick = "window.location.href = '../../addComponent/instructorID={{instructor.userID}}&moduleID={{title.pk}}';">Add Component</button>
-            <button type="button" onclick = "window.location.href = '../../addModuleQuiz/{{title.pk}}';">Add Quiz</button> -->
-            <h1>Courses for {{categoryCurr}}</h1>
-            <table>
+            <form method="post">
+                {% csrf_token %}
+                <button>{{type}}</button>
+            </form>
+            <h1>{{courseDetails.courseName}}</h1>
+            <h4>Course Instructor: {{instructorDetails.firstName}} {{instructorDetails.lastName}}</h4>
+            <h2>Course Description:</h2>
+            <p>{{courseDetails.courseDescription}}</p>
+            <h3>Includes {{courseDetails.numOfModules}} & End-of-Module Quizzes</h3>
+            <h2>CECU Value: {{courseDetails.courseCECU}} Units</h2>
+            <!-- <table>
                 {% for course in courseList %}
                 <tr>
-                    <td><a href ="../../courseDescription/learnerID={{learnerDetails.userID}}&courseID={{course.courseID}}">{{course.courseName}}</a></td>
+                    <td>{{course.courseName}}</td>
                 </tr>
                 {% endfor %}
-            </table>
+            </table> -->
         </div>
     </div>
 </div>

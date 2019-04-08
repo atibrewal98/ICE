@@ -128,3 +128,11 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 
 AUTHENTICATION_BACKENDS = ( 'django.contrib.auth.backends.ModelBackend', )
+AUTH_USER_MODEL = 'ICE.User'
+LOGIN_REDIRECT_URL = 'login_success'
+LOGOUT_REDIRECT_URL = 'login'
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'dancingdinosonice@gmail.com'
+EMAIL_HOST_PASSWORD = 'dancing123!'
+EMAIL_PORT = 587
