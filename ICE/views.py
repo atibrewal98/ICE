@@ -385,7 +385,7 @@ def courseDescriptionView(request, course_id):
         for l in learnerC:
             if(str(l.courseID) == str(course_id) and str(l.staffID) == str(learner_id)):
                 learnerCourse = LearnerTakesCourse.objects.get(staffID=learner_id, courseID=course_id)
-                return redirect('../../learnerCourse/learnerID='+learner_id+'&courseID='+course_id+'&moduleID='+str(learnerCourse.currentModule)+'/')
+                return redirect('../../learnerCourse/courseID='+course_id+'&moduleID='+str(learnerCourse.currentModule)+'/')
         courseDet = Course.objects.get(courseID=course_id)
         courseDet.currentEnrolled = courseDet.currentEnrolled+1
         courseDet.totalEnrolled = courseDet.totalEnrolled+1
@@ -396,7 +396,7 @@ def courseDescriptionView(request, course_id):
         learnerCourseDet.completeStatus = 'N'
         learnerCourseDet.currentModule = 1
         learnerCourseDet.save()
-        return redirect('../../learnerCourse/learnerID='+learner_id+'&courseID='+course_id+'&moduleID=1/')
+        return redirect('../../learnerCourse/courseID='+course_id+'&moduleID=1/')
     courseDetails = Course.objects.get(courseID=course_id)
     instructorDetails = Instructor.objects.get(userID=str(courseDetails.instructorID))
     template = loader.get_template("ICE/courseDescription.html")

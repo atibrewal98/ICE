@@ -25,13 +25,13 @@
 
             <div id="categoryList">
                 <tr>
-                    <td><a href ="../../category/learnerID={{learnerDetails.userID}}&categoryID=0">All Categories</a></td>
+                    <td><a href ="../../category/categoryID=0">All Categories</a></td>
                     <!-- <td rowspan="2">icon</td> -->
                 </tr>
                 <table>
                     {% for category in all_categories %}
                         <tr>
-                            <td><a href ="../../category/learnerID={{learnerDetails.userID}}&categoryID={{category.categoryID}}">{{category.categoryName}}</a></td>
+                            <td><a href ="../../category/categoryID={{category.categoryID}}">{{category.categoryName}}</a></td>
                             <!-- <td rowspan="2">icon</td> -->
                         </tr>
                         <!-- <tr>
@@ -53,7 +53,7 @@
             <table>
                 {% for course in courseList %}
                 <tr>
-                    <td><a href ="../../courseDescription/learnerID={{learnerDetails.userID}}&courseID={{course.courseID}}">{{course.courseName}}</a></td>
+                    <td><a href ="../../courseDescription/courseID={{course.courseID}}">{{course.courseName}}</a></td>
                 </tr>
                 {% endfor %}
             </table>
