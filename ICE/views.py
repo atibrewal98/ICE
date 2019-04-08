@@ -43,7 +43,15 @@ def quiz_form(request,id):
     module = Module.objects.filter(moduleID=id)
     return render(request, 'quizform.html', {'quizform': quizform, 'module': module})
 
-def course_form(request,instructor_id):
+@login_required
+def course_form(request):
+    if request.user.role != 1:
+        context={
+            #'sidebar': access[request.user.role],
+            'message': "You do not have access to this page."
+        }
+        return render(request, 'ICE/message.html', context)
+    instructor_id = request.user.userID
     if request.method=='POST':
         form = CourseForm(request.POST)
         if form.is_valid():
@@ -55,7 +63,15 @@ def course_form(request,instructor_id):
     form = CourseForm()
     return render(request,'add_course.html',{'courseform': form})
 
-def module_form(request,instructor_id,course_id):
+@login_required
+def module_form(request, course_id):
+    if request.user.role != 1:
+        context={
+            #'sidebar': access[request.user.role],
+            'message': "You do not have access to this page."
+        }
+        return render(request, 'ICE/message.html', context)
+    instructor_id = request.user.userID
     if request.method=='POST':
         form = ModuleForm(request.POST)
         if form.is_valid():
@@ -92,8 +108,15 @@ def module_form(request,instructor_id,course_id):
     module=Course.objects.filter(courseID=course_id)
     return render(request,'add_module.html',{'moduleform': form, 'course': module})
 
-def component_form(request,instructor_id,module_id):
-
+@login_required
+def component_form(request, module_id):
+    if request.user.role != 1:
+        context={
+            #'sidebar': access[request.user.role],
+            'message': "You do not have access to this page."
+        }
+        return render(request, 'ICE/message.html', context)
+    instructor_id = request.user.userID
     if request.method == 'POST':
         form = ComponentForm(request.POST,request.FILES)
         if form.is_valid():
@@ -138,7 +161,15 @@ def component(request):
 
 # Create your views here.
 
-def learnerModuleCourseView(request, course_ID, learner_ID, module_ID):
+@login_required
+def learnerModuleCourseView(request, course_ID, module_ID):
+    if request.user.role != 2:
+        context={
+            #'sidebar': access[request.user.role],
+            'message': "You do not have access to this page."
+        }
+        return render(request, 'ICE/message.html', context)
+    learner_ID = request.user.userID
     all_modules=Module.objects.filter(courseID = course_ID)
     all_modules = sorted(all_modules, key=operator.attrgetter('orderNumber'))
     course=Course.objects.filter(courseID = course_ID)
@@ -181,7 +212,15 @@ def learnerModuleCourseView(request, course_ID, learner_ID, module_ID):
     }
     return HttpResponse(template.render(context,request))
 
-def instructorCourseModuleView(request, instructor_ID,course_ID, module_ID):
+@login_required
+def instructorCourseModuleView(request, course_ID, module_ID):
+    if request.user.role != 1:
+        context={
+            #'sidebar': access[request.user.role],
+            'message': "You do not have access to this page."
+        }
+        return render(request, 'ICE/message.html', context)
+    instructor_ID = request.user.userID
     all_modules=Module.objects.filter(courseID = course_ID)
     all_modules = sorted(all_modules, key=operator.attrgetter('orderNumber'))
     course=Course.objects.get(courseID = course_ID)
@@ -202,7 +241,15 @@ def instructorCourseModuleView(request, instructor_ID,course_ID, module_ID):
     }
     return HttpResponse(template.render(context,request))
 
-def category_list_view(request, category_id, learner_id):
+@login_required
+def category_list_view(request, category_id):
+    if request.user.role != 2:
+        context={
+            #'sidebar': access[request.user.role],
+            'message': "You do not have access to this page."
+        }
+        return render(request, 'ICE/message.html', context)
+    learner_id = request.user.userID
     all_categories=Category.objects.all()
     all_learnerCourses=LearnerTakesCourse.objects.filter(staffID=learner_id)
     courseList = Course.objects.none()
@@ -263,7 +310,7 @@ def component_list_view(request, module_ID):
 
 @login_required
 def course_learner_view(request):
-    if request.user.role == 1:
+    if request.user.role != 2:
         context={
             #'sidebar': access[request.user.role],
             'message': "You do not have access to this page."
@@ -287,7 +334,15 @@ def course_learner_view(request):
     }
     return HttpResponse(template.render(context,request))
 
-def course_instructor_view(request, instructor_id):
+@login_required
+def course_instructor_view(request):
+    if request.user.role != 1:
+        context={
+            #'sidebar': access[request.user.role],
+            'message': "You do not have access to this page."
+        }
+        return render(request, 'ICE/message.html', context)
+    instructor_id = request.user.userID
     all_courses=Course.objects.filter(instructorID = instructor_id)
     currModules = Module.objects.none()
     learnerDetails= Instructor.objects.get(userID=instructor_id)
@@ -313,8 +368,15 @@ def intructor_view_quiz(request, id):
     }
     return HttpResponse(template.render(context, request))
 
-def courseDescriptionView(request, course_id, learner_id):
-
+@login_required
+def courseDescriptionView(request, course_id):
+    if request.user.role != 2:
+        context={
+            #'sidebar': access[request.user.role],
+            'message': "You do not have access to this page."
+        }
+        return render(request, 'ICE/message.html', context)
+    learner_id = request.user.userID
     if request.method == 'POST':
         learnerC = LearnerTakesCourse.objects.all()
         for l in learnerC:
@@ -362,7 +424,7 @@ FOR AUTHENTICATION
 def login_success(request):
     if request.user.role == 1:
         #instructor
-        return redirect("course_instructor", instructor_id = request.user.userID)
+        return redirect("course_instructor")
     elif request.user.role == 2:
         #learner
         return redirect("course_learner")
