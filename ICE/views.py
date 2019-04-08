@@ -5,7 +5,7 @@ from django.views.generic import View
 from django.template import loader
 
 from ICE.models import Module, Category, Component, Course, Instructor, LearnerTakesCourse, Learner, Question, User, Staff
-from .forms import ModuleForm,QuizForm, ComponentForm, UserForm, InviteForm, SignupFormInstructor, LearnerGetTokenForm, SignupFormLearner, CourseForm
+from .forms import ModuleForm,QuizForm, ComponentForm, UserForm, InviteForm, SignupFormInstructor, LearnerGetTokenForm, SignupFormLearner, CourseForm, QuestionForm
 import operator
 
 """
@@ -30,7 +30,7 @@ def learner_quiz(request, learner_ID, q_ID):
             choices = form.cleaned_data.get('answers')
             print(choices)
     form=QuestionForm(Question.objects.get(questionID=q_ID))
-    return render(request,'some_template.html',{'form':form})
+    return render(request,'quiz_template.html',{'form':form})
 
 def quiz_form(request,id):
     if request.method == 'POST':
