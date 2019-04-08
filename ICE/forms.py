@@ -1,5 +1,7 @@
 from django import forms
 from .models import Module, Component, Question, User, Course
+from django.forms import modelformset_factory
+from django.forms.widgets import RadioSelect
 
 class UserForm(forms.ModelForm):
     class Meta:
@@ -26,14 +28,8 @@ class ComponentForm(forms.ModelForm):
         model=Component
         fields=('componentTitle','componentText','componentImage','orderNumber',)
 
-class SomeForm(forms.Form):
-    Q = Question.objects.filter(moduleID=1)
-    CHOICES=[]
-    for q in Q:
-        CHOICES.append(('1', q.qOption1))
-        CHOICES.append(('2', q.qOption2))
-        CHOICES.append(('3', q.qOption3))
-        CHOICES.append(('4', q.qOption4))
-        choices = forms.MultipleChoiceField(choices=CHOICES, widget=forms.CheckboxSelectMultiple())
-        correct=q.answer
-        CHOICES = []
+class QuestionForm(forms.Form):
+    def __init__(self, question, *args, **kwargs):
+        super(QuestionForm, self).__init__(*args, **kwargs)
+        choices = [x for x in question.get_options()]
+        self.fields["answers"] = forms.ChoiceField(choices=choices,widget=RadioSelect)

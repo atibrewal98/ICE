@@ -66,7 +66,7 @@ class Module(models.Model):
     moduleID = models.AutoField(primary_key = True)
     courseID = models.ForeignKey(Course, on_delete=models.CASCADE)
     moduleTitle = models.CharField(max_length=100)
-    orderNumber = models.IntegerField(null = True)
+    orderNumber = models.IntegerField(null = True, blank = True)
     numOfComponents = models.IntegerField(default = 0)
     numOfQuestions = models.IntegerField(null = True, blank = True)
     passingMark = models.IntegerField(null = True, blank = True)
@@ -79,7 +79,7 @@ class Component(models.Model):
     componentTitle = models.CharField(max_length=100)
     componentText = models.CharField(max_length=100, null=True, blank = True)
     componentImage = models.ImageField(upload_to='images/',null=True, blank=True)
-    orderNumber = models.IntegerField()
+    orderNumber = models.IntegerField(null = True, blank = True)
     createdAt = models.DateField(auto_now=False, auto_now_add=True)
     updatedAt = models.DateField(auto_now=True)
     def __str__(self):
@@ -88,13 +88,23 @@ class Component(models.Model):
 class Question(models.Model):
     questionID = models.AutoField(primary_key = True)
     moduleID = models.ForeignKey(Module, on_delete=models.CASCADE)
-    questionStatement = models.CharField(max_length=200)
-    qOption1 = models.CharField(max_length=50)
-    qOption2 = models.CharField(max_length=50)
-    qOption3 = models.CharField(max_length=50)
-    qOption4 = models.CharField(max_length=50)
+    questionStatement = models.CharField(max_length=200,blank=False)
+    qOption1 = models.CharField(max_length=50,blank=False)
+    qOption2 = models.CharField(max_length=50,blank=False)
+    qOption3 = models.CharField(max_length=50,blank=False)
+    qOption4 = models.CharField(max_length=50,blank=False)
     # answer is 'i' where i is 1, 2, 3, 4
     answer = models.CharField(max_length=1)
+
+    #def check_answer(self,choices):
+        
+    def get_options(self):
+        choices=[]
+        choices.append((str(self.questionID)+'1',self.qOption1))
+        choices.append((str(self.questionID)+'2',self.qOption2))
+        choices.append((str(self.questionID)+'3',self.qOption3))
+        choices.append((str(self.questionID)+'4',self.qOption4))
+        return choices
     def __str__(self):
         return self.questionStatement
 

@@ -4,8 +4,18 @@ from django.views.generic.list import ListView
 from django.views.generic import View
 from django.template import loader
 from ICE.models import Module, Category, Component, Course, Instructor, LearnerTakesCourse, Learner, Question
-from .forms import ModuleForm,QuizForm, ComponentForm, UserForm, CourseForm #SomeForm
+from .forms import ModuleForm, QuizForm, ComponentForm, UserForm, CourseForm, QuestionForm
 import operator
+
+def learner_quiz(request, learner_ID, q_ID):
+    if request.method=="POST":
+        form=QuestionForm(Question.objects.get(questionID=q_ID),request.POST)
+        if form.is_valid():
+            choices = form.cleaned_data.get('answers')
+            print(choices)
+    form=QuestionForm(Question.objects.get(questionID=q_ID))
+    return render(request,'some_template.html',{'form':form})
+
 
 class UserFormView(View):	
 	userform = UserForm
@@ -222,31 +232,36 @@ def intructor_view_quiz(request, id):
     }
     return HttpResponse(template.render(context, request))
 
-def some_view(request):
+
+def quiz_template(request):
     questions=Question.objects.filter(moduleID=1)
-    if request.method == 'POST':
-
-
-            form = SomeForm(request.POST)
+    forms=[]
+    if request.method=='POST':
+        for q in questions:
+            form=QuestionForm(q,request.POST)
             if form.is_valid():
+                print("hi")
+                forms.append(form)
                 choices = form.cleaned_data.get('choices')
+                print("choice"+choices[0])
+                #selected = request.POST.getlist('ques_choices[]')
+                #print(selected[0])
+                # if (choices[0] == form.correct):
+                #     learner=LearnerTakesCourse.objects.get(staffID=2, courseID=1)
+                #     learner.currentModule=learner.currentModule+1
+                #     learner.save()
+                #     ans = "Congrats you have passed"
+                #     return render(request, 'quiz_result.html', {'ans': ans})
 
-                if (choices[0] == form.correct):
-                    learner=LearnerTakesCourse.objects.get(staffID=2, courseID=1)
-                    learner.currentModule=learner.currentModule+1
-                    learner.save()
-                    ans = "Congrats you have passed"
-                    return render(request, 'quiz_result.html', {'ans': ans})
-
-                else:
-                    ans = "Sorry try again"
-                    return render(request, 'quiz_result.html', {'ans': ans})
-
-    else:
-        form = SomeForm
-
-    return render(request,'some_template.html', {'form':form, 'questions': questions })
-
+                # else:
+                #     ans = "Sorry try again"
+                #     return render(request, 'quiz_result.html', {'ans': ans})
+            else:
+                print(form.errors)
+    for q in questions:
+        form=QuestionForm(q)
+        forms.append(form)
+    return render(request,'some_template.html',{'forms':forms,'questions':questions})
 
 '''
     Redundant Code
