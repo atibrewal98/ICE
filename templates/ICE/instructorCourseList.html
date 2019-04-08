@@ -33,7 +33,7 @@
                                 <td rowspan="2">icon</td>
                             </tr>
                             <tr>
-                                <td><a href ="../instructorCourse/instructorID={{learnerDetails.userID}}&courseID={{course.courseID}}&moduleID={{m.pk}}/">{{course.courseID}} - {{course.courseName}}</a></td>
+                                <td><a href ="../instructorCourse/courseID={{course.courseID}}&moduleID={{m.pk}}/">{{course.courseID}} - {{course.courseName}}</a></td>
                             </tr>
                             {% endif %}
                         {% endfor %}
@@ -43,7 +43,7 @@
         </div>
             
         <div id="right">
-            <button type="button" onclick = "window.location.href = '../../addCourse/instructorID={{learnerDetails.userID}}/';">Add Course</button>
+            <button type="button" onclick = "window.location.href = '../addCourse/';">Add Course</button>
         </div>
     </div>
 </div>

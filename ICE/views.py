@@ -59,7 +59,7 @@ def course_form(request):
             instructor=Instructor.objects.get(userID=instructor_id)
             instance.instructorID = instructor
             instance.save()
-            return redirect('../../addModule/instructorID='+instructor_id+'&courseID='+str(instance.courseID)+'/')
+            return redirect('../addModule/courseID='+str(instance.courseID)+'/')
     form = CourseForm()
     return render(request,'add_course.html',{'courseform': form})
 
@@ -103,7 +103,7 @@ def module_form(request, course_id):
                             mod.save()
             
             instance.save()
-            return redirect('../../instructorCourse/instructorID='+instructor_id+'&courseID='+course_id+'&moduleID='+str(instance.moduleID)+'/')
+            return redirect('../../instructorCourse/courseID='+course_id+'&moduleID='+str(instance.moduleID)+'/')
     form=ModuleForm()
     module=Course.objects.filter(courseID=course_id)
     return render(request,'add_module.html',{'moduleform': form, 'course': module})
@@ -147,7 +147,10 @@ def component_form(request, module_id):
                             com.orderNumber = com.orderNumber + 1
                             com.save()
             instance.save()
-            return redirect('../../instructorCourse/instructorID='+instructor_id+'&courseID=1'+'&moduleID='+module_id+'/')
+            mod=Module.objects.get(moduleID=module_id)
+            courseDet=Course.objects.get(courseID=str(mod.courseID))
+            print(courseDet.courseID)
+            return redirect('../../instructorCourse/courseID='+str(courseDet.courseID)+'&moduleID='+module_id+'/')
     form = ComponentForm()
     return render(request, 'add_component.html', {'componentform': form})
 
