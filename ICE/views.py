@@ -27,7 +27,6 @@ from .tokens import account_activation_token
 def learner_quiz(request, q_ID):
     if request.user.role != 2:
         context={
-            #'sidebar': access[request.user.role],
             'message': "You do not have access to this page."
         }
         return render(request, 'ICE/message.html', context)
@@ -55,7 +54,6 @@ def quiz_form(request,id):
 def course_form(request):
     if request.user.role != 1:
         context={
-            #'sidebar': access[request.user.role],
             'message': "You do not have access to this page."
         }
         return render(request, 'ICE/message.html', context)
@@ -75,7 +73,6 @@ def course_form(request):
 def module_form(request, course_id):
     if request.user.role != 1:
         context={
-            #'sidebar': access[request.user.role],
             'message': "You do not have access to this page."
         }
         return render(request, 'ICE/message.html', context)
@@ -120,7 +117,6 @@ def module_form(request, course_id):
 def component_form(request, module_id):
     if request.user.role != 1:
         context={
-            #'sidebar': access[request.user.role],
             'message': "You do not have access to this page."
         }
         return render(request, 'ICE/message.html', context)
@@ -162,13 +158,10 @@ def component_form(request, module_id):
     form = ComponentForm()
     return render(request, 'add_component.html', {'componentform': form})
 
-# Create your views here.
-
 @login_required
 def learnerModuleCourseView(request, course_ID, module_ID):
     if request.user.role != 2:
         context={
-            #'sidebar': access[request.user.role],
             'message': "You do not have access to this page."
         }
         return render(request, 'ICE/message.html', context)
@@ -219,7 +212,6 @@ def learnerModuleCourseView(request, course_ID, module_ID):
 def instructorCourseModuleView(request, course_ID, module_ID):
     if request.user.role != 1:
         context={
-            #'sidebar': access[request.user.role],
             'message': "You do not have access to this page."
         }
         return render(request, 'ICE/message.html', context)
@@ -248,7 +240,6 @@ def instructorCourseModuleView(request, course_ID, module_ID):
 def category_list_view(request, category_id):
     if request.user.role != 2:
         context={
-            #'sidebar': access[request.user.role],
             'message': "You do not have access to this page."
         }
         return render(request, 'ICE/message.html', context)
@@ -299,7 +290,6 @@ def category_list_view(request, category_id):
 def course_learner_view(request):
     if request.user.role != 2:
         context={
-            #'sidebar': access[request.user.role],
             'message': "You do not have access to this page."
         }
         return render(request, 'ICE/message.html', context)
@@ -325,7 +315,6 @@ def course_learner_view(request):
 def course_instructor_view(request):
     if request.user.role != 1:
         context={
-            #'sidebar': access[request.user.role],
             'message': "You do not have access to this page."
         }
         return render(request, 'ICE/message.html', context)
@@ -359,7 +348,6 @@ def intructor_view_quiz(request, id):
 def courseDescriptionView(request, course_id):
     if request.user.role != 2:
         context={
-            #'sidebar': access[request.user.role],
             'message': "You do not have access to this page."
         }
         return render(request, 'ICE/message.html', context)
