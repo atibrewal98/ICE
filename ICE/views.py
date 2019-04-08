@@ -5,18 +5,8 @@ from django.views.generic import View
 from django.template import loader
 
 from ICE.models import Module, Category, Component, Course, Instructor, LearnerTakesCourse, Learner, Question, User, Staff
-from .forms import ModuleForm,QuizForm, ComponentForm, UserForm, InviteForm, SignupFormInstructor, LearnerGetTokenForm, SignupFormLearner  #SomeForm
+from .forms import ModuleForm,QuizForm, ComponentForm, UserForm, InviteForm, SignupFormInstructor, LearnerGetTokenForm, SignupFormLearner, CourseForm
 import operator
-
-def learner_quiz(request, learner_ID, q_ID):
-    if request.method=="POST":
-        form=QuestionForm(Question.objects.get(questionID=q_ID),request.POST)
-        if form.is_valid():
-            choices = form.cleaned_data.get('answers')
-            print(choices)
-    form=QuestionForm(Question.objects.get(questionID=q_ID))
-    return render(request,'some_template.html',{'form':form})
-
 
 """
 FOR AUTHENTICATION
@@ -33,32 +23,14 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.shortcuts import redirect
 from .tokens import account_activation_token
 
-import operator
-
-class UserFormView(View):	
-	userform = UserForm
-	template = 'userform.html'
-
-	def get(self,request):
-		form = self.userform(None)
-		return render(request, self.template, {'userform':form})
-
-	def post(self,request):
-		form = self.userform(request.POST)
-		if form.is_valid():
-			user = form.save(commit=False)
-			username = form.cleaned_data['userName']
-			password = form.cleaned_data['password']
-			user.save()
-			print("User: ",username," ",password)
-			user = authenticate(username=username, password=password)
-			print("User: ",user)
-			
-			if user is not None:
-				if user.is_active:
-					login(request, user)
-					return redirect('../comp/')
-		return render(request, self.template, {'userform':form})
+def learner_quiz(request, learner_ID, q_ID):
+    if request.method=="POST":
+        form=QuestionForm(Question.objects.get(questionID=q_ID),request.POST)
+        if form.is_valid():
+            choices = form.cleaned_data.get('answers')
+            print(choices)
+    form=QuestionForm(Question.objects.get(questionID=q_ID))
+    return render(request,'some_template.html',{'form':form})
 
 def quiz_form(request,id):
     if request.method == 'POST':
@@ -377,56 +349,6 @@ def courseDescriptionView(request, course_id, learner_id):
         }
         return HttpResponse(template.render(context, request))
 
-def some_view(request):
-    questions=Question.objects.filter(moduleID=1)
-    if request.method == 'POST':
-
-
-def quiz_template(request):
-    questions=Question.objects.filter(moduleID=1)
-    forms=[]
-    if request.method=='POST':
-        for q in questions:
-            form=QuestionForm(q,request.POST)
-            if form.is_valid():
-                print("hi")
-                forms.append(form)
-                choices = form.cleaned_data.get('choices')
-                print("choice"+choices[0])
-                #selected = request.POST.getlist('ques_choices[]')
-                #print(selected[0])
-                # if (choices[0] == form.correct):
-                #     learner=LearnerTakesCourse.objects.get(staffID=2, courseID=1)
-                #     learner.currentModule=learner.currentModule+1
-                #     learner.save()
-                #     ans = "Congrats you have passed"
-                #     return render(request, 'quiz_result.html', {'ans': ans})
-
-                # else:
-                #     ans = "Sorry try again"
-                #     return render(request, 'quiz_result.html', {'ans': ans})
-            else:
-                print(form.errors)
-    for q in questions:
-        form=QuestionForm(q)
-        forms.append(form)
-    return render(request,'some_template.html',{'forms':forms,'questions':questions})
-
-                if (choices[0] == form.correct):
-                    learner=LearnerTakesCourse.objects.get(staffID=2, courseID=1)
-                    learner.currentModule=learner.currentModule+1
-                    learner.save()
-                    ans = "Congrats you have passed"
-                    return render(request, 'quiz_result.html', {'ans': ans})
-
-                else:
-                    ans = "Sorry try again"
-                    return render(request, 'quiz_result.html', {'ans': ans})
-
-    else:
-        form = SomeForm
-
-    return render(request,'some_template.html', {'form':form, 'questions': questions })
 
 """
 FOR AUTHENTICATION
@@ -565,81 +487,3 @@ def learner_get_token(request):
     else:
         form = LearnerGetTokenForm()
     return render(request, 'ICE/signup.html', {'title':'Get Learner Token','form':form})
-    
-
-'''
-    Redundant Code
-'''
-
-# def monkeyPageView(request):
-#     return render(request, 'ICE/monkey.html')
-
-
-
-# def learnerCourseView(request, course_ID, learner_ID):
-#     all_modules=Module.objects.filter(courseID = course_ID)
-#     course=Course.objects.filter(courseID = course_ID)
-#     instructor = ''
-#     title = ''
-#     components = ''
-#     done_Modules=Module.objects.none()
-#     left_Modules=Module.objects.none()
-#     curr_Modules=Module.objects.none()
-#     for c in course:
-#         instructor=Instructor.objects.filter(pk = c.instructorID)
-#     learnerDetails= Learner.objects.filter(userID=learner_ID)
-#     currModule=LearnerTakesCourse.objects.filter(courseID = course_ID, staffID = learner_ID)
-
-#     for m in currModule:
-#         print(m.currentModule)
-#         title=Module.objects.filter(moduleID = m.currentModule)
-#         components=Component.objects.filter(moduleID = m.currentModule)
-#         curr_Modules=Module.objects.filter(moduleID = m.currentModule)
-#     for m in all_modules:
-#         for t in curr_Modules:
-#             if(m.pk < int(t.moduleID)):
-#                 done_Modules = Module.objects.filter(moduleID = m.moduleID).union(done_Modules)
-#     for m in all_modules:
-#         for t in curr_Modules:
-#             if(m.pk > int(t.moduleID)):
-#                 left_Modules = Module.objects.filter(moduleID = m.moduleID).union(left_Modules)
-      
-#     template=loader.get_template("ICE/courseContent.html")
-#     context ={
-#         'all_modules':all_modules,
-#         'title': title,
-#         'instructor': instructor,
-#         'course': course,
-#         'components': components,
-#         'learnerDetails': learnerDetails,
-#         'left_Modules':left_Modules,
-#         'done_Modules':done_Modules,
-#         'currModule':curr_Modules,
-#         # 'components1': components1,
-#     }
-#     return HttpResponse(template.render(context,request))
-
-
-
-# def instructorCourseView(request, course_ID):
-#     all_modules=Module.objects.filter(courseID = course_ID)
-#     course=Course.objects.filter(courseID = course_ID)
-#     instructor = ''
-#     title = Module.objects.none()
-#     components = ''
-#     for c in course:
-#         instructor=Instructor.objects.filter(pk = c.instructorID)
-#     for m in all_modules:
-#         title = Module.objects.filter(moduleID = m.moduleID).union(title)
-#         break
-#     for t in title:
-#         components=Component.objects.filter(moduleID = t.moduleID)
-#     template=loader.get_template("ICE/instructorCourse.html")
-#     context ={
-#         'all_modules':all_modules,
-#         'title': title,
-#         'instructor': instructor,
-#         'course': course,
-#         'components': components,
-#     }
-#     return HttpResponse(template.render(context,request))

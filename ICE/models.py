@@ -83,19 +83,13 @@ class Staff(models.Model):
     lastName = models.CharField(max_length=50, null = True)
 
 class Learner(User):
-    #learnerID = models.AutoField(primary_key = True)
-    #staffID = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
     totalCECU = models.PositiveIntegerField(default=0)
     staff = models.OneToOneField(Staff, on_delete=models.CASCADE)
     
     def __str__(self):
         return str(self.userID)
 
-
-
 class Instructor(User):
-    #instructorID = models.AutoField(primary_key = True)
-    #instructorID = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
     biography = models.CharField(max_length=250, null = True)
     def __str__(self):
         return str(self.userID)
@@ -168,8 +162,6 @@ class Question(models.Model):
     qOption4 = models.CharField(max_length=50,blank=False)
     # answer is 'i' where i is 1, 2, 3, 4
     answer = models.CharField(max_length=1)
-
-    #def check_answer(self,choices):
         
     def get_options(self):
         choices=[]
