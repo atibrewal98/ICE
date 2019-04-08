@@ -103,7 +103,8 @@ venv.bak/
 # mypy
 .mypy_cache/
 .vs/
+.vscode/
 .idea/
 media/
-ICE/migrations 
-.vscode/
+ICE/migrations
+

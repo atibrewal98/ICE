@@ -3,9 +3,26 @@ from django.contrib.auth import authenticate, login
 from django.views.generic.list import ListView
 from django.views.generic import View
 from django.template import loader
-from ICE.models import Module, Category, Component, Course, Instructor, LearnerTakesCourse, Learner, Question
-from .forms import ModuleForm,QuizForm, ComponentForm, UserForm, CourseForm #SomeForm
+
+from ICE.models import Module, Category, Component, Course, Instructor, LearnerTakesCourse, Learner, Question, User, Staff
+from .forms import ModuleForm,QuizForm, ComponentForm, UserForm, InviteForm, SignupFormInstructor, LearnerGetTokenForm, SignupFormLearner  #SomeForm
+"""
+FOR AUTHENTICATION
+"""
+from django.contrib.auth.decorators import login_required
+from ICE.decorators import admin_required
+from django.core.mail import EmailMessage, send_mail
+from django.conf import settings
+from django.template.loader import render_to_string
+from django.contrib.auth import login, authenticate
+from django.contrib.sites.shortcuts import get_current_site
+from django.utils.encoding import force_bytes, force_text
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.shortcuts import redirect
+from .tokens import account_activation_token
+
 import operator
+
 
 class UserFormView(View):	
 	userform = UserForm
@@ -372,6 +389,144 @@ def some_view(request):
 
     return render(request,'some_template.html', {'form':form, 'questions': questions })
 
+"""
+FOR AUTHENTICATION
+"""
+def login_success(request):
+    if request.user.role == 1:
+        #instructor
+        return redirect("course_instructor", instructor_id = request.user.userID)
+    elif request.user.role == 2:
+        #learner
+        return redirect("course_learner", learner_ID = request.user.userID)
+    else:
+        return redirect("/")
+
+# @admin_required
+@login_required
+def invite(request):
+    if request.method == 'POST':
+        form = InviteForm(request.POST)
+        if form.is_valid():
+            user = Instructor(
+                emailID = form.cleaned_data.get('emailID'),
+                # username = 'n',
+                role = 1,
+                is_active = False
+            )
+            user.save()
+
+            email = EmailMessage(
+                'Sign up for your ICE Account',
+                render_to_string('ICE/send_email.html', {
+                    'domain': get_current_site(request).domain,
+                    'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+                    'token': account_activation_token.make_token(user),
+                }),
+                to=[form.cleaned_data.get('emailID')]
+            )
+
+            # subject = "ICE Instructor Registration Token"
+            # message = "".format()
+
+
+            email.send()
+            context={
+                #'sidebar': access[request.user.role],
+                'message': "Registration invite has been sent to " + user.emailID + "."
+            }
+            return render(request, 'ICE/message.html', context)
+    else:
+        form = InviteForm()
+    return render(request, 'ICE/signup.html', {'title':'Invite Users','form':form})
+
+
+
+def signup(request, uidb64, token):
+    try:
+        uid = urlsafe_base64_decode(uidb64).decode()
+        user = User.objects.get(pk=uid)
+    except(TypeError, ValueError, OverflowError, User.DoesNotExist):
+        context = {
+            'message': "Activation link is invalid!"
+        }
+        return render(request, 'ICE/message.html', context)
+    
+    if user.role == User.INSTRUCTOR:
+        SignupForm = SignupFormInstructor
+    else:
+         SignupForm = SignupFormLearner
+
+    if request.method == 'POST':
+        form = SignupForm(request.POST)
+        if form.is_valid():
+            if account_activation_token.check_token(user, token):
+                user.userName = form.cleaned_data.get('userName')
+                user.firstName = form.cleaned_data.get('firstName')
+                user.lastName = form.cleaned_data.get('lastName')
+                user.set_password(form.cleaned_data.get('password'))
+                user.biography = form.cleaned_data.get('biography')
+                user.is_staff = False
+                user.is_active = True
+                user.save()
+
+                login(request, user)
+                return redirect('login_success')
+            else:
+                context = {
+                    'message': "Activation link is invalid!"
+                }
+                return render(request, 'ICE/message.html', context)
+    else:
+            form = SignupForm()    
+    return render(request, 'ICE/signup.html', {'title': "Sign Up", 'form': form})
+
+def learner_get_token(request):
+    if request.method == 'POST':
+        form = LearnerGetTokenForm(request.POST)
+        if form.is_valid():
+            staffID = form.cleaned_data.get('staffID')
+            try:
+                staff = Staff.objects.get(staffID = staffID)
+            except:
+                context={
+                    'message': "StaffID is invalid! There's no staff record with the staffID you input."
+                }
+                return render(request, 'ICE/message.html', context)
+            staff_firstName = staff.firstName
+            staff_lastName = staff.lastName
+            staff_emailID = staff.emailID
+            # staff = Group
+            user = Learner(
+                emailID = staff_emailID,
+                staff = staff,
+                firstName = staff_firstName,
+                lastName = staff_lastName,
+                role = 2,
+                is_active = False
+            )
+            user.save()
+            email = EmailMessage(
+                'Sign up for your ICE Account',
+                render_to_string('ICE/send_email.html', {
+                    'domain': get_current_site(request).domain,
+                    'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+                    'token': account_activation_token.make_token(user),
+                }),
+                to=[staff_emailID]
+            )
+            # subject = "ICE Instructor Registration Token"
+            # message = "".format()
+            email.send()
+            context={
+                #'sidebar': access[request.user.role],
+                'message': "Registration invite has been sent to " + user.emailID + "."
+            }
+            return render(request, 'ICE/message.html', context)
+    else:
+        form = LearnerGetTokenForm()
+    return render(request, 'ICE/signup.html', {'title':'Get Learner Token','form':form})
+    
 
 '''
     Redundant Code
