@@ -90,7 +90,7 @@ def module_form(request,instructor_id,course_id):
             return redirect('../../instructorCourse/instructorID='+instructor_id+'&courseID='+course_id+'&moduleID='+str(instance.moduleID)+'/')
     form=ModuleForm()
     module=Course.objects.filter(courseID=course_id)
-    return render(request,'form.html',{'form': form, 'course': module})
+    return render(request,'add_module.html',{'moduleform': form, 'course': module})
 
 def component_form(request,instructor_id,module_id):
 
@@ -125,8 +125,8 @@ def component_form(request,instructor_id,module_id):
                             com.save()
             instance.save()
             return redirect('../../instructorCourse/instructorID='+instructor_id+'&courseID=1'+'&moduleID='+module_id+'/')
-    componentform=ComponentForm()
-    return render(request, 'add_component.html', {'componentform': componentform})
+    form = ComponentForm()
+    return render(request, 'add_component.html', {'componentform': form})
 
 def component(request):
     component=Component.objects.all()
