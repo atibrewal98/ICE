@@ -19,7 +19,7 @@ urlpatterns = [
     url(r'^addComponent/instructorID=(?P<instructor_id>[0-9]+)&moduleID=(?P<module_id>[0-9]+)/',views.component_form),
     path('comp/', views.component),
     url(r'^modules_component/(?P<module_ID>[0-9]+)/$',views.component_list_view),
-    url(r'^dashboard/learnerID=(?P<learner_ID>[0-9]+)/$',views.course_learner_view, name="course_learner"),
+    url(r'^dashboard//$',views.course_learner_view, name="course_learner"),
     url(r'^instructorDashboard/instructorID=(?P<instructor_id>[0-9]+)/$',views.course_instructor_view, name="course_instructor"),
     url(r'^quizform/$', views.some_view),
     path('accounts/', include('django.contrib.auth.urls')),

@@ -278,7 +278,9 @@ def component_list_view(request, module_ID):
     }
     return HttpResponse(template.render(context,request))
 
-def course_learner_view(request, learner_ID):
+@login_required
+def course_learner_view(request):
+    learner_ID = request.user.userID
     all_courses=LearnerTakesCourse.objects.filter(staffID = learner_ID)
     courseDetails = Course.objects.none()
     currModules = LearnerTakesCourse.objects.none()
@@ -398,7 +400,7 @@ def login_success(request):
         return redirect("course_instructor", instructor_id = request.user.userID)
     elif request.user.role == 2:
         #learner
-        return redirect("course_learner", learner_ID = request.user.userID)
+        return redirect("course_learner")
     else:
         return redirect("/")
 
