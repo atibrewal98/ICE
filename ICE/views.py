@@ -126,7 +126,7 @@ def component_form(request,instructor_id,module_id):
             instance.save()
             return redirect('../../instructorCourse/instructorID='+instructor_id+'&courseID=1'+'&moduleID='+module_id+'/')
     componentform=ComponentForm()
-    return render(request, 'component.html', {'componentform': componentform})
+    return render(request, 'add_component.html', {'componentform': componentform})
 
 def component(request):
     component=Component.objects.all()
