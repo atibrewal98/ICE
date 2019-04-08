@@ -60,11 +60,25 @@ class Migration(migrations.Migration):
             ],
         ),
         migrations.CreateModel(
+            name='Question',
+            fields=[
+                ('questionID', models.AutoField(primary_key=True, serialize=False)),
+                ('questionStatement', models.CharField(max_length=200)),
+                ('qOption1', models.CharField(max_length=50)),
+                ('qOption2', models.CharField(max_length=50)),
+                ('qOption3', models.CharField(max_length=50)),
+                ('qOption4', models.CharField(max_length=50)),
+                ('qchoices', models.CharField(choices=[('1', 'qOption1'), ('2', 'qOption2'), ('3', 'qOption3'), ('4', 'qOption4')], max_length=50)),
+                ('answer', models.CharField(max_length=1)),
+                ('moduleID', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='ICE.Module')),
+            ],
+        ),
+        migrations.CreateModel(
             name='Token',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('email', models.EmailField(max_length=50, unique=True)),
-                ('token', models.CharField(default='KqSqT6', editable=False, max_length=6)),
+                ('token', models.CharField(default='KqSqT6', editable=False, max_length=6))
             ],
         ),
         migrations.CreateModel(

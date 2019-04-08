@@ -1,5 +1,9 @@
 from django import forms
 
+from django.forms import modelformset_factory
+from django.forms.widgets import RadioSelect
+
+
 from .models import Module, Component, Question, User, Instructor, Learner, Course
 from django.contrib.auth.forms import UserCreationForm
 
@@ -37,7 +41,6 @@ class SignupFormLearner(forms.ModelForm):
 
 class LearnerGetTokenForm(forms.Form):
     staffID = forms.IntegerField(max_value=9999)
-
 
 class UserForm(forms.ModelForm):
     class Meta:
@@ -77,7 +80,7 @@ class ComponentForm(forms.ModelForm):
     class Meta:
         model=Component
         fields=('componentTitle','componentText','componentImage','orderNumber',)
-
+        
     def __init__(self, *args, **kwargs):
         super(ComponentForm, self).__init__(*args, **kwargs)
         self.fields['componentTitle'].widget.attrs['placeholder'] = 'Component Title'
@@ -85,14 +88,9 @@ class ComponentForm(forms.ModelForm):
         # self.fields['componentImage'].widget.attrs['placeholder'] = 'No Image chosen'
         self.fields['orderNumber'].widget.attrs['placeholder'] = 'Component#'
 
-# class SomeForm(forms.Form):
-#     Q = Question.objects.filter(moduleID=1)
-#     CHOICES=[]
-#     for q in Q:
-#         CHOICES.append(('1', q.qOption1))
-#         CHOICES.append(('2', q.qOption2))
-#         CHOICES.append(('3', q.qOption3))
-#         CHOICES.append(('4', q.qOption4))
-#         choices = forms.MultipleChoiceField(choices=CHOICES, widget=forms.CheckboxSelectMultiple())
-#         correct=q.answer
-#         CHOICES = []
+
+class QuestionForm(forms.Form):
+    def __init__(self, question, *args, **kwargs):
+        super(QuestionForm, self).__init__(*args, **kwargs)
+        choices = [x for x in question.get_options()]
+        self.fields["answers"] = forms.ChoiceField(choices=choices,widget=RadioSelect)
