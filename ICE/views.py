@@ -23,7 +23,15 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.shortcuts import redirect
 from .tokens import account_activation_token
 
-def learner_quiz(request, learner_ID, q_ID):
+@login_required
+def learner_quiz(request, q_ID):
+    if request.user.role != 2:
+        context={
+            #'sidebar': access[request.user.role],
+            'message': "You do not have access to this page."
+        }
+        return render(request, 'ICE/message.html', context)
+    learner_ID = request.user.userID
     if request.method=="POST":
         form=QuestionForm(Question.objects.get(questionID=q_ID),request.POST)
         if form.is_valid():
