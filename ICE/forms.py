@@ -62,13 +62,13 @@ class CourseForm(forms.ModelForm):
 class ModuleForm(forms.ModelForm):
     class Meta:
         model=Module
-        fields=('moduleTitle', 'orderNumber','numOfComponents',)
+        fields=('moduleTitle', 'orderNumber',)
 
     def __init__(self, *args, **kwargs):
         super(ModuleForm, self).__init__(*args, **kwargs)
         self.fields['moduleTitle'].widget.attrs['placeholder'] = 'Module Title'
         self.fields['orderNumber'].widget.attrs['placeholder'] = 'Module#'
-        self.fields['numOfComponents'].widget.attrs['placeholder'] = 'No. of Components'
+        # self.fields['numOfComponents'].widget.attrs['placeholder'] = 'No. of Components'
         # not showing placeholder num of components as integer field with blank = true not done
 
 class QuizForm(forms.ModelForm):

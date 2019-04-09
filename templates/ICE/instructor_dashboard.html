@@ -11,15 +11,15 @@
 {% endblock %}
 
 {% block content %}
-<div id="contentHeader" class="row">
-    <ul>
-        <li><a href="" class="navText">Current Courses</a></li>
-        <li><a href="" class="navText">History</a></li>
+<div id="contentHeader" class="container">
+    <ul class = "nav nav-tabs">
+        <li class = "active"><a href="" class="navText">Live Courses</a></li>
+        <li class = ""><a href="" class="navText">Under Development</a></li>
     </ul>
 </div>
-<div id="courseList">
-{% for course in courseDetails %}
-    <div class="course">
+<div id="courseList" class="container">
+{% for course in all_courses %}
+    <div class="course col-md-4">
     {% for m in currModules %}
         {% if course.courseID|slugify == m.courseID|slugify %}
         <span>Course {{course.courseID}}</span>

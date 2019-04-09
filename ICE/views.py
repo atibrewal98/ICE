@@ -328,7 +328,7 @@ def course_instructor_view(request):
             currModules = Module.objects.filter(moduleID = c.moduleID).union(currModules)
             break
 
-    template=loader.get_template("ICE/instructorCourseList.html")
+    template=loader.get_template("ICE/instructor_dashboard.html")
     context ={
         'all_courses':all_courses,
         'learnerDetails':learnerDetails,
