@@ -20,5 +20,5 @@ urlpatterns = [
     url(r'login_success/$', views.login_success, name='login_success'),
     url(r'invite/', views.invite, name='invite'), #for admin to invite instructors
     url(r'learner_get_token/', views.learner_get_token, name='learner_get_token'), #for learner to get token
-    url(r'signup/<uidb64>/<token>', views.signup, name='signup'),
+    path('signup/<uidb64>/<token>', views.signup, name='signup'),
 ]
