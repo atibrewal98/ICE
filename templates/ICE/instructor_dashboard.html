@@ -11,5 +11,22 @@
 {% endblock %}
 
 {% block content %}
-
+<div id="contentHeader" class="row">
+    <ul>
+        <li><a href="" class="navText">Current Courses</a></li>
+        <li><a href="" class="navText">History</a></li>
+    </ul>
+</div>
+<div id="courseList">
+{% for course in courseDetails %}
+    <div class="course">
+    {% for m in currModules %}
+        {% if course.courseID|slugify == m.courseID|slugify %}
+        <span>Course {{course.courseID}}</span>
+        <span><a href ="../learnerCourse/courseID={{course.courseID}}&moduleID={{m.currentModule}}/">{{course.courseID}} - {{course.courseName}}</a></span>
+        {% endif %}
+    {% endfor %}
+    </div>
+{% endfor %}
+</div>
 {% endblock %}

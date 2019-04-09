@@ -2,14 +2,31 @@
 
 {% load static %}
 {% block navbar %}
-    <ul>
-        <li><img src="{% static 'images/owl.png' %}"></li>
-        <li><a href="" class="navText">Dashboard</a></li>
-        <li><a href="" class="navText">Categories</a></li>
-        <li class="right"><img src="{% static 'images/user.png' %}"></li>
-    </ul>
+<ul>
+    <li><img src="{% static 'images/owl.png' %}"></li>
+    <li><a href="" class="navText">Dashboard</a></li>
+    <li><a href="" class="navText">Categories</a></li>
+    <li class="right"><img src="{% static 'images/user.png' %}"></li>
+</ul>
 {% endblock %}
 
 {% block content %}
-
+<div id="contentHeader" class="row">
+    <ul>
+        <li><a href="" class="navText">Current Courses</a></li>
+        <li><a href="" class="navText">History</a></li>
+    </ul>
+</div>
+<div id="courseList">
+{% for course in courseDetails %}
+    <div class="course">
+    {% for m in currModules %}
+        {% if course.courseID|slugify == m.courseID|slugify %}
+        <span>Course {{course.courseID}}</span>
+        <span><a href ="../learnerCourse/courseID={{course.courseID}}&moduleID={{m.currentModule}}/">{{course.courseID}} - {{course.courseName}}</a></span>
+        {% endif %}
+    {% endfor %}
+    </div>
+{% endfor %}
+</div>
 {% endblock %}
