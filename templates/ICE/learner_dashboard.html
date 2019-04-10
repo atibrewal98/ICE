@@ -1,13 +1,14 @@
 {% extends 'ICE/base1.html' %}
 
 {% load static %}
+
 {% block navbar %}
 <ul class="navbar-nav mr-auto">
     <li class="nav-item active">
-        <a class="nav-link" href="#">Dashboard<span class="sr-only">(current)</span></a>
+        <a class="nav-link" href="../dashboard/">Dashboard<span class="sr-only">(current)</span></a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" href="#">Categories</a>
+        <a class="nav-link" href="../category/categoryID=0">Categories</a>
     </li>
 </ul>
 <ul class="navbar-nav ml-auto">
@@ -19,7 +20,7 @@
             <a class="dropdown-item" href="#">Profile</a>
             <a class="dropdown-item" href="#">Change Account Details</a>
             <div class="dropdown-divider"></div>
-            <a class="dropdown-item" href="#">Logout</a>
+            <a class="dropdown-item" href="../accounts/logout">Logout</a>
         </div>
     </li>
 </ul>
