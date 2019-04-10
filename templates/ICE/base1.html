@@ -10,11 +10,17 @@
     <link rel="stylesheet" type="text/css" href="{% static 'scripts/styles1.css' %}">
 </head>
 <body>
-<div id="background">
-    <div id="navbar">
+<header class="navbar navbar-expand-md navbar-light bg-white">
+    <a class="navbar-brand" href="#"><img src="{% static 'images/owl.png' %}"></a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse w-100" id="navbarNav">
         {% block navbar %}
         {% endblock %}
     </div>
+</header>
+<div id="background">
     <div id="frame" class="container">
         {% block content %}
         {% endblock %}
