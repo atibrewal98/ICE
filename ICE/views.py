@@ -171,7 +171,6 @@ def learnerModuleCourseView(request, course_ID, module_ID):
     all_modules = sorted(all_modules, key=operator.attrgetter('orderNumber'))
     course=Course.objects.get(courseID = course_ID)
 
-    instructor = Instructor.objects.none()
     title = Module.objects.none()
     components = Component.objects.none()
     done_Modules=Module.objects.none()
@@ -219,16 +218,23 @@ def instructorCourseModuleView(request, course_ID, module_ID):
         }
         return render(request, 'ICE/message.html', context)
     instructor_ID = request.user.userID
+
     all_modules=Module.objects.filter(courseID = course_ID)
     all_modules = sorted(all_modules, key=operator.attrgetter('orderNumber'))
     course=Course.objects.get(courseID = course_ID)
-    instructor = ''
-    title = ''
-    components = ''
+
+    title = Module.objects.none()
+    components = Component.objects.none()
+
     instructor=Instructor.objects.get(pk = course.instructorID)
-    title=Module.objects.get(moduleID = module_ID)
-    components=Component.objects.filter(moduleID = module_ID)
+
+    for m in all_modules:
+        if(m.orderNumber == module_ID):
+            title=Module.objects.get(moduleID = m.noduleID)
+            components=Component.objects.filter(moduleID = m.moduleID)
+    
     components = sorted(components, key=operator.attrgetter('orderNumber'))
+
     template=loader.get_template("ICE/instructorCourse.html")
     context ={
         'all_modules':all_modules,
@@ -355,6 +361,7 @@ def courseDescriptionView(request, course_id):
         }
         return render(request, 'ICE/message.html', context)
     learner_id = request.user.userID
+
     if request.method == 'POST':
         learnerC = LearnerTakesCourse.objects.all()
         for l in learnerC:
@@ -409,7 +416,6 @@ def login_success(request):
     else:
         return redirect("/")
 
-# @admin_required
 @login_required
 def invite(request):
     if request.method == 'POST':
@@ -417,7 +423,6 @@ def invite(request):
         if form.is_valid():
             user = Instructor(
                 emailID = form.cleaned_data.get('emailID'),
-                # username = 'n',
                 role = 1,
                 is_active = False
             )
@@ -432,14 +437,8 @@ def invite(request):
                 }),
                 to=[form.cleaned_data.get('emailID')]
             )
-
-            # subject = "ICE Instructor Registration Token"
-            # message = "".format()
-
-
             email.send()
             context={
-                #'sidebar': access[request.user.role],
                 'message': "Registration invite has been sent to " + user.emailID + "."
             }
             return render(request, 'ICE/message.html', context)
@@ -526,7 +525,6 @@ def learner_get_token(request):
             # message = "".format()
             email.send()
             context={
-                #'sidebar': access[request.user.role],
                 'message': "Registration invite has been sent to " + user.emailID + "."
             }
             return render(request, 'ICE/message.html', context)
