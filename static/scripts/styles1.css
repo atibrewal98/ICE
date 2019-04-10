@@ -18,7 +18,16 @@
     background: #FFFFFF;
 }
 
-#navBar ul {
+#tabs {
+    position: absolute;
+    top: 0px;
+    width: 100%;
+    height: 65px;
+    box-shadow: 0px 0px 5px 5px rgba(0, 0, 0, 0.25);
+    background: #FFFFFF;
+}
+
+#navBar ul, #tabs ul {
     list-style-type: none;
     margin: 0;
     padding: 0;
@@ -26,25 +35,30 @@
     height: 100%;
 }
 
-#navBar li {
+#navBar li, #tabs li {
     height: 100%;
     float: left;
 }
 
-#navBar .navText {
+#navBar img {
+    padding-top: 2.5px;
+}
+
+.navText {
     display: block;
     text-align: center;
     font-size: 19px;
-    padding: 14px 16px;
+    padding: 18px 16px;
     text-decoration: none;
     color: #646464;
 }
 
 #navBar .right {
     float: right;
+    padding-top: 9.25;
 }
 
-#navBar li a:hover:not(.active) {
+#navBar li a:hover:not(.active), #tabs li a:hover:not(.active) {
     background-color: #E5E5E5;
 }
 

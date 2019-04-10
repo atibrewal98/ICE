@@ -302,7 +302,7 @@ def course_learner_view(request):
         courseDetails = Course.objects.filter(courseID = str(c.courseID)).union(courseDetails)
         currModules=LearnerTakesCourse.objects.filter(courseID = str(c.courseID), staffID = learner_ID).union(currModules)
 
-    template=loader.get_template("ICE/learnerCourseList.html")
+    template=loader.get_template("ICE/learner_dashboard.html")
     context ={
         'all_courses':all_courses,
         'courseDetails':courseDetails,
