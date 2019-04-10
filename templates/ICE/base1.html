@@ -1,4 +1,5 @@
 {% load static %}
+<html>
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -10,20 +11,23 @@
     <link rel="stylesheet" type="text/css" href="{% static 'scripts/styles1.css' %}">
 </head>
 <body>
-<header class="navbar navbar-expand-md navbar-light bg-white">
-    <a class="navbar-brand" href="#"><img src="{% static 'images/owl.png' %}"></a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse w-100" id="navbarNav">
-        {% block navbar %}
-        {% endblock %}
+    <header class="navbar navbar-expand-md navbar-light bg-white">
+        <a class="navbar-brand" href="#"><img src="{% static 'images/owl.png' %}"></a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse w-100" id="navbarNav">
+            {% block navbar %}
+            {% endblock navbar %}
+        </div>
+    </header>
+    <div class="container-fluid">
+        <div id="frame" class="container">
+            {% block navbar2 %}
+            {% endblock navbar2 %}
+            {% block content %}
+            {% endblock content %}
+        </div>
     </div>
-</header>
-<div id="background">
-    <div id="frame" class="container">
-        {% block content %}
-        {% endblock %}
-    </div>
-</div>
 </body>
+</html>
