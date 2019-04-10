@@ -11,8 +11,8 @@
     <div id="navBar">
             <ul>
                 <li><img src="{% static 'images/owl.png' %}"></li>
-                <li><a href="" class="navText">Dashboard</a></li>
-                <li><a href="#category" class="navText">Categories</a></li>
+                <li><a href="../../dashboard" class="navText">Dashboard</a></li>
+                <li><a href="../../category/categoryID=0" class="navText">Categories</a></li>
                 <li class="right"><img src="{% static 'images/user.png' %}"></li>
             </ul>
     </div>
@@ -20,12 +20,8 @@
     <div id="frame">
         <div id="left">
             <div id="leftHeader">
-                {% for c in course %}
-                    <h1>{{c.courseName}}</h1>
-                {% endfor %}
-                {% for i in instructor %}
-                    <p>Course Instructor: {{i.firstName}} {{i.lastName}}</p>
-                {% endfor %} 
+                <h1>{{course.courseName}}</h1>
+                <p>Course Instructor: {{instructor.firstName}} {{instructor.lastName}}</p>
             </div>
 
             <div id="moduleList">
@@ -36,56 +32,38 @@
                             <td rowspan="2">icon</td>
                         </tr>
                         <tr>
-                            {% for learner in learnerDetails %}
-                                <td><a href ="../../learnerCourse/courseID={{modules.courseID}}&moduleID={{modules.pk}}">{{modules.moduleTitle}}</a></td>
-                            {% endfor %}
+                            <td><a href ="../../learnerCourse/courseID={{modules.courseID}}&moduleID={{modules.pk}}">{{modules.moduleTitle}}</a></td>
                         </tr>
-                        <!-- <tr>
-                            <td>Take end of module quiz</td>
-                        </tr> -->
                     {% endfor %}
-                    {% for modules in currModule %}
+                    {% if currModule.moduleID is not Null %}
                         <tr>
-                            <td>Module {{modules.orderNumber}}</td>
+                            <td>Module {{currModule.orderNumber}}</td>
                             <td rowspan="3">icon</td>
                         </tr>
                         <tr>
-                            {% for learner in learnerDetails %}
-                                <td><a href ="../../learnerCourse/courseID={{modules.courseID}}&moduleID={{modules.pk}}">{{modules.moduleTitle}}</a></td>
-                            {% endfor %}
+                            <td><a href ="../../learnerCourse/courseID={{currModule.courseID}}&moduleID={{currModule.pk}}">{{currModule.moduleTitle}}</a></td>
                         </tr>
                         <tr>
                             <td><a href ="../../quizform/">Module Quiz</a></td>
                         </tr>
-                    {% endfor %}
+                    {% endif %}
                     {% for modules in left_Modules %}
                         <tr>
                             <td>Module {{modules.orderNumber}}</td>
                             <td rowspan="2">icon</td>
                         </tr>
                         <tr>
-                            {% for learner in learnerDetails %}
-                                <td>{{modules.moduleTitle}}</td>
-                            {% endfor %}
+                            <td>{{modules.moduleTitle}}</td>
                         </tr>
-                        <!-- <tr>
-                            <td>Take end of module quiz</td>
-                        </tr> -->
                     {% endfor %}
                 </table>
             </div>    
         </div>
             
         <div id="right">
-            {% for learner in learnerDetails %}
-                {% for c in course %}
-                    <button type="button" onclick="window.location.href = '../../courseDescription/courseID={{c.courseID}}'">Course Info</button>
-                {% endfor %}
-            {% endfor %}
+            <button type="button" onclick="window.location.href = '../../courseDescription/courseID={{course.courseID}}'">Course Info</button>
             <button type="button" onclick="alert('Hello world!')">Drop Course</button>
-            {% for modules in title %}
-                <h1>{{modules.moduleTitle}}</h1>
-            {% endfor %}
+            <h1>{{title.moduleTitle}}</h1>
             <table>
                 {% for com in components %}
                     <tr>Component {{com.orderNumber}} - {{com.componentTitle}}</tr>
@@ -95,10 +73,6 @@
                         <tr><img src="{{com.componentImage.url}}" width="400" height="200"></tr>
                     {% endif %}
                 {% endfor %}
-                <!-- {% for com in components1 %}
-                    <tr>Component {{com.orderNumber}} - {{com.componentTitle}}</tr>
-                    <tr><img src="{{com.componentImage.url}}" width="100" height="100"></tr>
-                {% endfor %} -->
             </table>
         </div>
     </div>

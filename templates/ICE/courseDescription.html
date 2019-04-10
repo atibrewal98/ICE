@@ -18,29 +18,6 @@
     </div>
         
     <div id="frame">
-        <!-- <div id="left">
-            <div id="leftHeader">
-                <h1>Categories</h1>
-            </div>
-
-            <div id="categoryList">
-                <table>
-                    {% for category in all_categories %}
-                        <tr>
-                            <td><a href ="../../category/categoryID={{category.categoryID}}">{{category.categoryName}}</a></td>
-                            <td rowspan="2">icon</td>
-                        </tr>
-                        <tr>
-                            <td><a href ="../../instructorCourse/instructorID={{instructor.userID}}&courseID={{modules.courseID}}&moduleID={{modules.pk}}">{{modules.moduleTitle}}</a></td>
-                        </tr>
-                        <tr>
-                            <td>Take end of module quiz</td>
-                        </tr>
-                    {% endfor %}
-                </table>
-            </div>    
-        </div> -->
-            
         <div id="right">
             <form method="post">
                 {% csrf_token %}
@@ -50,15 +27,8 @@
             <h4>Course Instructor: {{instructorDetails.firstName}} {{instructorDetails.lastName}}</h4>
             <h2>Course Description:</h2>
             <p>{{courseDetails.courseDescription}}</p>
-            <h3>Includes {{courseDetails.numOfModules}} & End-of-Module Quizzes</h3>
+            <h3>Includes {{courseDetails.numOfModules}} Modules & End-of-Module Quizzes</h3>
             <h2>CECU Value: {{courseDetails.courseCECU}} Units</h2>
-            <!-- <table>
-                {% for course in courseList %}
-                <tr>
-                    <td>{{course.courseName}}</td>
-                </tr>
-                {% endfor %}
-            </table> -->
         </div>
     </div>
 </div>
