@@ -1,64 +1,69 @@
+{% extends 'ICE/base1.html' %}
+
 {% load static %}
-<!DOCTYPE html>
-<html>
-<head>
-    <link rel="stylesheet" type="text/css" href="{% static 'scripts/styles.css' %}">
-<title>{{c.courseName}}</title>
-</head>
-<body>
 
-<div id="background">
-    <div id="navBar">
-            <ul>
-                <li><img src="{% static 'images/owl.png' %}"></li>
-                <li><a href="" class="navText">Dashboard</a></li>
-                <li><a href="#categories" class="navText">Categories</a></li>
-                <li class="right"><img src="{% static 'images/user.png' %}"></li>
-            </ul>
-    </div>
-        
-    <div id="frame">
-        <div id="left">
-            <div id="leftHeader">
-                <h1>Categories</h1>
-            </div>
+{% block navbar %}
+<ul class="navbar-nav mr-auto">
+    <li class="nav-item">
+        <a class="nav-link" href="../../dashboard/">Dashboard<span class="sr-only">(current)</span></a>
+    </li>
+    <li class="nav-item active">
+        <a class="nav-link" href="../category/categoryID=0">Categories</a>
+    </li>
+</ul>
+<ul class="navbar-nav ml-auto">
+    <li class="nav-item dropdown">
+        <a class="nav-link" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <img src="{% static 'images/user.png' %}">
+        </a>
+        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
+            <a class="dropdown-item" href="#">Profile</a>
+            <a class="dropdown-item" href="#">Change Account Details</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="../accounts/logout">Logout</a>
+        </div>
+    </li>
+</ul>
+{% endblock navbar %}
 
-            <div id="categoryList">
-                <tr>
-                    <td><a href ="../../category/categoryID=0">All Categories</a></td>
+{% block content %}
+<div id="subframe" class="row">
+    <div id="left" class="col-md-4">
+        <div id="leftHeader">
+                <h2>Categories</h2>
+        </div>
+        <div id="categoryList">
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a class="nav-link active" href="../../category/categoryID=0">All Courses</a>
                     <!-- <td rowspan="2">icon</td> -->
-                </tr>
-                <table>
-                    {% for category in all_categories %}
-                        <tr>
-                            <td><a href ="../../category/categoryID={{category.categoryID}}">{{category.categoryName}}</a></td>
-                            <!-- <td rowspan="2">icon</td> -->
-                        </tr>
-                        <!-- <tr>
-                            <td><a href ="../../instructorCourse/instructorID={{instructor.userID}}&courseID={{modules.courseID}}&moduleID={{modules.pk}}">{{modules.moduleTitle}}</a></td>
-                        </tr> -->
-                        <!-- <tr>
-                            <td>Take end of module quiz</td>
-                        </tr> -->
-                    {% endfor %}
-                </table>
-            </div>    
-        </div>
-            
-        <div id="right">
-            <!-- <button type="button" onclick = "window.location.href = '../../addModule/instructorID={{instructor.userID}}&courseID={{course.pk}}';">Add Module</button>
-            <button type="button" onclick = "window.location.href = '../../addComponent/instructorID={{instructor.userID}}&moduleID={{title.pk}}';">Add Component</button>
-            <button type="button" onclick = "window.location.href = '../../addModuleQuiz/{{title.pk}}';">Add Quiz</button> -->
-            <h1>Courses for {{categoryCurr}}</h1>
-            <table>
-                {% for course in courseList %}
-                <tr>
-                    <td><a href ="../../courseDescription/courseID={{course.courseID}}">{{course.courseName}}</a></td>
-                </tr>
+                </li>
+                {% for category in all_categories %}
+                <li class="nav-item">
+                    <a class="nav-link" href ="../../category/categoryID={{category.categoryID}}">{{category.categoryName}}</a>
+                    <!-- <td rowspan="2">icon</td> -->
+                </li>
+                <!-- <tr>
+                    <td><a href ="../../instructorCourse/instructorID={{instructor.userID}}&courseID={{modules.courseID}}&moduleID={{modules.pk}}">{{modules.moduleTitle}}</a></td>
+                </tr> -->
+                <!-- <tr>
+                    <td>Take end of module quiz</td>
+                </tr> -->
                 {% endfor %}
-            </table>
+            </ul>
         </div>
+    </div>
+    <div id="right" class="col-md-8">
+        <!-- <button type="button" onclick = "window.location.href = '../../addModule/instructorID={{instructor.userID}}&courseID={{course.pk}}';">Add Module</button>
+        <button type="button" onclick = "window.location.href = '../../addComponent/instructorID={{instructor.userID}}&moduleID={{title.pk}}';">Add Component</button>
+        <button type="button" onclick = "window.location.href = '../../addModuleQuiz/{{title.pk}}';">Add Quiz</button> -->
+        <h2>{{categoryCurr}}</h2>
+        <div id="courseList" class="row">
+        {% for course in courseList %}
+            <div class="course col-md-6">
+                <span><a href ="../../courseDescription/courseID={{course.courseID}}">{{course.courseName}}</a></span>
+            </div>
+        {% endfor %}
     </div>
 </div>
-</body>
-</html>
+{% endblock content %}
