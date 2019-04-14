@@ -4,8 +4,8 @@ from django.views.generic.list import ListView
 from django.views.generic import View
 from django.template import loader
 
-from ICE.models import Module, Category, Component, Course, Instructor, LearnerTakesCourse, Learner, Question, User, Staff
-from .forms import ModuleForm,QuizForm, ComponentForm, UserForm, InviteForm, SignupFormInstructor, LearnerGetTokenForm, SignupFormLearner, CourseForm, QuestionForm
+from ICE.models import Module, Category, Component, Course, Instructor, LearnerTakesCourse, Learner, Question, User, Staff, Quiz
+from .forms import ModuleForm,QuizForm, ComponentForm, UserForm, InviteForm, SignupFormInstructor, LearnerGetTokenForm, SignupFormLearner, CourseForm
 import operator
 
 """
@@ -23,21 +23,12 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.shortcuts import redirect
 from .tokens import account_activation_token
 
-@login_required
-def learner_quiz(request, q_ID):
-    if request.user.role != 2:
-        context={
-            'message': "You do not have access to this page."
-        }
-        return render(request, 'ICE/message.html', context)
-    learner_ID = request.user.userID
-    if request.method=="POST":
-        form=QuestionForm(Question.objects.get(questionID=q_ID),request.POST)
-        if form.is_valid():
-            choices = form.cleaned_data.get('answers')
-            print(choices)
-    form=QuestionForm(Question.objects.get(questionID=q_ID))
-    return render(request,'quiz_template.html',{'form':form})
+def learner_quiz(request,module_ID):
+    if request.method=='POST':
+        for q in request.POST:
+            print(q)
+    questions=Module.objects.get(moduleID=module_ID).getQuiz().getQuestions()
+    return render(request, 'quiz_template.html', {'questions': questions})
 
 def quiz_form(request,id):
     if request.method == 'POST':

@@ -4,7 +4,7 @@ from django.forms import modelformset_factory
 from django.forms.widgets import RadioSelect
 
 
-from .models import Module, Component, Question, User, Instructor, Learner, Course
+from .models import Module, Component, Question, User, Instructor, Learner, Course, Quiz
 from django.contrib.auth.forms import UserCreationForm
 
 class InviteForm(forms.Form):
@@ -73,7 +73,7 @@ class ModuleForm(forms.ModelForm):
 
 class QuizForm(forms.ModelForm):
     class Meta:
-        model=Module
+        model=Quiz
         fields=('numOfQuestions','passingMark',)
 
 class ComponentForm(forms.ModelForm):

@@ -8,11 +8,18 @@
     <title>Quiz</title>
 </head>
 <body>
-<form method="POST">
-    {% csrf_token %}
-    {{form}}
-<button> Submit</button>
-</form>
-
+    <form method='POST'>
+        {% csrf_token %}
+        {% for q in questions %}
+        <fieldset id={{q.questionID}}>
+            {{q.questionStatement}} <br>
+            <input type="radio" value=1 name={{q.questionID}}> {{q.qOption1}} <br>
+            <input type="radio" value=2 name={{q.questionID}}> {{q.qOption2}} <br>
+            <input type="radio" value=3 name={{q.questionID}}> {{q.qOption3}} <br>
+            <input type="radio" value=4 name={{q.questionID}}> {{q.qOption4}} <br>
+        </fieldset>
+        {% endfor %}
+        <button>Submit</button>
+    </form>
 </body>
 </html>
