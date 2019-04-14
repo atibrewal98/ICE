@@ -86,6 +86,9 @@ class Learner(User):
     totalCECU = models.PositiveIntegerField(default=0)
     staff = models.OneToOneField(Staff, on_delete=models.CASCADE)
     
+    def updateCECU(self,value):
+        self.totalCECU+=value
+
     def __str__(self):
         return str(self.userID)
 
@@ -115,6 +118,7 @@ class Course(models.Model):
     numOfModules = models.IntegerField(default = 0)
     totalEnrolled = models.IntegerField(default = 0)
     currentEnrolled = models.IntegerField(default = 0)
+    
     def __str__(self):
         return str(self.courseID)
 
@@ -123,9 +127,15 @@ class LearnerTakesCourse(models.Model):
     courseID = models.ForeignKey(Course, on_delete=models.CASCADE)
     # 'Y' for completed
     # 'N' for course under process
-    completeStatus = models.CharField(max_length=1)
+    completeStatus = models.CharField(max_length=1,default='N')
     completionDate = models.DateField(auto_now=False, auto_now_add=False, null=True, blank=True)
     currentModule = models.IntegerField(null=True, blank = True)
+
+    def updateCourse(self):
+        self.currentModule+=1
+        #self.completeStatus='Y'
+        #self.completionDate=datetime.date.today()
+
     def __str__(self):
         return f'{self.staffID} ({self.courseID})'
 
@@ -135,7 +145,7 @@ class Module(models.Model):
     moduleTitle = models.CharField(max_length=100)
     orderNumber = models.IntegerField(null = True, blank = True)
     numOfComponents = models.IntegerField(default = 0)
-
+    
     def getQuiz(self):
         return Quiz.objects.get(moduleID=self.moduleID)
 

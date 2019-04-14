@@ -16,7 +16,6 @@ urlpatterns = [
     url(r'^dashboard/$',views.course_learner_view, name="course_learner"),
     url(r'^instructorDashboard/$',views.course_instructor_view, name="course_instructor"),
     url(r'^quiz/moduleID=(?P<module_ID>[0-9]+)$', views.learner_quiz),
-    #url(r'^result/moduleID=(?P<module_ID>[0-9]+)$', views.result),
     url(r'accounts/', include('django.contrib.auth.urls')),
     url(r'login_success/$', views.login_success, name='login_success'),
     url(r'invite/', views.invite, name='invite'), #for admin to invite instructors
