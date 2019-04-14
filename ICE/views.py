@@ -25,8 +25,15 @@ from .tokens import account_activation_token
 
 def learner_quiz(request,module_ID):
     if request.method=='POST':
-        for q in request.POST:
-            print(q)
+        correct=0
+        for key, value in request.POST.items():
+            if key!='csrfmiddlewaretoken':
+                if Question.objects.get(questionID=key).getAnswer()==value:
+                    correct+=1
+        if Module.objects.get(moduleID=module_ID).getQuiz().passingMark<=correct:
+            return render(request, 'quiz_result.html', {'result': correct})
+        else:
+            return render(request, 'quiz_result.html', {'result': -1})
     questions=Module.objects.get(moduleID=module_ID).getQuiz().getQuestions()
     return render(request, 'quiz_template.html', {'questions': questions})
 

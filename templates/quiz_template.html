@@ -12,7 +12,7 @@
         {% csrf_token %}
         {% for q in questions %}
         <fieldset id={{q.questionID}}>
-            {{q.questionStatement}} <br>
+            <h1> {{q.questionStatement}} </h1>
             <input type="radio" value=1 name={{q.questionID}}> {{q.qOption1}} <br>
             <input type="radio" value=2 name={{q.questionID}}> {{q.qOption2}} <br>
             <input type="radio" value=3 name={{q.questionID}}> {{q.qOption3}} <br>
