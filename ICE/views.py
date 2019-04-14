@@ -304,7 +304,6 @@ def learnerModuleCourseView(request, course_ID, module_ID):
     
     components = title.getComponent()
     components = sorted(components, key=operator.attrgetter('orderNumber'))
-    curr_Modules = sorted(curr_Modules, key=operator.attrgetter('orderNumber'))
     done_Modules = sorted(done_Modules, key=operator.attrgetter('orderNumber'))
     left_Modules = sorted(left_Modules, key=operator.attrgetter('orderNumber'))
 
