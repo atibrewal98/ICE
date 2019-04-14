@@ -23,6 +23,7 @@
                 {% csrf_token %}
                 <button>{{type}}</button>
             </form>
+            <h3>{{categoryDetails.categoryName}}</h3>
             <h1>{{courseDetails.courseName}}</h1>
             <h4>Course Instructor: {{instructorDetails.firstName}} {{instructorDetails.lastName}}</h4>
             <h2>Course Description:</h2>
