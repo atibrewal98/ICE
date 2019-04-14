@@ -140,7 +140,10 @@ class LearnerTakesCourse(models.Model):
     currentModule = models.IntegerField(null=True, blank = True)
 
     def updateCourse(self):
-        if self.currentModule==Course.objects.get(courseID=str(self.courseID)).numOfModules:
+        course = Course.objects.get(courseID=str(self.courseID))
+        if self.currentModule==course.numOfModules:
+            course.currentEnrolled -= 1
+            course.save()
             self.completeStatus='Y'
             self.completionDate=datetime.date.today()
             self.currentModule=1

@@ -46,7 +46,7 @@
                     {% if course.courseID|slugify == m.courseID|slugify %}
                         <img src="{% static 'images/python.png' %}" class="img-fluid">
                         <span>Course {{course.courseID}}</span><br>
-                        <span><a href ="../instructorCourse/courseID={{course.courseID}}&moduleID={{m.orderNumber}}/">{{course.courseID}} - {{course.courseName}}</a></span>
+                        <span><a href ="../instructorCourse/courseID={{course.courseID}}&moduleID=1/">{{course.courseID}} - {{course.courseName}}</a></span>
                     {% endif %}
                 {% endfor %}
             </div>

@@ -26,7 +26,39 @@
 
             <div id="moduleList">
                 <table>
-                    {% for modules in done_Modules %}
+                    {% if CM.completeStatus == 'N' %}
+                        {% for modules in done_Modules %}
+                            <tr>
+                                <td>Module {{modules.orderNumber}}</td>
+                                <td rowspan="2">icon</td>
+                            </tr>
+                            <tr>
+                                <td><a href ="../../learnerCourse/courseID={{modules.courseID}}&moduleID={{modules.orderNumber}}">{{modules.moduleTitle}}</a></td>
+                            </tr>
+                        {% endfor %}
+                        {% if currModule.moduleID is not Null%}
+                            <tr>
+                                <td>Module {{currModule.orderNumber}}</td>
+                                <td rowspan="3">icon</td>
+                            </tr>
+                            <tr>
+                                <td><a href ="../../learnerCourse/courseID={{currModule.courseID}}&moduleID={{currModule.orderNumber}}">{{currModule.moduleTitle}}</a></td>
+                            </tr>
+                            <tr>
+                                <td><a href ="../../quiz/moduleID={{currModule.pk}}">Module Quiz</a></td>
+                            </tr>
+                        {% endif %}
+                        {% for modules in left_Modules %}
+                            <tr>
+                                <td>Module {{modules.orderNumber}}</td>
+                                <td rowspan="2">icon</td>
+                            </tr>
+                            <tr>
+                                <td>{{modules.moduleTitle}}</td>
+                            </tr>
+                        {% endfor %}
+                    {% else %}
+                    {% for modules in all_modules %}
                         <tr>
                             <td>Module {{modules.orderNumber}}</td>
                             <td rowspan="2">icon</td>
@@ -35,27 +67,7 @@
                             <td><a href ="../../learnerCourse/courseID={{modules.courseID}}&moduleID={{modules.orderNumber}}">{{modules.moduleTitle}}</a></td>
                         </tr>
                     {% endfor %}
-                    {% if currModule.moduleID is not Null %}
-                        <tr>
-                            <td>Module {{currModule.orderNumber}}</td>
-                            <td rowspan="3">icon</td>
-                        </tr>
-                        <tr>
-                            <td><a href ="../../learnerCourse/courseID={{currModule.courseID}}&moduleID={{currModule.orderNumber}}">{{currModule.moduleTitle}}</a></td>
-                        </tr>
-                        <tr>
-                            <td><a href ="../../quiz/moduleID={{currModule.pk}}">Module Quiz</a></td>
-                        </tr>
                     {% endif %}
-                    {% for modules in left_Modules %}
-                        <tr>
-                            <td>Module {{modules.orderNumber}}</td>
-                            <td rowspan="2">icon</td>
-                        </tr>
-                        <tr>
-                            <td>{{modules.moduleTitle}}</td>
-                        </tr>
-                    {% endfor %}
                 </table>
             </div>    
         </div>

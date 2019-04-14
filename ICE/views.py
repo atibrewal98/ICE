@@ -114,7 +114,7 @@ def module_form(request, course_id):
                             mod.save()
             
             instance.save()
-            return redirect('../../instructorCourse/courseID='+course_id+'&moduleID='+str(instance.moduleID)+'/')
+            return redirect('../../instructorCourse/courseID='+course_id+'&moduleID='+str(instance.orderNumber)+'/')
     form=ModuleForm()
     module=Course.objects.filter(courseID=course_id)
     return render(request,'add_module.html',{'moduleform': form, 'course': module})
@@ -286,6 +286,7 @@ def learnerModuleCourseView(request, course_ID, module_ID):
         'left_Modules':left_Modules,
         'done_Modules':done_Modules,
         'currModule':curr_Modules,
+        'CM': currModule,
     }
     return HttpResponse(template.render(context,request))
 
@@ -309,8 +310,10 @@ def instructorCourseModuleView(request, course_ID, module_ID):
     for m in all_modules:
         if(m.orderNumber == int(module_ID)):
             title=Module.objects.get(moduleID = m.moduleID)
-    
-    components = title.getComponent()
+    if title.numOfComponents != 0:
+        components = title.getComponent()
+    else:
+        components = Component.objects.none()
     components = sorted(components, key=operator.attrgetter('orderNumber'))
 
     template=loader.get_template("ICE/instructorCourse.html")
@@ -381,13 +384,42 @@ def course_learner_view(request):
         }
         return render(request, 'ICE/message.html', context)
     learner_ID = request.user.userID
-    all_courses=LearnerTakesCourse.objects.filter(staffID = learner_ID)
+    all_courses=LearnerTakesCourse.objects.filter(staffID = learner_ID).exclude(completeStatus = 'Y')
     courseDetails = Course.objects.none()
     currModules = LearnerTakesCourse.objects.none()
     learnerDetails= Learner.objects.get(userID=learner_ID)
     for c in all_courses:
         courseDetails = Course.objects.filter(courseID = str(c.courseID)).union(courseDetails)
         currModules=LearnerTakesCourse.objects.filter(courseID = str(c.courseID), staffID = learner_ID).union(currModules)
+
+    template=loader.get_template("ICE/learner_dashboard.html")
+    context ={
+        'all_courses':all_courses,
+        'courseDetails':courseDetails,
+        'learnerDetails':learnerDetails,
+		'currModules':currModules,
+    }
+    return HttpResponse(template.render(context,request))
+
+def course_history_view(request):
+    if request.user.role != 2:
+        context={
+            'message': "You do not have access to this page."
+        }
+        return render(request, 'ICE/message.html', context)
+    learner_ID = request.user.userID
+    all_courses=LearnerTakesCourse.objects.filter(staffID = learner_ID).exclude(completeStatus = 'N')
+    courseDetails = Course.objects.none()
+    currModules = LearnerTakesCourse.objects.none()
+    learnerDetails= Learner.objects.get(userID=learner_ID)
+    for c in all_courses:
+        courseDetails = Course.objects.filter(courseID = str(c.courseID)).union(courseDetails)
+        currModules=LearnerTakesCourse.objects.filter(courseID = str(c.courseID), staffID = learner_ID).union(currModules)
+    
+    for c in all_courses:
+        for course in courseDetails:
+            if(str(c.courseID) == str(course.courseID)):
+                print(c.completeStatus)
 
     template=loader.get_template("ICE/learner_dashboard.html")
     context ={
