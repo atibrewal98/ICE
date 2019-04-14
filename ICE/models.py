@@ -1,6 +1,7 @@
 from django.db import models
 import random, string
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
+import datetime
 
 # Create your models here.
 
@@ -139,7 +140,7 @@ class LearnerTakesCourse(models.Model):
     currentModule = models.IntegerField(null=True, blank = True)
 
     def updateCourse(self):
-        if self.currentModule==Course.objects.get(courseID=self.courseID).numOfModules:
+        if self.currentModule==Course.objects.get(courseID=str(self.courseID)).numOfModules:
             self.completeStatus='Y'
             self.completionDate=datetime.date.today()
             self.currentModule=1

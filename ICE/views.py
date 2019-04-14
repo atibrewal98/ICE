@@ -31,7 +31,7 @@ def learner_quiz(request,module_ID):
                 if Question.objects.get(questionID=key).getAnswer()==value:
                     correct+=1
         if Module.objects.get(moduleID=module_ID).getQuiz().passingMark<=correct:
-            record=LearnerTakesCourse.objects.get(staffID=user.userID,courseID=Module.objects.get(moduleID=module_ID).getCourse())
+            record=LearnerTakesCourse.objects.get(staffID=request.user.userID,courseID=Module.objects.get(moduleID=module_ID).getCourse())
             record.updateCourse()
             record.save()
             if record.completeStatus=='Y':
