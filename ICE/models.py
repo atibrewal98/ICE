@@ -139,9 +139,12 @@ class LearnerTakesCourse(models.Model):
     currentModule = models.IntegerField(null=True, blank = True)
 
     def updateCourse(self):
-        self.currentModule+=1
-        #self.completeStatus='Y'
-        #self.completionDate=datetime.date.today()
+        if self.currentModule==Course.objects.get(courseID=self.courseID).numOfModules:
+            self.completeStatus='Y'
+            self.completionDate=datetime.date.today()
+            self.currentModule=1
+        else:
+            self.currentModule+=1
 
     def __str__(self):
         return f'{self.staffID} ({self.courseID})'
