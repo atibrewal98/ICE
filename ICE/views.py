@@ -5,7 +5,7 @@ from django.views.generic import View
 from django.template import loader
 
 from ICE.models import Module, Category, Component, Course, Instructor, LearnerTakesCourse, Learner, Question, User, Staff, Quiz
-from .forms import ModuleForm,QuizForm, ComponentForm, ImportComponentForm, UserForm, InviteForm, SignupFormInstructor, LearnerGetTokenForm, SignupFormLearner, CourseForm
+from .forms import ModuleForm,QuizForm, ComponentForm, ImportComponentForm, UserForm, InviteForm, SignupFormInstructor, LearnerGetTokenForm, SignupFormLearner, CourseForm, ImportQuizForm
 import operator
 
 """
@@ -118,6 +118,34 @@ def module_form(request, course_id):
     form=ModuleForm()
     module=Course.objects.filter(courseID=course_id)
     return render(request,'add_module.html',{'moduleform': form, 'course': module})
+
+def import_quiz(request,module_ID):
+    if request.method=='POST':
+        quiz=Quiz.objects.none()
+        passingMark=0
+        numOfQuestions=0
+        for key, value in request.POST.items():
+            if key=='quizzes':
+                quiz=Quiz.objects.get(quizID=value)
+            elif key=='numOfQuestions':
+                numOfQuestions=value
+            elif key=='passingMark':
+                passingMark=value
+        quiz.passingMark=passingMark
+        quiz.numOfQuestions=numOfQuestions
+        quiz.moduleID=Module.objects.get(moduleID=module_ID)
+        quiz.save()
+        course_ID=Module.objects.get(moduleID=module_ID).getCourse().courseID
+        orderNumber=Module.objects.get(moduleID=module_ID).orderNumber
+        return redirect('../../instructorCourse/courseID='+str(course_ID)+'&moduleID='+str(orderNumber)+'/')
+    quizzes=Module.objects.get(moduleID=module_ID).getCourse().getQuiz()
+    quiz=Quiz.objects.none()
+    for q in quizzes:
+        if q.moduleID is None:
+            quiz=Quiz.objects.filter(quizID=q.quizID).union(quiz)
+    form=ImportQuizForm(quiz)
+    return render(request, 'import_quiz.html', {'form': form})
+
 
 @login_required
 def import_component_form(request, module_id):

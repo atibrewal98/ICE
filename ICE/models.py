@@ -127,6 +127,9 @@ class Course(models.Model):
     def getComponent(self):
         return Component.objects.filter(courseID=self.courseID)
 
+    def getQuiz(self):
+        return Quiz.objects.filter(courseID=self.courseID)    
+
     def __str__(self):
         return str(self.courseID)
 
