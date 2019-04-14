@@ -439,18 +439,13 @@ def course_history_view(request):
         }
         return render(request, 'ICE/message.html', context)
     learner_ID = request.user.userID
-    all_courses=LearnerTakesCourse.objects.filter(staffID = learner_ID).exclude(completeStatus = 'N')
+    all_courses=LearnerTakesCourse.objects.filter(staffID = learner_ID).exclude(completeStatus = 'N').order_by('completionDate')
     courseDetails = Course.objects.none()
     currModules = LearnerTakesCourse.objects.none()
     learnerDetails= Learner.objects.get(userID=learner_ID)
     for c in all_courses:
         courseDetails = Course.objects.filter(courseID = str(c.courseID)).union(courseDetails)
         currModules=LearnerTakesCourse.objects.filter(courseID = str(c.courseID), staffID = learner_ID).union(currModules)
-    
-    for c in all_courses:
-        for course in courseDetails:
-            if(str(c.courseID) == str(course.courseID)):
-                print(c.completeStatus)
 
     template=loader.get_template("ICE/learner_dashboard.html")
     context ={

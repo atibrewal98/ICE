@@ -196,7 +196,8 @@ class Quiz(models.Model):
     passingMark = models.IntegerField(null = False, default=1)
 
     def getQuestions(self):
-        return sorted(Question.objects.filter(quizID=self.quizID)[:self.numOfQuestions], key=lambda x: random.random())
+        ques=sorted(Question.objects.filter(quizID=self.quizID), key=lambda x: random.random())
+        return ques[:self.numOfQuestions]
     
     def __str__(self):
         return str(self.quizID)
