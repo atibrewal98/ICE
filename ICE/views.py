@@ -127,7 +127,15 @@ def import_component_form(request, module_id):
         return render(request, 'ICE/message.html', context)
     instructor_id = request.user.userID
     if request.method == 'POST':
-        form = ImportComponentForm(request.POST,request.FILES)
+        course = Module.objects.get(moduleID=module_id).getCourse()
+        print('CCC', course)
+        components = course.getComponent()
+        component = Component.objects.none()
+        for c in components:
+            if c.moduleID is None:
+                print('MMM', c.componentID)
+                component = Component.objects.filter(componentID=c.componentID).union(component)
+        form = ImportComponentForm(component, request.POST)
         if form.is_valid():
             instance=form.save(commit=False)
             module=Module.objects.get(moduleID=module_id)
@@ -164,7 +172,7 @@ def import_component_form(request, module_id):
     components = course.getComponent()
     component = Component.objects.none()
     for c in components:
-        if c.moduleID is not None:
+        if c.moduleID is None:
             component = Component.objects.filter(componentID=c.componentID).union(component)
 
     form = ImportComponentForm(component)

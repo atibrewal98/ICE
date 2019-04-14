@@ -124,7 +124,7 @@ class Course(models.Model):
         return Module.objects.filter(courseID=self.courseID)
     
     def getComponent(self):
-        return Component.objects.filter(componentID=self.componentID)
+        return Component.objects.filter(courseID=self.courseID)
 
     def __str__(self):
         return str(self.courseID)
@@ -160,7 +160,7 @@ class Module(models.Model):
         return Component.objects.filter(moduleID=self.moduleID)
 
     def getCourse(self):
-        return Course.objects.get(courseID=self.courseID)
+        return Course.objects.get(courseID=str(self.courseID))
 
     def __str__(self):
         return str(self.courseID) + ":" + str(self.moduleID) + " : " + self.moduleTitle
