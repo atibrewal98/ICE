@@ -23,25 +23,31 @@
             </div>
         </li>
     </ul>
-{% endblock %}
+{% endblock navbar %}
+
+{% block navbar2 %}
+    <ul class="nav nav2">
+        <li class="nav-item">
+            <a class="nav-link active" href="#">Live Courses</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#">Under Development</a>
+        </li>
+    </ul>
+{% endblock navbar2 %}
 
 {% block content %}
-    <div id="tabs" class="row">
-        <ul>
-            <li><a href="" class="navText">Live Courses</a></li>
-            <li><a href="" class="navText">Under Development</a></li>
-        </ul>
-    </div>
     <div id="courseList" class="row">
-    {% for course in all_courses %}
-        <div class="course">
-        {% for m in currModules %}
-            {% if course.courseID|slugify == m.courseID|slugify %}
-            <span>Course {{course.courseID}}</span><br>
-            <span><a href ="../instructorCourse/courseID={{course.courseID}}&moduleID={{m.moduleID}}/">{{course.courseID}} - {{course.courseName}}</a></span>
-            {% endif %}
+        {% for course in all_courses %}
+            <div class="course col-md-4">
+                {% for m in currModules %}
+                    {% if course.courseID|slugify == m.courseID|slugify %}
+                        <img src="{% static 'images/python.png' %}" class="img-fluid">
+                        <span>Course {{course.courseID}}</span><br>
+                        <span><a href ="../instructorCourse/courseID={{course.courseID}}&moduleID={{m.moduleID}}/">{{course.courseID}} - {{course.courseName}}</a></span>
+                    {% endif %}
+                {% endfor %}
+            </div>
         {% endfor %}
-        </div>
-    {% endfor %}
     </div>
-{% endblock %}
+{% endblock content %}

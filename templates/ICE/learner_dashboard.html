@@ -3,52 +3,52 @@
 {% load static %}
 
 {% block navbar %}
-<ul class="navbar-nav mr-auto">
-    <li class="nav-item active">
-        <a class="nav-link" href="../dashboard/">Dashboard<span class="sr-only">(current)</span></a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" href="../category/categoryID=0">Categories</a>
-    </li>
-</ul>
-<ul class="navbar-nav ml-auto">
-    <li class="nav-item dropdown">
-        <a class="nav-link" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <img src="{% static 'images/user.png' %}">
-        </a>
-        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
-            <a class="dropdown-item" href="#">Profile</a>
-            <a class="dropdown-item" href="#">Change Account Details</a>
-            <div class="dropdown-divider"></div>
-            <a class="dropdown-item" href="../accounts/logout">Logout</a>
-        </div>
-    </li>
-</ul>
+    <ul class="navbar-nav mr-auto">
+        <li class="nav-item active">
+            <a class="nav-link" href="../dashboard/">Dashboard<span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="../category/categoryID=0">Categories</a>
+        </li>
+    </ul>
+    <ul class="navbar-nav ml-auto">
+        <li class="nav-item dropdown">
+            <a class="nav-link" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <img src="{% static 'images/user.png' %}">
+            </a>
+            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
+                <a class="dropdown-item" href="#">Profile</a>
+                <a class="dropdown-item" href="#">Change Account Details</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="../accounts/logout">Logout</a>
+            </div>
+        </li>
+    </ul>
 {% endblock navbar %}
 
 {% block navbar2 %}
-<ul class="nav nav2">
-    <li class="nav-item">
-        <a class="nav-link active" href="#">Current Courses</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" href="#">History</a>
-    </li>
-</ul>
+    <ul class="nav nav2">
+        <li class="nav-item">
+            <a class="nav-link active" href="#">Current Courses</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#">History</a>
+        </li>
+    </ul>
 {% endblock navbar2 %}
 
 {% block content %}
-<div id="courseList" class="row">
-{% for course in courseDetails %}
-    <div class="course col-md-4">
-        <img src="{% static 'images/python.png' %}" class="img-fluid">
-        <span>Course {{course.courseID}}</span><br>
-        {% for m in currModules %}
-            {% if course.courseID|slugify == m.courseID|slugify %}
-            <span><a href ="../learnerCourse/courseID={{course.courseID}}&moduleID={{m.currentModule}}/">{{course.courseID}} - {{course.courseName}}</a></span>
-            {% endif %}
+    <div id="courseList" class="row">
+        {% for course in courseDetails %}
+            <div class="course col-md-4">
+                {% for m in currModules %}
+                    {% if course.courseID|slugify == m.courseID|slugify %}
+                        <img src="{% static 'images/python.png' %}" class="img-fluid">
+                        <span>Course {{course.courseID}}</span><br>
+                        <span><a href ="../learnerCourse/courseID={{course.courseID}}&moduleID={{m.currentModule}}/">{{course.courseID}} - {{course.courseName}}</a></span>
+                    {% endif %}
+                {% endfor %}
+            </div>
         {% endfor %}
     </div>
-{% endfor %}
-</div>
 {% endblock content %}

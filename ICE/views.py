@@ -97,6 +97,7 @@ def module_form(request, course_id):
                 print(maxOrd)
                 if maxOrd < form.instance.orderNumber:
                     instance.orderNumber=course.numOfModules
+                    
                 for m in modules:
                     if m.orderNumber == form.instance.orderNumber:
                         sameOrd = m.orderNumber
