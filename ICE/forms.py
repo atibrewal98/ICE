@@ -96,5 +96,5 @@ class ImportComponentForm(forms.ModelForm):
     def __init__(self, component, *args, **kwargs):
         super(ImportComponentForm, self).__init__(*args, **kwargs)
         self.fields['components'] = forms.ModelChoiceField(queryset = component)
-        self.fields['orderNumber'] = forms.IntegerField()
+        # self.fields['orderNumber'] = forms.IntegerField()
         self.fields['orderNumber'].widget.attrs['placeholder'] = 'Component#'

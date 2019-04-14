@@ -138,20 +138,24 @@ def import_component_form(request, module_id):
                 componentID = value
         print(componentID)
         component = Component.objects.filter(componentID=componentID)
-        # for c in components:
-        #     if c.moduleID is None:
-        #         print('MMM', c.componentID)
-        #         component = Component.objects.filter(componentID=c.componentID).union(component)
         form = ImportComponentForm(component, request.POST)
         if form.is_valid():
             print("111")
             instance=form.save(commit=False)
             module=Module.objects.get(moduleID=module_id)
-            components = Component.objects.filter(componentID=componentID)
+            components = Component.objects.get(componentID=componentID)
             module.numOfComponents = module.numOfComponents+1
             module.save()
             instance.moduleID=module
-            instance.componentID=components
+            instance.componentID=components.componentID
+            instance.courseID = components.courseID
+            instance.componentTitle = components.componentTitle
+            print("Here", form.instance.orderNumber)
+            if(components.componentText is not None):
+                instance.componentText = components.componentText
+            if(components.componentImage is not None):
+                instance.componentImage = components.componentImage
+            instance.createdAt=components.createdAt
             if form.instance.orderNumber is None:
                 instance.orderNumber=module.numOfComponents
             else:
