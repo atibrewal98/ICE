@@ -471,7 +471,32 @@ def course_instructor_view(request):
         }
         return render(request, 'ICE/message.html', context)
     instructor_id = request.user.userID
-    all_courses=Course.objects.filter(instructorID = instructor_id)
+    all_courses=Course.objects.filter(instructorID = instructor_id).exclude(courseStatus = 'U')
+    currModules = Module.objects.none()
+    learnerDetails= Instructor.objects.get(userID=instructor_id)
+    for c in all_courses:
+        currModule=Module.objects.filter(courseID = str(c.courseID))
+        for c in currModule:
+            currModules = Module.objects.filter(moduleID = c.moduleID).union(currModules)
+            break
+
+    template=loader.get_template("ICE/instructor_dashboard.html")
+    context ={
+        'all_courses':all_courses,
+        'learnerDetails':learnerDetails,
+		'currModules':currModules,
+    }
+    return HttpResponse(template.render(context,request))
+
+@login_required
+def course_development_view(request):
+    if request.user.role != 1:
+        context={
+            'message': "You do not have access to this page."
+        }
+        return render(request, 'ICE/message.html', context)
+    instructor_id = request.user.userID
+    all_courses=Course.objects.filter(instructorID = instructor_id).exclude(courseStatus = 'L')
     currModules = Module.objects.none()
     learnerDetails= Instructor.objects.get(userID=instructor_id)
     for c in all_courses:

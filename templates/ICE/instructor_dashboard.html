@@ -28,14 +28,14 @@
 {% block navbar2 %}
     <ul class="nav nav2">
         <li class="nav-item">
-            <a class="nav-link active" href="#">Live Courses</a>
+            <a class="nav-link active" href="../instructorDashboard">Live Courses</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="#">Under Development</a>
+            <a class="nav-link" href="../underDevelopment">Under Development</a>
         </li>
     </ul>
     <button type="button" onclick = "window.location.href = '../addCourse/';">Add Course</button>
-    <button type="button" onclick = "window.location.href = '../addComponent2/';">Add Component</button>
+    <button type="button" onclick = "">Add Component</button>
     <button type="button" onclick = "">Add Quiz</button>
 {% endblock navbar2 %}
 {% block content %}
@@ -46,9 +46,14 @@
                     {% if course.courseID|slugify == m.courseID|slugify %}
                         <img src="{% static 'images/python.png' %}" class="img-fluid">
                         <span><a href ="../instructorCourse/courseID={{course.courseID}}&moduleID=1/">{{course.courseName}}</a></span><br>
-                        <span>Total Enrolled: {{course.totalEnrolled}}</span><br>
-                        <span>Current Enrolled: {{course.currentEnrolled}}</span><br>
-                        <span><h6>{{course.courseCECU}} CECUS AWARDED</h6></span>
+                        {% if course.courseStatus == 'L' %}    
+                            <span>Total Enrolled: {{course.totalEnrolled}}</span><br>
+                            <span>Current Enrolled: {{course.currentEnrolled}}</span><br>
+                            <span><h6>{{course.courseCECU}} CECUS AWARDED</h6></span>
+                        {% else %}
+                            <span><h5>Under Development</h5></span>
+                            <span><h6>{{course.courseCECU}} CECUS AWARDED</h6></span>
+                        {% endif %}
                     {% endif %}
                 {% endfor %}
             </div>

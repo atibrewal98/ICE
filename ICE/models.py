@@ -121,6 +121,9 @@ class Course(models.Model):
     totalEnrolled = models.IntegerField(default = 0)
     currentEnrolled = models.IntegerField(default = 0)
 
+    def getInstructor(self):
+        return Instructor.objects.get(instructorID=self.instructorID)
+
     def getModule(self):
         return Module.objects.filter(courseID=self.courseID)
     
