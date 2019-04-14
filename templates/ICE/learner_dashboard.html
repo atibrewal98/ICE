@@ -41,20 +41,20 @@
 
 {% block content %}
     <div id="courseList" class="row">
-        {% for course in courseDetails %}
+        {% for course in all_courses %}
             <div class="course col-md-4">
-                {% for m in currModules %}
-                    {% if course.courseID|slugify == m.courseID|slugify %}
-                        <img src="{% static 'images/python.png' %}" class="img-fluid">
-                        <span><a href ="../learnerCourse/courseID={{course.courseID}}&moduleID={{m.currentModule}}/">{{course.courseName}}</a></span><br>
-                    {% endif %}
-                {% endfor %}
-                {% for c in all_courses %}
+                {% for c in courseDetails %}
                     {% if course.courseID|slugify == c.courseID|slugify %}
-                        {% if c.completeStatus == 'Y'%}
-                            <span>Completed: {{c.completionDate}}</span><br>
-                            <span><h6>{{course.courseCECU}} CECUS AWARDED</h6></span>
-                        {% endif %}
+                            {% for m in currModules %}
+                                {% if course.courseID|slugify == m.courseID|slugify %}
+                                    <img src="{% static 'images/python.png' %}" class="img-fluid">
+                                    <span><a href ="../learnerCourse/courseID={{course.courseID}}&moduleID={{m.currentModule}}/">{{c.courseName}}</a></span><br>
+                                    {% if course.completeStatus == 'Y'%}
+                                        <span>Completed: {{course.completionDate}}</span><br>
+                                        <span><h6>{{c.courseCECU}} CECUS AWARDED</h6></span>
+                                    {% endif %}
+                                {% endif %}
+                            {% endfor %}
                     {% endif %}
                 {% endfor %}
             </div>
