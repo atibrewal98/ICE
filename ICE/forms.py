@@ -98,3 +98,12 @@ class ImportComponentForm(forms.ModelForm):
         self.fields['components'] = forms.ModelChoiceField(queryset = component)
         # self.fields['orderNumber'] = forms.IntegerField()
         self.fields['orderNumber'].widget.attrs['placeholder'] = 'Component#'
+
+class ImportQuizForm(forms.ModelForm):
+    class Meta:
+        model=Quiz
+        fields=('numOfQuestions','passingMark',)
+    
+    def __init__(self, quizzes, *args, **kwargs):
+        super(ImportQuizForm, self).__init__(*args, **kwargs)
+        self.fields['quizzes'] = forms.ModelChoiceField(queryset = quizzes)
