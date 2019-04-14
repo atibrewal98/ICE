@@ -129,19 +129,28 @@ def import_component_form(request, module_id):
     if request.method == 'POST':
         course = Module.objects.get(moduleID=module_id).getCourse()
         print('CCC', course)
+        componentID=0
         components = course.getComponent()
         component = Component.objects.none()
-        for c in components:
-            if c.moduleID is None:
-                print('MMM', c.componentID)
-                component = Component.objects.filter(componentID=c.componentID).union(component)
+        for key, value in request.POST.items():
+            if key=='components':
+                componentID = value
+        print(componentID)
+        component = Component.objects.filter(componentID=componentID)
+        # for c in components:
+        #     if c.moduleID is None:
+        #         print('MMM', c.componentID)
+        #         component = Component.objects.filter(componentID=c.componentID).union(component)
         form = ImportComponentForm(component, request.POST)
         if form.is_valid():
+            print("111")
             instance=form.save(commit=False)
             module=Module.objects.get(moduleID=module_id)
+            components = Component.objects.filter(componentID=componentID)
             module.numOfComponents = module.numOfComponents+1
             module.save()
             instance.moduleID=module
+            instance.componentID=components
             if form.instance.orderNumber is None:
                 instance.orderNumber=module.numOfComponents
             else:
@@ -163,6 +172,7 @@ def import_component_form(request, module_id):
                             com = Component.objects.get(componentID=c.componentID)
                             com.orderNumber = com.orderNumber + 1
                             com.save()
+            print(instance)
             instance.save()
             mod=Module.objects.get(moduleID=module_id)
             courseDet=Course.objects.get(courseID=str(mod.courseID))

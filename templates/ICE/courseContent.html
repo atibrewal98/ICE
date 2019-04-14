@@ -32,7 +32,7 @@
                             <td rowspan="2">icon</td>
                         </tr>
                         <tr>
-                            <td><a href ="../../learnerCourse/courseID={{modules.courseID}}&moduleID={{modules.pk}}">{{modules.moduleTitle}}</a></td>
+                            <td><a href ="../../learnerCourse/courseID={{modules.courseID}}&moduleID={{modules.orderNumber}}">{{modules.moduleTitle}}</a></td>
                         </tr>
                     {% endfor %}
                     {% if currModule.moduleID is not Null %}
@@ -41,7 +41,7 @@
                             <td rowspan="3">icon</td>
                         </tr>
                         <tr>
-                            <td><a href ="../../learnerCourse/courseID={{currModule.courseID}}&moduleID={{currModule.pk}}">{{currModule.moduleTitle}}</a></td>
+                            <td><a href ="../../learnerCourse/courseID={{currModule.courseID}}&moduleID={{currModule.orderNumber}}">{{currModule.moduleTitle}}</a></td>
                         </tr>
                         <tr>
                             <td><a href ="../../quizform/">Module Quiz</a></td>
