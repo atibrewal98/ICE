@@ -98,9 +98,3 @@ class ImportComponentForm(forms.ModelForm):
         self.fields['components'] = forms.ModelChoiceField(queryset = component)
         self.fields['orderNumber'] = forms.IntegerField()
         self.fields['orderNumber'].widget.attrs['placeholder'] = 'Component#'
-
-class QuestionForm(forms.Form):
-    def __init__(self, question, *args, **kwargs):
-        super(QuestionForm, self).__init__(*args, **kwargs)
-        choices = [x for x in question.get_options()]
-        self.fields["answers"] = forms.ChoiceField(choices=choices,widget=RadioSelect)

@@ -31,12 +31,13 @@ def learner_quiz(request,module_ID):
                 if Question.objects.get(questionID=key).getAnswer()==value:
                     correct+=1
         if Module.objects.get(moduleID=module_ID).getQuiz().passingMark<=correct:
-            user=Learner.objects.get(userID=request.user.userID)
-            user.updateCECU(Module.objects.get(moduleID=module_ID).getCourse().courseCECU)
-            user.save()
             record=LearnerTakesCourse.objects.get(staffID=user.userID,courseID=Module.objects.get(moduleID=module_ID).getCourse())
             record.updateCourse()
             record.save()
+            if record.completeStatus=='Y':
+                user=Learner.objects.get(userID=request.user.userID)
+                user.updateCECU(Module.objects.get(moduleID=module_ID).getCourse().courseCECU)
+                user.save()
             numOfQues=Module.objects.get(moduleID=module_ID).getQuiz().numOfQuestions
             return render(request, 'quiz_result.html', {'result': correct,'numOfQues':numOfQues})
         else:
