@@ -304,6 +304,9 @@ def learnerModuleCourseView(request, course_ID, module_ID):
     
     components = title.getComponent()
     components = sorted(components, key=operator.attrgetter('orderNumber'))
+    curr_Modules = sorted(all_modules, key=operator.attrgetter('orderNumber'))
+    done_Modules = sorted(all_modules, key=operator.attrgetter('orderNumber'))
+    left_Modules = sorted(all_modules, key=operator.attrgetter('orderNumber'))
 
     template=loader.get_template("ICE/courseContent.html")
     context ={
