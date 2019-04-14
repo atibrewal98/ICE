@@ -182,8 +182,8 @@ class Quiz(models.Model):
     quizID=models.AutoField(primary_key = True)
     moduleID = models.ForeignKey(Module, on_delete=models.CASCADE,null=True, blank = True)
     courseID = models.ForeignKey(Course, on_delete=models.CASCADE)
-    numOfQuestions = models.IntegerField(null = False, blank = False)
-    passingMark = models.IntegerField(null = False, blank = False)
+    numOfQuestions = models.IntegerField(null = False, default=1)
+    passingMark = models.IntegerField(null = False, default=1)
 
     def getQuestions(self):
         return sorted(Question.objects.filter(quizID=self.quizID)[:self.numOfQuestions], key=lambda x: random.random())
