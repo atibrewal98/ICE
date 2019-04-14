@@ -5,6 +5,10 @@
   <title>Title</title>
 </head>
 <body>
-    {{ ans }}
+{% if result is -1 %}
+  Sorry, you failed the quiz. Try again!
+{% else %}
+  Congratulations! You passed the quiz!
+{% endif %}
 </body>
 </html>

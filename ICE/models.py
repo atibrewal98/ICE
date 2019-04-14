@@ -158,11 +158,11 @@ class Quiz(models.Model):
     quizID=models.AutoField(primary_key = True)
     moduleID = models.ForeignKey(Module, on_delete=models.CASCADE,null=True, blank = True)
     courseID = models.ForeignKey(Course, on_delete=models.CASCADE)
-    numOfQuestions = models.IntegerField(null = True, blank = True)
-    passingMark = models.IntegerField(null = True, blank = True)
+    numOfQuestions = models.IntegerField(null = False, blank = False)
+    passingMark = models.IntegerField(null = False, blank = False)
 
     def getQuestions(self):
-        return sorted(Question.objects.filter(quizID=self.quizID), key=lambda x: random.random())
+        return sorted(Question.objects.filter(quizID=self.quizID)[:self.numOfQuestions], key=lambda x: random.random())
     
     def __str__(self):
         return str(self.quizID)
@@ -177,13 +177,8 @@ class Question(models.Model):
     # answer is 'i' where i is 1, 2, 3, 4
     answer = models.CharField(max_length=1)
         
-    def get_options(self):
-        choices=[]
-        choices.append(('1',self.qOption1))
-        choices.append(('2',self.qOption2))
-        choices.append(('3',self.qOption3))
-        choices.append(('4',self.qOption4))
-        return choices
+    def getAnswer(self):
+        return self.answer
 
     def __str__(self):
         return self.questionStatement
