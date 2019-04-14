@@ -39,6 +39,13 @@ def learner_quiz(request,module_ID):
                 user=Learner.objects.get(userID=request.user.userID)
                 user.updateCECU(Module.objects.get(moduleID=module_ID).getCourse().courseCECU)
                 user.save()
+                email = EmailMessage(
+                'Course completion confirmation',
+                render_to_string('ICE/quiz_email.html', {
+                    'course': course,
+                }),
+                to=[Learner.objects.get(userID=request.user.userID).emailID])
+                email.send()
             numOfQues=Module.objects.get(moduleID=module_ID).getQuiz().numOfQuestions
             return render(request, 'quiz_result.html', {'result': correct,'numOfQues':numOfQues,'courseID':course,'moduleID':record.currentModule})
         else:
