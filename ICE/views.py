@@ -5,7 +5,7 @@ from django.views.generic import View
 from django.template import loader
 
 from ICE.models import Module, Category, Component, Course, Instructor, LearnerTakesCourse, Learner, Question, User, Staff, Quiz
-from .forms import ModuleForm,QuizForm, ComponentForm, UserForm, InviteForm, SignupFormInstructor, LearnerGetTokenForm, SignupFormLearner, CourseForm
+from .forms import ModuleForm,QuizForm, ComponentForm, ImportComponentForm, UserForm, InviteForm, SignupFormInstructor, LearnerGetTokenForm, SignupFormLearner, CourseForm
 import operator
 
 """
@@ -106,6 +106,58 @@ def module_form(request, course_id):
     return render(request,'add_module.html',{'moduleform': form, 'course': module})
 
 @login_required
+def import_component_form(request, module_id):
+    if request.user.role != 1:
+        context={
+            'message': "You do not have access to this page."
+        }
+        return render(request, 'ICE/message.html', context)
+    instructor_id = request.user.userID
+    if request.method == 'POST':
+        form = ImportComponentForm(request.POST,request.FILES)
+        if form.is_valid():
+            instance=form.save(commit=False)
+            module=Module.objects.get(moduleID=module_id)
+            module.numOfComponents = module.numOfComponents+1
+            module.save()
+            instance.moduleID=module
+            if form.instance.orderNumber is None:
+                instance.orderNumber=module.numOfComponents
+            else:
+                components = Component.objects.filter(moduleID=module_id)
+                maxOrd = 0
+                sameOrd = 0
+                for c in components:
+                    if c.orderNumber > maxOrd:
+                        maxOrd = c.orderNumber
+                print(maxOrd)
+                if maxOrd < form.instance.orderNumber:
+                    instance.orderNumber=module.numOfComponents
+                for c in components:
+                    if c.orderNumber == form.instance.orderNumber:
+                        sameOrd = c.orderNumber
+                if sameOrd != 0:
+                    for c in components:
+                        if c.orderNumber >= sameOrd:
+                            com = Component.objects.get(componentID=c.componentID)
+                            com.orderNumber = com.orderNumber + 1
+                            com.save()
+            instance.save()
+            mod=Module.objects.get(moduleID=module_id)
+            courseDet=Course.objects.get(courseID=str(mod.courseID))
+            print(courseDet.courseID)
+            return redirect('../../instructorCourse/courseID='+str(courseDet.courseID)+'&moduleID='+str(mod.orderNumber)+'/')
+    course = Module.objects.get(moduleID=module_id).getCourse()
+    components = course.getComponent()
+    component = Component.objects.none()
+    for c in components:
+        if c.moduleID is not None:
+            component = Component.objects.filter(componentID=c.componentID).union(component)
+
+    form = ImportComponentForm(component)
+    return render(request, 'import_component.html', {'componentform': form})
+
+@login_required
 def component_form(request, module_id):
     if request.user.role != 1:
         context={
@@ -146,7 +198,7 @@ def component_form(request, module_id):
             mod=Module.objects.get(moduleID=module_id)
             courseDet=Course.objects.get(courseID=str(mod.courseID))
             print(courseDet.courseID)
-            return redirect('../../instructorCourse/courseID='+str(courseDet.courseID)+'&moduleID='+module_id+'/')
+            return redirect('../../instructorCourse/courseID='+str(courseDet.courseID)+'&moduleID='+str(mod.orderNumber)+'/')
     form = ComponentForm()
     return render(request, 'add_component.html', {'componentform': form})
 
@@ -159,12 +211,11 @@ def learnerModuleCourseView(request, course_ID, module_ID):
         return render(request, 'ICE/message.html', context)
     learner_ID = request.user.userID
 
-    all_modules=Module.objects.filter(courseID = course_ID)
+    course = Course.objects.get(courseID = course_ID)
+    all_modules = course.getModule()
     all_modules = sorted(all_modules, key=operator.attrgetter('orderNumber'))
-    course=Course.objects.get(courseID = course_ID)
 
     title = Module.objects.none()
-    components = Component.objects.none()
     done_Modules=Module.objects.none()
     left_Modules=Module.objects.none()
     curr_Modules=Module.objects.none()
@@ -183,10 +234,10 @@ def learnerModuleCourseView(request, course_ID, module_ID):
             left_Modules = Module.objects.filter(moduleID = m.moduleID).union(left_Modules)
 
     for m in all_modules:
-        if(m.orderNumber == module_ID):
+        if(m.orderNumber == int(module_ID)):
             title=Module.objects.get(moduleID = m.moduleID)
-            components=Component.objects.filter(moduleID = m.moduleID)
     
+    components = title.getComponent()
     components = sorted(components, key=operator.attrgetter('orderNumber'))
 
     template=loader.get_template("ICE/courseContent.html")
@@ -210,21 +261,20 @@ def instructorCourseModuleView(request, course_ID, module_ID):
         }
         return render(request, 'ICE/message.html', context)
     instructor_ID = request.user.userID
-
-    all_modules=Module.objects.filter(courseID = course_ID)
-    all_modules = sorted(all_modules, key=operator.attrgetter('orderNumber'))
+    
     course=Course.objects.get(courseID = course_ID)
+    all_modules = course.getModule()
+    all_modules = sorted(all_modules, key=operator.attrgetter('orderNumber'))
 
     title = Module.objects.none()
-    components = Component.objects.none()
 
     instructor=Instructor.objects.get(pk = course.instructorID)
 
     for m in all_modules:
-        if(m.orderNumber == module_ID):
-            title=Module.objects.get(moduleID = m.noduleID)
-            components=Component.objects.filter(moduleID = m.moduleID)
+        if(m.orderNumber == int(module_ID)):
+            title=Module.objects.get(moduleID = m.moduleID)
     
+    components = title.getComponent()
     components = sorted(components, key=operator.attrgetter('orderNumber'))
 
     template=loader.get_template("ICE/instructorCourse.html")
@@ -373,7 +423,8 @@ def courseDescriptionView(request, course_id):
         return redirect('../../learnerCourse/courseID='+course_id+'&moduleID=1/')
     courseDetails = Course.objects.get(courseID=course_id)
     instructorDetails = Instructor.objects.get(userID=str(courseDetails.instructorID))
-    template = loader.get_template("ICE/courseDescription.html")
+    categoryDetails = Category.objects.get(categoryID=str(courseDetails.categoryID))
+    template = loader.get_template("ICE/learnerCourseDescription.html")
     learnerC = LearnerTakesCourse.objects.all()
     flag = True
     for l in learnerC:
@@ -382,6 +433,7 @@ def courseDescriptionView(request, course_id):
     if(flag == False):
         context = {
             'courseDetails': courseDetails,
+            'categoryDetails': categoryDetails,
             'instructorDetails': instructorDetails,
             'type': 'View Course',
         }

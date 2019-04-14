@@ -1,6 +1,7 @@
 {% extends 'ICE/base1.html' %}
 
 {% load static %}
+
 {% block navbar %}
     <ul class="navbar-nav mr-auto">
         <li class="nav-item active">
@@ -24,7 +25,6 @@
         </li>
     </ul>
 {% endblock navbar %}
-
 {% block navbar2 %}
     <ul class="nav nav2">
         <li class="nav-item">
@@ -34,8 +34,10 @@
             <a class="nav-link" href="#">Under Development</a>
         </li>
     </ul>
+    <button type="button" onclick = "window.location.href = '../addCourse/';">Add Course</button>
+    <button type="button" onclick = "window.location.href = '../addComponent2/';">Add Component</button>
+    <button type="button" onclick = "">Add Quiz</button>
 {% endblock navbar2 %}
-
 {% block content %}
     <div id="courseList" class="row">
         {% for course in all_courses %}
@@ -44,7 +46,7 @@
                     {% if course.courseID|slugify == m.courseID|slugify %}
                         <img src="{% static 'images/python.png' %}" class="img-fluid">
                         <span>Course {{course.courseID}}</span><br>
-                        <span><a href ="../instructorCourse/courseID={{course.courseID}}&moduleID={{m.moduleID}}/">{{course.courseID}} - {{course.courseName}}</a></span>
+                        <span><a href ="../instructorCourse/courseID={{course.courseID}}&moduleID={{m.orderNumber}}/">{{course.courseID}} - {{course.courseName}}</a></span>
                     {% endif %}
                 {% endfor %}
             </div>

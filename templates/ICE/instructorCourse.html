@@ -22,6 +22,7 @@
             <div id="leftHeader">
                 <h1>{{course.courseName}}</h1>
                 <p>Course Instructor: {{instructor.firstName}} {{instructor.lastName}}</p>
+                <button type="button" onclick = "window.location.href = '../../addModule/courseID={{course.pk}}';">Add Module</button>
             </div>
 
             <div id="moduleList">
@@ -32,20 +33,16 @@
                             <td rowspan="2">icon</td>
                         </tr>
                         <tr>
-                            <td><a href ="../../instructorCourse/courseID={{modules.courseID}}&moduleID={{modules.pk}}">{{modules.moduleTitle}}</a></td>
+                            <td><a href ="../../instructorCourse/courseID={{modules.courseID}}&moduleID={{modules.orderNumber}}">{{modules.moduleTitle}}</a></td>
                         </tr>
-                        <!-- <tr>
-                            <td>Take end of module quiz</td>
-                        </tr> -->
                     {% endfor %}
                 </table>
             </div>    
         </div>
             
         <div id="right">
-            <button type="button" onclick = "window.location.href = '../../addModule/courseID={{course.pk}}';">Add Module</button>
-            <button type="button" onclick = "window.location.href = '../../addComponent/moduleID={{title.pk}}';">Add Component</button>
-            <button type="button" onclick = "window.location.href = '../../addModuleQuiz/{{title.pk}}';">Add Quiz</button>
+            <button type="button" onclick = "window.location.href = '../../importComponent/moduleID={{title.moduleID}}';">Import Component</button>
+            <button type="button" onclick = "window.location.href = '../../addModuleQuiz/{{title.moduleID}}';">Import Quiz</button>
             <h1>{{title.moduleTitle}}</h1>
             <table>
                 {% for com in components %}

@@ -88,6 +88,17 @@ class ComponentForm(forms.ModelForm):
         # self.fields['componentImage'].widget.attrs['placeholder'] = 'No Image chosen'
         self.fields['orderNumber'].widget.attrs['placeholder'] = 'Component#'
 
+class ImportComponentForm(forms.ModelForm):
+    class Meta:
+        model=Component
+        fields=('componentID', 'orderNumber',)
+        
+    def __init__(self, component, *args, **kwargs):
+        super(ImportComponentForm, self).__init__(*args, **kwargs)
+        # self.fields['componentTitle'].widget.attrs['placeholder'] = 'Component Title'
+        # self.fields['componentText'].widget.attrs['placeholder'] = 'Component Text Content'
+        # self.fields['componentImage'].widget.attrs['placeholder'] = 'No Image chosen'
+        self.fields['orderNumber'].widget.attrs['placeholder'] = 'Component#'
 
 class QuestionForm(forms.Form):
     def __init__(self, question, *args, **kwargs):

@@ -97,8 +97,9 @@ class Instructor(User):
 class Category(models.Model):
     categoryID = models.AutoField(primary_key = True)
     categoryName = models.CharField(max_length=100, unique = True)
+
     def __str__(self):
-        return self.categoryName
+        return str(self.categoryID)
 
 class Course(models.Model):
     courseID = models.AutoField(primary_key = True)
@@ -115,6 +116,13 @@ class Course(models.Model):
     numOfModules = models.IntegerField(default = 0)
     totalEnrolled = models.IntegerField(default = 0)
     currentEnrolled = models.IntegerField(default = 0)
+
+    def getModule(self):
+        return Module.objects.filter(courseID=self.courseID)
+    
+    def getComponent(self):
+        return Component.objects.filter(componentID=self.componentID)
+
     def __str__(self):
         return str(self.courseID)
 
@@ -139,12 +147,19 @@ class Module(models.Model):
     def getQuiz(self):
         return Quiz.objects.get(moduleID=self.moduleID)
 
+    def getComponent(self):
+        return Component.objects.filter(moduleID=self.moduleID)
+
+    def getCourse(self):
+        return Course.objects.get(courseID=self.courseID)
+
     def __str__(self):
         return str(self.courseID) + ":" + str(self.moduleID) + " : " + self.moduleTitle
 
 class Component(models.Model):
     componentID = models.AutoField(primary_key = True)
-    moduleID = models.ForeignKey(Module, on_delete=models.CASCADE)
+    courseID = models.ForeignKey(Course, null = True, blank = True, on_delete=models.CASCADE)
+    moduleID = models.ForeignKey(Module, null = True, blank = True, on_delete=models.CASCADE)
     componentTitle = models.CharField(max_length=100)
     componentText = models.CharField(max_length=100, null=True, blank = True)
     componentImage = models.ImageField(upload_to='images/',null=True, blank=True)
