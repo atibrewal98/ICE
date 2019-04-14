@@ -30,8 +30,9 @@ def learner_quiz(request,module_ID):
             if key!='csrfmiddlewaretoken':
                 if Question.objects.get(questionID=key).getAnswer()==value:
                     correct+=1
+        course=Module.objects.get(moduleID=module_ID).getCourse()
+        record=LearnerTakesCourse.objects.get(staffID=request.user.userID,courseID=course)
         if Module.objects.get(moduleID=module_ID).getQuiz().passingMark<=correct:
-            record=LearnerTakesCourse.objects.get(staffID=request.user.userID,courseID=Module.objects.get(moduleID=module_ID).getCourse())
             record.updateCourse()
             record.save()
             if record.completeStatus=='Y':
@@ -39,9 +40,9 @@ def learner_quiz(request,module_ID):
                 user.updateCECU(Module.objects.get(moduleID=module_ID).getCourse().courseCECU)
                 user.save()
             numOfQues=Module.objects.get(moduleID=module_ID).getQuiz().numOfQuestions
-            return render(request, 'quiz_result.html', {'result': correct,'numOfQues':numOfQues})
+            return render(request, 'quiz_result.html', {'result': correct,'numOfQues':numOfQues,'courseID':course,'moduleID':record.currentModule})
         else:
-            return render(request, 'quiz_result.html', {'result': -1})
+            return render(request, 'quiz_result.html', {'result': -1,'courseID':course,'moduleID':record.currentModule})
     questions=Module.objects.get(moduleID=module_ID).getQuiz().getQuestions()
     return render(request, 'quiz_template.html', {'questions': questions})
 
