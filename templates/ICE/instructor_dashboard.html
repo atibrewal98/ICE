@@ -45,7 +45,10 @@
                 {% for m in currModules %}
                     {% if course.courseID|slugify == m.courseID|slugify %}
                         <img src="{% static 'images/python.png' %}" class="img-fluid">
-                        <span><a href ="../instructorCourse/courseID={{course.courseID}}&moduleID=1/">{{course.courseName}}</a></span>
+                        <span><a href ="../instructorCourse/courseID={{course.courseID}}&moduleID=1/">{{course.courseName}}</a></span><br>
+                        <span>Total Enrolled: {{course.totalEnrolled}}</span><br>
+                        <span>Current Enrolled: {{course.currentEnrolled}}</span><br>
+                        <span><h6>{{course.courseCECU}} CECUS AWARDED</h6></span>
                     {% endif %}
                 {% endfor %}
             </div>

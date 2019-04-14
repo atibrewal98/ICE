@@ -116,7 +116,7 @@ class Course(models.Model):
     # 'U' for course under development
     # 'R' for under review by HR
     # 'N' for course not live and unavailable
-    courseStatus = models.CharField(max_length=1)
+    courseStatus = models.CharField(max_length=1, default = 'U')
     numOfModules = models.IntegerField(default = 0)
     totalEnrolled = models.IntegerField(default = 0)
     currentEnrolled = models.IntegerField(default = 0)

@@ -369,7 +369,7 @@ def category_list_view(request, category_id):
     all_learnerCourses=LearnerTakesCourse.objects.filter(staffID=learner_id)
     courseList = Course.objects.none()
     if category_id == '0':
-        courses=Course.objects.all()
+        courses=Course.objects.all().exclude(courseStatus = 'U')
         for c in courses:
             flag = True
             for lc in all_learnerCourses:
@@ -387,7 +387,7 @@ def category_list_view(request, category_id):
             'learnerDetails': learnerDetails,
         }
         return HttpResponse(template.render(context,request))
-    courses=Course.objects.filter(categoryID = category_id)
+    courses=Course.objects.filter(categoryID = category_id).exclude(courseStatus = 'U')
     for c in courses:
         flag = True
         for lc in all_learnerCourses:
