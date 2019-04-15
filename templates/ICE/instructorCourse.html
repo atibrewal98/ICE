@@ -42,7 +42,7 @@
             <table class="table">
                 {% for modules in all_modules %}
                     <tr>
-                        <td>Module {{modules.orderNumber}}</td>
+                        <td><h6>Module {{modules.orderNumber}}</h6></td>
                         {% if course.courseStatus == 'U' %}
                             <td rowspan="2" align="center"><button type="button" class="btn btn-primary btn-sm" onclick="window.location.href='../../editModule/moduleID={{modules.pk}}';">Reorder Module</button></td>
                         {% endif %}
@@ -74,7 +74,7 @@
         <h2>{{title.moduleTitle}}</h2>
         <br>
         {% for com in components %}
-            Component {{com.orderNumber}} - {{com.componentTitle}}<br>
+            <h6>Component {{com.orderNumber}} - {{com.componentTitle}}</h6>
                 {% if com.componentText is not Null %}
                     <p>{{com.componentText}}</p>
                 {% else %}
