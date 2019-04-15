@@ -71,22 +71,22 @@ class ModuleForm(forms.ModelForm):
         # self.fields['numOfComponents'].widget.attrs['placeholder'] = 'No. of Components'
         # not showing placeholder num of components as integer field with blank = true not done
 
-class QuizForm(forms.ModelForm):
-    class Meta:
-        model=Quiz
-        fields=('numOfQuestions','passingMark',)
+# class QuizForm(forms.ModelForm):
+#     class Meta:
+#         model=Quiz
+#         fields=('numOfQuestions','passingMark',)
 
-class ComponentForm(forms.ModelForm):
-    class Meta:
-        model=Component
-        fields=('componentTitle','componentText','componentImage','orderNumber',)
+# class ComponentForm(forms.ModelForm):
+#     class Meta:
+#         model=Component
+#         fields=('componentTitle','componentText','componentImage','orderNumber',)
         
-    def __init__(self, *args, **kwargs):
-        super(ComponentForm, self).__init__(*args, **kwargs)
-        self.fields['componentTitle'].widget.attrs['placeholder'] = 'Component Title'
-        self.fields['componentText'].widget.attrs['placeholder'] = 'Component Text Content'
-        # self.fields['componentImage'].widget.attrs['placeholder'] = 'No Image chosen'
-        self.fields['orderNumber'].widget.attrs['placeholder'] = 'Component#'
+#     def __init__(self, *args, **kwargs):
+#         super(ComponentForm, self).__init__(*args, **kwargs)
+#         self.fields['componentTitle'].widget.attrs['placeholder'] = 'Component Title'
+#         self.fields['componentText'].widget.attrs['placeholder'] = 'Component Text Content'
+#         # self.fields['componentImage'].widget.attrs['placeholder'] = 'No Image chosen'
+#         self.fields['orderNumber'].widget.attrs['placeholder'] = 'Component#'
 
 class ImportComponentForm(forms.ModelForm):
     class Meta:
@@ -105,7 +105,7 @@ class EditModuleForm(forms.ModelForm):
         
     def __init__(self, *args, **kwargs):
         super(EditModuleForm, self).__init__(*args, **kwargs)
-        self.fields['orderNumber'].widget.attrs['placeholder'] = 'Component#'
+        self.fields['orderNumber'].widget.attrs['placeholder'] = 'Module#'
 
 
 class ImportQuizForm(forms.ModelForm):
