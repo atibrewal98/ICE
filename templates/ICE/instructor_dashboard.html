@@ -26,17 +26,24 @@
     </ul>
 {% endblock navbar %}
 {% block navbar2 %}
-    <ul class="nav nav2">
-        <li class="nav-item">
-            <a class="nav-link active" href="../instructorDashboard">Live Courses</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="../underDevelopment">Under Development</a>
-        </li>
-    </ul>
-    <button type="button" onclick = "window.location.href = '../addCourse/';">Add Course</button>
-    <button type="button" onclick = "">Add Component</button>
-    <button type="button" onclick = "">Add Quiz</button>
+    <nav class="navbar navbar-expand-md navbar-light bg-white">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar2" aria-controls="navbar2" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbar2">
+            <ul class="nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link active" href="../instructorDashboard">Live Courses</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="../underDevelopment">Under Development</a>
+                </li>
+            </ul>
+            <button type="button" class="btn btn-primary" onclick="window.location.href = '../addCourse/';">Add Course</button>
+            <button type="button" class="btn btn-primary" onclick = "">Add Component</button>
+            <button type="button" class="btn btn-primary" onclick = "">Add Quiz</button>
+        </div>
+    </nav>
 {% endblock navbar2 %}
 {% block content %}
     <div id="courseList" class="row">

@@ -1,37 +1,42 @@
-{% load static %}
-<!DOCTYPE html>
-<html>
-<head>
-    <link rel="stylesheet" type="text/css" href="{% static 'scripts/styles.css' %}">
-<title>{{c.courseName}}</title>
-</head>
-<body>
+{% extends 'ICE/base1.html' %}
 
-<div id="background">
-    <div id="navBar">
-            <ul>
-                <li><img src="{% static 'images/owl.png' %}"></li>
-                <li><a href="../../dashboard" class="navText">Dashboard</a></li>
-                <li><a href="../category/categoryID=0" class="navText">Categories</a></li>
-                <li class="right"><img src="{% static 'images/user.png' %}"></li>
-            </ul>
-    </div>
-        
-    <div id="frame">
-        <div id="right">
-            <form method="post">
-                {% csrf_token %}
-                <button>{{type}}</button>
-            </form>
-            <h3>{{categoryDetails.categoryName}}</h3>
-            <h1>{{courseDetails.courseName}}</h1>
-            <h4>Course Instructor: {{instructorDetails.firstName}} {{instructorDetails.lastName}}</h4>
-            <h2>Course Description:</h2>
-            <p>{{courseDetails.courseDescription}}</p>
-            <h3>Includes {{courseDetails.numOfModules}} Modules & End-of-Module Quizzes</h3>
-            <h2>CECU Value: {{courseDetails.courseCECU}} Units</h2>
+{% load static %}
+
+{% block navbar %}
+<ul class="navbar-nav mr-auto">
+    <li class="nav-item">
+        <a class="nav-link" href="../../dashboard/">Dashboard<span class="sr-only">(current)</span></a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="../category/categoryID=0">Categories</a>
+    </li>
+</ul>
+<ul class="navbar-nav ml-auto">
+    <li class="nav-item dropdown">
+        <a class="nav-link" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <img src="{% static 'images/user.png' %}">
+        </a>
+        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
+            <a class="dropdown-item" href="#">Profile</a>
+            <a class="dropdown-item" href="#">Change Account Details</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="../accounts/logout">Logout</a>
         </div>
-    </div>
-</div>
-</body>
-</html>
+    </li>
+</ul>
+{% endblock navbar %}
+
+{% block content %}
+<form method="post">
+    {% csrf_token %}
+    <button class="btn btn-primary btn-sm">{{type}}</button>
+</form>
+<h3>{{categoryDetails.categoryName}}:</h3>
+<h3>{{courseDetails.courseName}}</h3>
+<h5>Course Instructor: {{instructorDetails.firstName}} {{instructorDetails.lastName}}</h5>
+<br>
+<h5>Course Description:</h5>
+<p>{{courseDetails.courseDescription}}</p>
+<p>Includes {{courseDetails.numOfModules}} Modules & End-of-Module Quizzes</p>
+<p>CECU Value: {{courseDetails.courseCECU}} Units</p>
+{% endblock content %}

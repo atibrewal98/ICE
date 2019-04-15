@@ -1,95 +1,97 @@
+{% extends 'ICE/base1.html' %}
+
 {% load static %}
-<!DOCTYPE html>
-<html>
-<head>
-    <link rel="stylesheet" type="text/css" href="{% static 'scripts/styles.css' %}">
-<title>ICE</title>
-</head>
-<body>
 
-<div id="background">
-    <div id="navBar">
-            <ul>
-                <li><img src="{% static 'images/owl.png' %}"></li>
-                <li><a href="../../dashboard" class="navText">Dashboard</a></li>
-                <li><a href="../../category/categoryID=0" class="navText">Categories</a></li>
-                <li class="right"><img src="{% static 'images/user.png' %}"></li>
-            </ul>
-    </div>
-        
-    <div id="frame">
-        <div id="left">
-            <div id="leftHeader">
-                <h1>{{course.courseName}}</h1>
-                <p>Course Instructor: {{instructor.firstName}} {{instructor.lastName}}</p>
-            </div>
-
-            <div id="moduleList">
-                <table>
-                    {% if CM.completeStatus == 'N' %}
-                        {% for modules in done_Modules %}
-                            <tr>
-                                <td>Module {{modules.orderNumber}}</td>
-                                <td rowspan="2">icon</td>
-                            </tr>
-                            <tr>
-                                <td><a href ="../../learnerCourse/courseID={{modules.courseID}}&moduleID={{modules.orderNumber}}">{{modules.moduleTitle}}</a></td>
-                            </tr>
-                        {% endfor %}
-                        {% if currModule.moduleID is not Null%}
-                            <tr>
-                                <td>Module {{currModule.orderNumber}}</td>
-                                <td rowspan="3">icon</td>
-                            </tr>
-                            <tr>
-                                <td><a href ="../../learnerCourse/courseID={{currModule.courseID}}&moduleID={{currModule.orderNumber}}">{{currModule.moduleTitle}}</a></td>
-                            </tr>
-                            <tr>
-                                <td><a href ="../../quiz/moduleID={{currModule.pk}}">Module Quiz</a></td>
-                            </tr>
-                        {% endif %}
-                        {% for modules in left_Modules %}
-                            <tr>
-                                <td>Module {{modules.orderNumber}}</td>
-                                <td rowspan="2">icon</td>
-                            </tr>
-                            <tr>
-                                <td>{{modules.moduleTitle}}</td>
-                            </tr>
-                        {% endfor %}
-                    {% else %}
-                    {% for modules in all_modules %}
-                        <tr>
-                            <td>Module {{modules.orderNumber}}</td>
-                            <td rowspan="2">icon</td>
-                        </tr>
-                        <tr>
-                            <td><a href ="../../learnerCourse/courseID={{modules.courseID}}&moduleID={{modules.orderNumber}}">{{modules.moduleTitle}}</a></td>
-                        </tr>
-                    {% endfor %}
-                    {% endif %}
-                </table>
-            </div>    
+{% block navbar %}
+<ul class="navbar-nav mr-auto">
+    <li class="nav-item">
+        <a class="nav-link" href="../../dashboard/">Dashboard<span class="sr-only">(current)</span></a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="../category/categoryID=0">Categories</a>
+    </li>
+</ul>
+<ul class="navbar-nav ml-auto">
+    <li class="nav-item dropdown">
+        <a class="nav-link" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <img src="{% static 'images/user.png' %}">
+        </a>
+        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
+            <a class="dropdown-item" href="#">Profile</a>
+            <a class="dropdown-item" href="#">Change Account Details</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="../accounts/logout">Logout</a>
         </div>
-            
-        <div id="right">
-            <button type="button" onclick="window.location.href = '../../courseDescription/courseID={{course.courseID}}'">Course Info</button>
-            <button type="button" onclick="alert('Hello world!')">Drop Course</button>
-            <h1>{{title.moduleTitle}}</h1>
-            <table>
-                {% for com in components %}
-                    <tr>Component {{com.orderNumber}} - {{com.componentTitle}}</tr>
-                    {% if com.componentText is not Null %}
-                        <tr><p>{{com.componentText}}</p></tr>
-                    {% else %}
-                        <tr><img src="{{com.componentImage.url}}" width="400" height="200"></tr>
+    </li>
+</ul>
+{% endblock navbar %}
+
+{% block content %}
+<div id="subframe" class="row">
+    <div id="left" class="col-md-4">
+        <div id="leftHeader">
+            <h2>{{course.courseName}}</h2>
+            <p>Course Instructor: {{instructor.firstName}} {{instructor.lastName}}</p>
+        </div>
+        <div id="moduleList">
+            <table class="table">
+                {% if CM.completeStatus == 'N' %}
+                    {% for modules in done_Modules %}
+                    <tr>
+                        <td>Module {{modules.orderNumber}}</td>
+                        <td rowspan="2"><img src="{% static 'images/tick_mark.png' %}"></td>
+                    </tr>
+                    <tr>
+                        <td><a href="../../learnerCourse/courseID={{modules.courseID}}&moduleID={{modules.orderNumber}}">{{modules.moduleTitle}}</a></td>
+                    </tr>
+                    {% endfor %}
+                    {% if currModule.moduleID is not Null%}
+                    <tr>
+                        <td colspan="2">Module {{currModule.orderNumber}}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="2"><a href="../../learnerCourse/courseID={{currModule.courseID}}&moduleID={{currModule.orderNumber}}">{{currModule.moduleTitle}}</a></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2"><a href="../../quiz/moduleID={{currModule.pk}}">Module Quiz</a></td>
+                    </tr>
                     {% endif %}
-                {% endfor %}
+                    {% for modules in left_Modules %}
+                    <tr>
+                        <td colspan="2">Module {{modules.orderNumber}}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">{{modules.moduleTitle}}</td>
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                    {% for modules in all_modules %}
+                    <tr>
+                        <td>Module {{modules.orderNumber}}</td>
+                        <td rowspan="2">icon</td>
+                    </tr>
+                    <tr>
+                        <td><a href="../../learnerCourse/courseID={{modules.courseID}}&moduleID={{modules.orderNumber}}">{{modules.moduleTitle}}</a></td>
+                    </tr>
+                    {% endfor %}
+                {% endif %}
             </table>
         </div>
     </div>
+    <div id="right" class="col-md-8">
+        <nav class="nav navbar-light bg-white">
+            <button type="button" class="btn btn-primary btn-sm" onclick="window.location.href = '../../courseDescription/courseID={{course.courseID}}'">Course Info</button>
+            <button type="button" class="btn btn-primary btn-sm" onclick="">Drop Component</button>
+        </nav>
+        <h2>{{title.moduleTitle}}</h2>
+        {% for com in components %}
+            Component {{com.orderNumber}} - {{com.componentTitle}}<br>
+                {% if com.componentText is not Null %}
+                    <p>{{com.componentText}}</p>
+                {% else %}
+                    <img src="{{com.componentImage.url}}" width="400" height="200"><br>
+                {% endif %}
+        {% endfor %}
+    </div>
 </div>
-
-
-</body>
-</html>
+{% endblock content %}
