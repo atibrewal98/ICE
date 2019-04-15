@@ -122,7 +122,7 @@ class Course(models.Model):
     currentEnrolled = models.IntegerField(default = 0)
 
     def getInstructor(self):
-        return Instructor.objects.get(instructorID=self.instructorID)
+        return Instructor.objects.get(userID=str(self.instructorID))
 
     def getModule(self):
         return Module.objects.filter(courseID=self.courseID)

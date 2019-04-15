@@ -678,6 +678,15 @@ def intructor_view_quiz(request, id):
     }
     return HttpResponse(template.render(context, request))
 
+def instructorDetailView(request, course_id):
+    course = Course.objects.get(courseID= course_id)
+    instructor = course.getInstructor()
+    template = loader.get_template("ICE/instructorDetails.html")
+    context = {
+        'course': course,
+        'instructor': instructor
+    }
+    return HttpResponse(template.render(context, request))
 
 @login_required
 def courseDescriptionView(request, course_id):

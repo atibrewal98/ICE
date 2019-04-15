@@ -27,16 +27,11 @@
 {% endblock navbar %}
 
 {% block content %}
-    <form method="post">
-        {% csrf_token %}
-        <button class="btn btn-primary btn-sm">{{type}}</button>
-    </form>
-    <h3>Category: {{categoryDetails.categoryName}}</h3>
-    <h3>Course Name: {{courseDetails.courseName}}</h3>
-    <h5>Course Instructor: <a href="../../instructorDetails/courseID={{courseDetails.courseID}}">{{instructorDetails.firstName}} {{instructorDetails.lastName}}</a></h5>
+    <button class="btn btn-primary btn-sm" onclick = "window.location.href = '../../courseDescription/courseID={{course.courseID}}';">Back to Course</button>
     <br>
-    <h5>Course Description:</h5>
-    <p>{{courseDetails.courseDescription}}</p>
-    <p>Includes {{courseDetails.numOfModules}} Modules & End-of-Module Quizzes</p>
-    <p>CECU Value: <b>{{courseDetails.courseCECU}} Units</b></p>
+    <h3>Name: {{instructor.firstName}} {{instructor.lastName}}</h3>
+    <h5>Biography:</h5>
+    <br>
+    <p>{{instructor.biography}}</p>
+    <h5>Email: {{instructor.emailID}}</h5>
 {% endblock content %}
