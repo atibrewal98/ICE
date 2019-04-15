@@ -40,7 +40,8 @@ class SignupFormLearner(forms.ModelForm):
         fields = ('userName', 'password')
 
 class LearnerGetTokenForm(forms.Form):
-    staffID = forms.IntegerField(max_value=9999)
+    staffID = forms.CharField(max_length=100)
+    # staffID = forms.IntegerField(max_value=9999)
 
 class UserForm(forms.ModelForm):
     class Meta:
