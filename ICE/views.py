@@ -223,7 +223,7 @@ def edit_module_form(request, module_id):
                 module.save()
         return redirect('../../instructorCourse/courseID='+str(course.courseID)+'&moduleID=1/')
     form = EditModuleForm()
-    return render(request, 'edit_component.html', {'componentform': form})
+    return render(request, 'edit_module.html', {'componentform': form})
 
 @login_required
 def import_component_form(request, module_id):
