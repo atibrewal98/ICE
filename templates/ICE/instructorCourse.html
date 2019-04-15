@@ -43,7 +43,9 @@
                 {% for modules in all_modules %}
                     <tr>
                         <td>Module {{modules.orderNumber}}</td>
-                        <td rowspan="2" align="center"><button type="button" class="btn btn-primary btn-sm" onclick="window.location.href='../../editModule/moduleID={{modules.pk}}';">Reorder Module</button></td>
+                        {% if course.courseStatus == 'U' %}
+                            <td rowspan="2" align="center"><button type="button" class="btn btn-primary btn-sm" onclick="window.location.href='../../editModule/moduleID={{modules.pk}}';">Reorder Module</button></td>
+                        {% endif %}
                     </tr>
                     <tr>
                         <td><a href="../../instructorCourse/courseID={{modules.courseID}}&moduleID={{modules.orderNumber}}">{{modules.moduleTitle}}</a></td>
@@ -54,11 +56,19 @@
     </div>
     <div id="right" class="col-md-8">
         {% if course.courseStatus == 'U' %}
-        <nav class="nav navbar-light bg-white">
-            <button type="button" class="btn btn-primary" onclick="window.location.href = '../../importComponent/moduleID={{title.moduleID}}';">Import Component</button>
-            <button type="button" class="btn btn-primary" onclick="window.location.href = '../../importQuiz/moduleID={{title.moduleID}}';">Import Quiz</button>
-            <button type="button" class="btn btn-primary" onclick="window.location.href = '../../liveCourse/courseID={{course.courseID}}';">Publish Course</button>
-        </nav>
+            <nav class="nav navbar-light bg-white">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item">
+                        <button type="button" class="btn btn-primary" onclick="window.location.href = '../../importComponent/moduleID={{title.moduleID}}';">Import Component</button>
+                        <button type="button" class="btn btn-primary" onclick="window.location.href = '../../importQuiz/moduleID={{title.moduleID}}';">Import Quiz</button>
+                    </li>
+                </ul>
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <button type="button" class="btn btn-success" onclick="window.location.href = '../../liveCourse/courseID={{course.courseID}}';">Publish Course</button>
+                    </li>
+                </ul>
+            </nav>
         {% endif %}
         <br>
         <h2>{{title.moduleTitle}}</h2>

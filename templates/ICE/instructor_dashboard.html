@@ -56,10 +56,10 @@
                         {% if course.courseStatus == 'L' %}    
                             <span>Total Enrolled: {{course.totalEnrolled}}</span><br>
                             <span>Current Enrolled: {{course.currentEnrolled}}</span><br>
-                            <span><h6>{{course.courseCECU}} CECUS AWARDED</h6></span>
+                            <span><h6>{{course.courseCECU}} CECUS AVAILABLE</h6></span>
                         {% else %}
                             <span><h5>Under Development</h5></span>
-                            <span><h6>{{course.courseCECU}} CECUS AWARDED</h6></span>
+                            <span><h6>{{course.courseCECU}} CECUS AVAILABLE</h6></span>
                         {% endif %}
                     {% endif %}
                 {% endfor %}
