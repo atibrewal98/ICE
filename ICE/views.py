@@ -24,8 +24,34 @@ from django.shortcuts import redirect
 from .tokens import account_activation_token
 
 def learner_quiz(request,module_ID):
-    course=Module.objects.get(moduleID=module_ID).getCourse()
-    record=LearnerTakesCourse.objects.get(staffID=request.user.userID,courseID=course)
+    """
+    Only the learner who has access to the course can access this.
+    """
+    if request.user.role != 2:
+        context={
+            'message': "You do not have access to this page."
+        }
+        return render(request, 'ICE/message.html', context)
+    courseID=Module.objects.get(moduleID=module_ID).getCourse().courseID
+    learner_ID = request.user.userID
+    print(courseID)
+    print(learner_ID)
+    try:
+        print("HEY")
+        lcs = LearnerTakesCourse.objects.filter(courseID=courseID)
+        lc = LearnerTakesCourse.objects.get(courseID=courseID, staffID = learner_ID)        
+    except Exception as e :
+        print(e)
+        """
+        The learner doesn't take this course
+        """
+        context= {
+            'message': "You do not have access to this page."
+        }
+        return render(request, 'ICE/message.html', context)
+        
+
+    record=LearnerTakesCourse.objects.get(staffID=request.user.userID,courseID=courseID)
     if request.method=='POST':
         correct=0
         for key, value in request.POST.items():
@@ -90,6 +116,15 @@ def course_form(request):
 
 @login_required
 def module_form(request, course_id):
+    """
+    Only the instructor who is the creator of the course can access this.
+    """
+    course=Course.objects.get(courseID = course_id)
+    if request.user.role != 1 or (course.instructorID.userID != request.user.userID):
+        context={
+            'message': "You do not have access to this page."
+        }
+        return render(request, 'ICE/message.html', context)
     if request.user.role != 1:
         context={
             'message': "You do not have access to this page."
@@ -134,6 +169,15 @@ def module_form(request, course_id):
     return render(request,'add_module.html',{'moduleform': form, 'course': module})
 
 def import_quiz(request,module_ID):
+    """
+    Only the instructor who is the creator of the course to which this module belongs can access this.
+    """
+    course = Module.objects.get(moduleID=module_ID).getCourse()
+    if request.user.role != 1 or (course.instructorID.userID != request.user.userID):
+        context={
+            'message': "You do not have access to this page."
+        }
+        return render(request, 'ICE/message.html', context)
     if request.method=='POST':
         quiz=Quiz.objects.none()
         passingMark=0
@@ -162,7 +206,11 @@ def import_quiz(request,module_ID):
 
 @login_required
 def edit_module_form(request, module_id):
-    if request.user.role != 1:
+    """
+    Only the instructor who is the creator of the course to which this module belongs can access this.
+    """
+    course = Module.objects.get(moduleID=module_id).getCourse()
+    if request.user.role != 1 or (course.instructorID.userID != request.user.userID):
         context={
             'message': "You do not have access to this page."
         }
@@ -226,7 +274,12 @@ def edit_module_form(request, module_id):
 
 @login_required
 def import_component_form(request, module_id):
-    if request.user.role != 1:
+    """
+    Only the instructor who is the creator of the course to which this module belongs can access this.
+    """
+    course = Module.objects.get(moduleID=module_id).getCourse()
+    if (request.user.role != 1) or (course.instructorID.userID != request.user.userID): 
+        print(course.courseID)
         context={
             'message': "You do not have access to this page."
         }
@@ -345,12 +398,26 @@ def import_component_form(request, module_id):
 
 @login_required
 def learnerModuleCourseView(request, course_ID, module_ID):
+    """
+    Only the learner who is the owner of the course can view this page
+    """
+    learner_ID = request.user.userID
     if request.user.role != 2:
         context={
             'message': "You do not have access to this page."
         }
         return render(request, 'ICE/message.html', context)
-    learner_ID = request.user.userID
+    try:
+        lc = LearnerTakesCourse.objects.get(courseID=course_ID, staffID = learner_ID)
+    except:
+        """
+        The learner doesn't take this course
+        """
+        context= {
+            'message': "You do not have access to this page."
+        }
+        return render(request, 'ICE/message.html', context)
+        
 
     course = Course.objects.get(courseID = course_ID)
     all_modules = course.getModule()
@@ -397,9 +464,14 @@ def learnerModuleCourseView(request, course_ID, module_ID):
     }
     return HttpResponse(template.render(context,request))
 
+
 @login_required
 def instructorCourseModuleView(request, course_ID, module_ID):
-    if request.user.role != 1:
+    """
+    Only the instructor who is the owner of the course can view this page
+    """
+    course=Course.objects.get(courseID = course_ID)
+    if (request.user.role != 1) or (request.user.userID != course.instructorID.userID):
         context={
             'message': "You do not have access to this page."
         }
@@ -605,6 +677,7 @@ def intructor_view_quiz(request, id):
     }
     return HttpResponse(template.render(context, request))
 
+
 @login_required
 def courseDescriptionView(request, course_id):
     if request.user.role != 2:
@@ -612,8 +685,10 @@ def courseDescriptionView(request, course_id):
             'message': "You do not have access to this page."
         }
         return render(request, 'ICE/message.html', context)
+    """
+    Added learner_id
+    """
     learner_id = request.user.userID
-
     if request.method == 'POST':
         learnerC = LearnerTakesCourse.objects.all()
         for l in learnerC:
