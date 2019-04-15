@@ -726,6 +726,7 @@ def courseDescriptionView(request, course_id):
     else:
         context = {
             'courseDetails': courseDetails,
+            'categoryDetails': categoryDetails,
             'instructorDetails': instructorDetails,
             'type': 'Enroll Course',
         }

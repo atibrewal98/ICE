@@ -31,12 +31,12 @@
         {% csrf_token %}
         <button class="btn btn-primary btn-sm">{{type}}</button>
     </form>
-    <h3>Category: {{categoryDetails.categoryName}}:</h3>
+    <h3>Category: {{categoryDetails.categoryName}}</h3>
     <h3>Course Name: {{courseDetails.courseName}}</h3>
     <h5>Course Instructor: {{instructorDetails.firstName}} {{instructorDetails.lastName}}</h5>
     <br>
     <h5>Course Description:</h5>
     <p>{{courseDetails.courseDescription}}</p>
     <p>Includes {{courseDetails.numOfModules}} Modules & End-of-Module Quizzes</p>
-    <p>CECU Value: {{courseDetails.courseCECU}} Units</p>
+    <p>CECU Value: <b>{{courseDetails.courseCECU}} Units</b></p>
 {% endblock content %}
