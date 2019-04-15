@@ -184,21 +184,40 @@ def edit_module_form(request, module_id):
                     mod.save()
             module.orderNumber=course.numOfModules
             module.save()
-            
-        for m in modules:
-            if m.orderNumber == ordNum:
-                sameOrd = m.orderNumber
-        if sameOrd != 0:
+        elif int(ordNum) == 0:
             for m in modules:
-                if m.orderNumber <= sameOrd and m.orderNumber > module.orderNumber:
-                    mod = Module.objects.get(moduleID=m.moduleID)
-                    mod.orderNumber = mod.orderNumber - 1
+                if m.orderNumber < module.orderNumber:
+                    mod = Module.objects.get(moduleID = m.moduleID)
+                    mod.orderNumber += 1
                     mod.save()
-            module.orderNumber = ordNum
+            module.orderNumber = 1
             module.save()
+        else:    
+            for m in modules:
+                if int(m.orderNumber) == int(ordNum):
+                    sameOrd = m.orderNumber
+            print(sameOrd, "ORD1")
+            if int(sameOrd) != 0 and int(sameOrd) > int(module.orderNumber):
+                for m in modules:
+                    if int(m.orderNumber) <= int(sameOrd) and int(m.orderNumber) > int(module.orderNumber):
+                        print(m.orderNumber, "Reorder1")
+                        mod = Module.objects.get(moduleID=m.moduleID)
+                        mod.orderNumber = mod.orderNumber - 1
+                        mod.save()
+                module.orderNumber = ordNum
+                module.save()
+            elif int(sameOrd) != 0 and int(sameOrd) < int(module.orderNumber):
+                for m in modules:
+                    if int(m.orderNumber) >= int(sameOrd) and int(m.orderNumber) < int(module.orderNumber):
+                        print(m.orderNumber, "Reorder2")
+                        mod = Module.objects.get(moduleID=m.moduleID)
+                        mod.orderNumber = mod.orderNumber + 1
+                        mod.save()
+                module.orderNumber = ordNum
+                module.save()
         return redirect('../../instructorCourse/courseID='+str(course.courseID)+'&moduleID=1/')
     form = EditModuleForm()
-    return render(request, 'import_component.html', {'componentform': form})
+    return render(request, 'edit_component.html', {'componentform': form})
 
 @login_required
 def import_component_form(request, module_id):

@@ -105,7 +105,7 @@ class EditModuleForm(forms.ModelForm):
         
     def __init__(self, *args, **kwargs):
         super(EditModuleForm, self).__init__(*args, **kwargs)
-        self.fields['orderNumber'].widget.attrs['placeholder'] = 'Component#'
+        self.fields['orderNumber'].widget.attrs['placeholder'] = 'Module#'
 
 
 class ImportQuizForm(forms.ModelForm):
