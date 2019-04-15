@@ -5,7 +5,7 @@ from django.views.generic import View
 from django.template import loader
 
 from ICE.models import Module, Category, Component, Course, Instructor, LearnerTakesCourse, Learner, Question, User, Staff, Quiz
-from .forms import ModuleForm,QuizForm, ComponentForm, ImportComponentForm, UserForm, InviteForm, SignupFormInstructor, LearnerGetTokenForm, SignupFormLearner, CourseForm, ImportQuizForm, EditModuleForm
+from .forms import ModuleForm, ImportComponentForm, UserForm, InviteForm, SignupFormInstructor, LearnerGetTokenForm, SignupFormLearner, CourseForm, ImportQuizForm, EditModuleForm
 import operator
 
 """
