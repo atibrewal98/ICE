@@ -11,7 +11,7 @@ urlpatterns = [
     url(r'^courseDescription/courseID=(?P<course_id>[0-9]+)/$', views.courseDescriptionView),
     url(r'^addCourse/$', views.course_form),
     url(r'^addModule/courseID=(?P<course_id>[0-9]+)/$', views.module_form),
-    url(r'^editModule/moduleID=(?P<module_id>[0-9]+)/$', views.edit_module_form),
+    #url(r'^editModule/moduleID=(?P<module_id>[0-9]+)/$', views.edit_module_form),
     url(r'^addModuleQuiz/(?P<id>[0-9]+)/$',views.quiz_form),
     url(r'^addComponent/moduleID=(?P<module_id>[0-9]+)/',views.component_form),
     url(r'^importComponent/moduleID=(?P<module_id>[0-9]+)/',views.import_component_form),

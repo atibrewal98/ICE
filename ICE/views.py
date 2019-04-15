@@ -5,8 +5,7 @@ from django.views.generic import View
 from django.template import loader
 
 from ICE.models import Module, Category, Component, Course, Instructor, LearnerTakesCourse, Learner, Question, User, Staff, Quiz
-from .forms import ModuleForm,QuizForm, ComponentForm, ImportComponentForm, UserForm, InviteForm, SignupFormInstructor
-from .forms import SignupFormLearner, CourseForm, ImportQuizForm, LearnerGetTokenForm, EditModuleForm
+from .forms import ModuleForm,QuizForm, ComponentForm, ImportComponentForm, UserForm, InviteForm, SignupFormInstructor, LearnerGetTokenForm, SignupFormLearner, CourseForm, ImportQuizForm
 import operator
 
 """
@@ -161,50 +160,6 @@ def import_quiz(request,module_ID):
     form=ImportQuizForm(quiz)
     return render(request, 'import_quiz.html', {'form': form})
 
-@login_required
-def edit_module_form(request, module_id):
-    if request.user.role != 1:
-        context={
-            'message': "You do not have access to this page."
-        }
-        return render(request, 'ICE/message.html', context)
-    instructor_id = request.user.userID
-    if request.method == 'POST':
-        module=Module.objects.get(moduleID=module_id)
-        ordNum = 0
-        for key, value in request.POST.items():
-            if key=='orderNumber':
-                ordNum = value
-        course = module.getCourse()
-        modules = Module.objects.filter(courseID=course.courseID)
-        maxOrd = 0
-        sameOrd = 0
-        for m in modules:
-            if m.orderNumber > maxOrd:
-                maxOrd = m.orderNumber
-        if int(maxOrd) < int(ordNum):
-            for m in modules:
-                if m.orderNumber > module.orderNumber:
-                    mod = Module.objects.get(moduleID = m.moduleID)
-                    mod.orderNumber -= 1
-                    mod.save()
-            module.orderNumber=course.numOfModules
-            module.save()
-            
-        for m in modules:
-            if m.orderNumber == ordNum:
-                sameOrd = m.orderNumber
-        if sameOrd != 0:
-            for m in modules:
-                if m.orderNumber <= sameOrd and m.orderNumber > module.orderNumber:
-                    mod = Module.objects.get(moduleID=m.moduleID)
-                    mod.orderNumber = mod.orderNumber - 1
-                    mod.save()
-            module.orderNumber = ordNum
-            module.save()
-        return redirect('../../instructorCourse/courseID='+str(course.courseID)+'&moduleID=1/')
-    form = EditModuleForm()
-    return render(request, 'import_component.html', {'componentform': form})
 
 @login_required
 def import_component_form(request, module_id):
@@ -653,7 +608,7 @@ def invite(request):
                 'Sign up for your ICE Account',
                 render_to_string('ICE/send_email.html', {
                     'domain': get_current_site(request).domain,
-                    'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+                    'uid': urlsafe_base64_encode(force_bytes(user.pk)).decode(),
                     'token': account_activation_token.make_token(user),
                 }),
                 to=[form.cleaned_data.get('emailID')]
