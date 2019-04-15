@@ -12,7 +12,7 @@
             <ul>
                 <li><img src="{% static 'images/owl.png' %}"></li>
                 <li><a href="" class="navText">Dashboard</a></li>
-                <li><a href="#categories" class="navText">Categories</a></li>
+                <li><a href="#categories" class="navText">Quiz Question Bank</a></li>
                 <li class="right"><img src="{% static 'images/user.png' %}"></li>
             </ul>
     </div>
@@ -22,7 +22,9 @@
             <div id="leftHeader">
                 <h1>{{course.courseName}}</h1>
                 <p>Course Instructor: {{instructor.firstName}} {{instructor.lastName}}</p>
-                <button type="button" onclick = "window.location.href = '../../addModule/courseID={{course.pk}}';">Add Module</button>
+                {% if course.courseStatus == 'U' %}
+                    <button type="button" onclick = "window.location.href = '../../addModule/courseID={{course.pk}}';">Add Module</button>
+                {% endif %}
             </div>
 
             <div id="moduleList">
@@ -30,7 +32,7 @@
                     {% for modules in all_modules %}
                         <tr>
                             <td>Module {{modules.orderNumber}}</td>
-                            <td rowspan="2">icon</td>
+                            <td rowspan="2"><button type="button" onclick = "window.location.href = '../../editModule/moduleID={{modules.pk}}';">Reorder Module</button></td>
                         </tr>
                         <tr>
                             <td><a href ="../../instructorCourse/courseID={{modules.courseID}}&moduleID={{modules.orderNumber}}">{{modules.moduleTitle}}</a></td>
@@ -41,8 +43,10 @@
         </div>
             
         <div id="right">
-            <button type="button" onclick = "window.location.href = '../../importComponent/moduleID={{title.moduleID}}';">Import Component</button>
-            <button type="button" onclick = "window.location.href = '../../importQuiz/moduleID={{title.moduleID}}';">Import Quiz</button>
+            {% if course.courseStatus == 'U' %}
+                <button type="button" onclick = "window.location.href = '../../importComponent/moduleID={{title.moduleID}}';">Import Component</button>
+                <button type="button" onclick = "window.location.href = '../../importQuiz/moduleID={{title.moduleID}}';">Import Quiz</button>
+            {% endif %}
             <h1>{{title.moduleTitle}}</h1>
             <table>
                 {% for com in components %}

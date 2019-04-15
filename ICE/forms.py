@@ -96,8 +96,17 @@ class ImportComponentForm(forms.ModelForm):
     def __init__(self, component, *args, **kwargs):
         super(ImportComponentForm, self).__init__(*args, **kwargs)
         self.fields['components'] = forms.ModelChoiceField(queryset = component)
-        # self.fields['orderNumber'] = forms.IntegerField()
         self.fields['orderNumber'].widget.attrs['placeholder'] = 'Component#'
+
+class EditModuleForm(forms.ModelForm):
+    class Meta:
+        model=Module
+        fields=('orderNumber',)
+        
+    def __init__(self, *args, **kwargs):
+        super(EditModuleForm, self).__init__(*args, **kwargs)
+        self.fields['orderNumber'].widget.attrs['placeholder'] = 'Component#'
+
 
 class ImportQuizForm(forms.ModelForm):
     class Meta:
@@ -107,3 +116,5 @@ class ImportQuizForm(forms.ModelForm):
     def __init__(self, quizzes, *args, **kwargs):
         super(ImportQuizForm, self).__init__(*args, **kwargs)
         self.fields['quizzes'] = forms.ModelChoiceField(queryset = quizzes)
+        self.fields['numOfQuestions'].widget.attrs['placeholder'] = 'Question#'
+        self.fields['passingMark'].widget.attrs['placeholder'] = 'Passing Mark'
