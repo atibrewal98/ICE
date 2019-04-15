@@ -5,7 +5,7 @@ from django.views.generic import View
 from django.template import loader
 
 from ICE.models import Module, Category, Component, Course, Instructor, LearnerTakesCourse, Learner, Question, User, Staff, Quiz
-from .forms import ModuleForm,QuizForm, ComponentForm, ImportComponentForm, UserForm, InviteForm, SignupFormInstructor, LearnerGetTokenForm, SignupFormLearner, CourseForm, ImportQuizForm
+from .forms import ModuleForm,QuizForm, ComponentForm, ImportComponentForm, UserForm, InviteForm, SignupFormInstructor, LearnerGetTokenForm, SignupFormLearner, CourseForm, ImportQuizForm, EditModuleForm
 import operator
 
 """
@@ -59,15 +59,15 @@ def learner_quiz(request,module_ID):
         }
         return render(request, 'ICE/message.html', context)
 
-def quiz_form(request,id):
-    if request.method == 'POST':
-        instance=Module.objects.get(moduleID=id)
-        quizform = QuizForm(request.POST,instance=instance)
-        if quizform.is_valid():
-            quizform.save()
-    quizform=QuizForm()
-    module = Module.objects.filter(moduleID=id)
-    return render(request, 'quizform.html', {'quizform': quizform, 'module': module})
+# def quiz_form(request,id):
+#     if request.method == 'POST':
+#         instance=Module.objects.get(moduleID=id)
+#         quizform = QuizForm(request.POST,instance=instance)
+#         if quizform.is_valid():
+#             quizform.save()
+#     quizform=QuizForm()
+#     module = Module.objects.filter(moduleID=id)
+#     return render(request, 'quizform.html', {'quizform': quizform, 'module': module})
 
 @login_required
 def course_form(request):
@@ -298,50 +298,50 @@ def import_component_form(request, module_id):
     form = ImportComponentForm(component)
     return render(request, 'import_component.html', {'componentform': form})
 
-@login_required
-def component_form(request, module_id):
-    if request.user.role != 1:
-        context={
-            'message': "You do not have access to this page."
-        }
-        return render(request, 'ICE/message.html', context)
-    instructor_id = request.user.userID
-    if request.method == 'POST':
-        form = ComponentForm(request.POST,request.FILES)
-        if form.is_valid():
-            instance=form.save(commit=False)
-            module=Module.objects.get(moduleID=module_id)
-            module.numOfComponents = module.numOfComponents+1
-            module.save()
-            instance.moduleID=module
-            if form.instance.orderNumber is None:
-                instance.orderNumber=module.numOfComponents
-            else:
-                components = Component.objects.filter(moduleID=module_id)
-                maxOrd = 0
-                sameOrd = 0
-                for c in components:
-                    if c.orderNumber > maxOrd:
-                        maxOrd = c.orderNumber
-                print(maxOrd)
-                if maxOrd < form.instance.orderNumber:
-                    instance.orderNumber=module.numOfComponents
-                for c in components:
-                    if c.orderNumber == form.instance.orderNumber:
-                        sameOrd = c.orderNumber
-                if sameOrd != 0:
-                    for c in components:
-                        if c.orderNumber >= sameOrd:
-                            com = Component.objects.get(componentID=c.componentID)
-                            com.orderNumber = com.orderNumber + 1
-                            com.save()
-            instance.save()
-            mod=Module.objects.get(moduleID=module_id)
-            courseDet=Course.objects.get(courseID=str(mod.courseID))
-            print(courseDet.courseID)
-            return redirect('../../instructorCourse/courseID='+str(courseDet.courseID)+'&moduleID='+str(mod.orderNumber)+'/')
-    form = ComponentForm()
-    return render(request, 'add_component.html', {'componentform': form})
+# @login_required
+# def component_form(request, module_id):
+#     if request.user.role != 1:
+#         context={
+#             'message': "You do not have access to this page."
+#         }
+#         return render(request, 'ICE/message.html', context)
+#     instructor_id = request.user.userID
+#     if request.method == 'POST':
+#         form = ComponentForm(request.POST,request.FILES)
+#         if form.is_valid():
+#             instance=form.save(commit=False)
+#             module=Module.objects.get(moduleID=module_id)
+#             module.numOfComponents = module.numOfComponents+1
+#             module.save()
+#             instance.moduleID=module
+#             if form.instance.orderNumber is None:
+#                 instance.orderNumber=module.numOfComponents
+#             else:
+#                 components = Component.objects.filter(moduleID=module_id)
+#                 maxOrd = 0
+#                 sameOrd = 0
+#                 for c in components:
+#                     if c.orderNumber > maxOrd:
+#                         maxOrd = c.orderNumber
+#                 print(maxOrd)
+#                 if maxOrd < form.instance.orderNumber:
+#                     instance.orderNumber=module.numOfComponents
+#                 for c in components:
+#                     if c.orderNumber == form.instance.orderNumber:
+#                         sameOrd = c.orderNumber
+#                 if sameOrd != 0:
+#                     for c in components:
+#                         if c.orderNumber >= sameOrd:
+#                             com = Component.objects.get(componentID=c.componentID)
+#                             com.orderNumber = com.orderNumber + 1
+#                             com.save()
+#             instance.save()
+#             mod=Module.objects.get(moduleID=module_id)
+#             courseDet=Course.objects.get(courseID=str(mod.courseID))
+#             print(courseDet.courseID)
+#             return redirect('../../instructorCourse/courseID='+str(courseDet.courseID)+'&moduleID='+str(mod.orderNumber)+'/')
+#     form = ComponentForm()
+#     return render(request, 'add_component.html', {'componentform': form})
 
 @login_required
 def learnerModuleCourseView(request, course_ID, module_ID):
@@ -755,7 +755,7 @@ def learner_get_token(request):
                 'Sign up for your ICE Account',
                 render_to_string('ICE/send_email.html', {
                     'domain': get_current_site(request).domain,
-                    'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+                    'uid': urlsafe_base64_encode(force_bytes(user.pk)).decode(),
                     'token': account_activation_token.make_token(user),
                 }),
                 to=[staff_emailID]
