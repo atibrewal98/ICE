@@ -25,14 +25,14 @@ from django.shortcuts import redirect
 from .tokens import account_activation_token
 
 def learner_quiz(request,module_ID):
+    course=Module.objects.get(moduleID=module_ID).getCourse()
+    record=LearnerTakesCourse.objects.get(staffID=request.user.userID,courseID=course)
     if request.method=='POST':
         correct=0
         for key, value in request.POST.items():
             if key!='csrfmiddlewaretoken':
                 if Question.objects.get(questionID=key).getAnswer()==value:
                     correct+=1
-        course=Module.objects.get(moduleID=module_ID).getCourse()
-        record=LearnerTakesCourse.objects.get(staffID=request.user.userID,courseID=course)
         if Module.objects.get(moduleID=module_ID).getQuiz().passingMark<=correct:
             record.updateCourse()
             record.save()
@@ -51,8 +51,14 @@ def learner_quiz(request,module_ID):
             return render(request, 'quiz_result.html', {'result': correct,'numOfQues':numOfQues,'courseID':course,'moduleID':record.currentModule})
         else:
             return render(request, 'quiz_result.html', {'result': -1,'courseID':course,'moduleID':record.currentModule})
-    questions=Module.objects.get(moduleID=module_ID).getQuiz().getQuestions()
-    return render(request, 'quiz_template.html', {'questions': questions})
+    if record.currentModule==Module.objects.get(moduleID=module_ID).orderNumber and record.completeStatus!='Y':
+        questions=Module.objects.get(moduleID=module_ID).getQuiz().getQuestions()
+        return render(request, 'quiz_template.html', {'questions': questions})
+    else:
+        context={
+            'message': "You don't have access to this quiz."
+        }
+        return render(request, 'ICE/message.html', context)
 
 def quiz_form(request,id):
     if request.method == 'POST':
