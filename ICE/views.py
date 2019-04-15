@@ -744,7 +744,7 @@ def invite(request):
                 'Sign up for your ICE Account',
                 render_to_string('ICE/send_email.html', {
                     'domain': get_current_site(request).domain,
-                    'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+                    'uid': urlsafe_base64_encode(force_bytes(user.pk)).decode(),
                     'token': account_activation_token.make_token(user),
                 }),
                 to=[form.cleaned_data.get('emailID')]
@@ -828,7 +828,7 @@ def learner_get_token(request):
                 'Sign up for your ICE Account',
                 render_to_string('ICE/send_email.html', {
                     'domain': get_current_site(request).domain,
-                    'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+                    'uid': urlsafe_base64_encode(force_bytes(user.pk)).decode(),
                     'token': account_activation_token.make_token(user),
                 }),
                 to=[staff_emailID]
