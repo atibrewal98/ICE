@@ -222,7 +222,7 @@ def edit_module_form(request, module_id):
                 module.save()
         return redirect('../../instructorCourse/courseID='+str(course.courseID)+'&moduleID=1/')
     form = EditModuleForm()
-    return render(request, 'edit_module.html', {'componentform': form})
+    return render(request, 'edit_module.html', {'moduleform': form})
 
 @login_required
 def import_component_form(request, module_id):
@@ -405,8 +405,8 @@ def instructorCourseModuleView(request, course_ID, module_ID):
         }
         return render(request, 'ICE/message.html', context)
     instructor_ID = request.user.userID
-    
     course=Course.objects.get(courseID = course_ID)
+
     all_modules = course.getModule()
     all_modules = sorted(all_modules, key=operator.attrgetter('orderNumber'))
 
@@ -432,6 +432,21 @@ def instructorCourseModuleView(request, course_ID, module_ID):
         'components': components,
     }
     return HttpResponse(template.render(context,request))
+
+@login_required
+def liveCourseView(request, course_ID):
+    if request.user.role != 1:
+        context={
+            'message': "You do not have access to this page."
+        }
+        return render(request, 'ICE/message.html', context)
+    instructor_ID = request.user.userID
+    course=Course.objects.get(courseID = course_ID)
+
+    course.courseStatus = 'L'
+    course.save()
+
+    return redirect('../../instructorDashboard/')
 
 @login_required
 def category_list_view(request, category_id):

@@ -3,40 +3,40 @@
 {% load static %}
 
 {% block navbar %}
-<ul class="navbar-nav mr-auto">
-    <li class="nav-item">
-        <a class="nav-link" href="../../dashboard/">Dashboard<span class="sr-only">(current)</span></a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" href="../category/categoryID=0">Categories</a>
-    </li>
-</ul>
-<ul class="navbar-nav ml-auto">
-    <li class="nav-item dropdown">
-        <a class="nav-link" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <img src="{% static 'images/user.png' %}">
-        </a>
-        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
-            <a class="dropdown-item" href="#">Profile</a>
-            <a class="dropdown-item" href="#">Change Account Details</a>
-            <div class="dropdown-divider"></div>
-            <a class="dropdown-item" href="../accounts/logout">Logout</a>
-        </div>
-    </li>
-</ul>
+    <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+            <a class="nav-link" href="../../dashboard/">Dashboard<span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="../category/categoryID=0">Categories</a>
+        </li>
+    </ul>
+    <ul class="navbar-nav ml-auto">
+        <li class="nav-item dropdown">
+            <a class="nav-link" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <img src="{% static 'images/user.png' %}">
+            </a>
+            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
+                <a class="dropdown-item" href="#">Profile</a>
+                <a class="dropdown-item" href="#">Change Account Details</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="../accounts/logout">Logout</a>
+            </div>
+        </li>
+    </ul>
 {% endblock navbar %}
 
 {% block content %}
-<form method="post">
-    {% csrf_token %}
-    <button class="btn btn-primary btn-sm">{{type}}</button>
-</form>
-<h3>{{categoryDetails.categoryName}}:</h3>
-<h3>{{courseDetails.courseName}}</h3>
-<h5>Course Instructor: {{instructorDetails.firstName}} {{instructorDetails.lastName}}</h5>
-<br>
-<h5>Course Description:</h5>
-<p>{{courseDetails.courseDescription}}</p>
-<p>Includes {{courseDetails.numOfModules}} Modules & End-of-Module Quizzes</p>
-<p>CECU Value: {{courseDetails.courseCECU}} Units</p>
+    <form method="post">
+        {% csrf_token %}
+        <button class="btn btn-primary btn-sm">{{type}}</button>
+    </form>
+    <h3>Category: {{categoryDetails.categoryName}}:</h3>
+    <h3>Course Name: {{courseDetails.courseName}}</h3>
+    <h5>Course Instructor: {{instructorDetails.firstName}} {{instructorDetails.lastName}}</h5>
+    <br>
+    <h5>Course Description:</h5>
+    <p>{{courseDetails.courseDescription}}</p>
+    <p>Includes {{courseDetails.numOfModules}} Modules & End-of-Module Quizzes</p>
+    <p>CECU Value: {{courseDetails.courseCECU}} Units</p>
 {% endblock content %}

@@ -57,9 +57,12 @@
         <nav class="nav navbar-light bg-white">
             <button type="button" class="btn btn-primary" onclick="window.location.href = '../../importComponent/moduleID={{title.moduleID}}';">Import Component</button>
             <button type="button" class="btn btn-primary" onclick="window.location.href = '../../importQuiz/moduleID={{title.moduleID}}';">Import Quiz</button>
+            <button type="button" class="btn btn-primary" onclick="window.location.href = '../../liveCourse/courseID={{course.courseID}}';">Publish Course</button>
         </nav>
         {% endif %}
+        <br>
         <h2>{{title.moduleTitle}}</h2>
+        <br>
         {% for com in components %}
             Component {{com.orderNumber}} - {{com.componentTitle}}<br>
                 {% if com.componentText is not Null %}

@@ -6,6 +6,7 @@ from . import views
 urlpatterns = [
     url(r'^learnerCourse/courseID=(?P<course_ID>[0-9]+)&moduleID=(?P<module_ID>[0-9]+)/$',views.learnerModuleCourseView),
     url(r'^instructorCourse/courseID=(?P<course_ID>[0-9]+)&moduleID=(?P<module_ID>[0-9]+)/$',views.instructorCourseModuleView),
+    url(r'^liveCourse/courseID=(?P<course_ID>[0-9]+)/$',views.liveCourseView),
     url(r'^moduleQuiz/(?P<id>[0-9]+)/$', views.intructor_view_quiz),
     url(r'category/categoryID=(?P<category_id>[0-9]+)/$', views.category_list_view),
     url(r'^courseDescription/courseID=(?P<course_id>[0-9]+)/$', views.courseDescriptionView),

@@ -56,7 +56,6 @@ class CourseForm(forms.ModelForm):
         super(CourseForm, self).__init__(*args, **kwargs)
         self.fields['courseName'].widget.attrs['placeholder'] = 'Course Title'
         self.fields['courseCECU'].widget.attrs['placeholder'] = 'CECU Value'
-        # not showing placeholder cecu as integer field with blank = true not done
         self.fields['courseDescription'].widget.attrs['placeholder'] = 'Course Description'
 
 class ModuleForm(forms.ModelForm):
@@ -68,8 +67,6 @@ class ModuleForm(forms.ModelForm):
         super(ModuleForm, self).__init__(*args, **kwargs)
         self.fields['moduleTitle'].widget.attrs['placeholder'] = 'Module Title'
         self.fields['orderNumber'].widget.attrs['placeholder'] = 'Module#'
-        # self.fields['numOfComponents'].widget.attrs['placeholder'] = 'No. of Components'
-        # not showing placeholder num of components as integer field with blank = true not done
 
 # class QuizForm(forms.ModelForm):
 #     class Meta:
