@@ -50,7 +50,7 @@ def learner_quiz(request,module_ID):
         }
         return render(request, 'ICE/message.html', context)
         
-    course=Course.objects.get(courseID=courseID)
+    course=Module.objects.get(moduleID=module_ID).getCourse()
     record=LearnerTakesCourse.objects.get(staffID=request.user.userID,courseID=courseID)
     if request.method=='POST':
         correct=0
