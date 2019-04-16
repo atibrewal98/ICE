@@ -678,13 +678,22 @@ def intructor_view_quiz(request, id):
     }
     return HttpResponse(template.render(context, request))
 
+@login_required
 def instructorDetailView(request, course_id):
+    if request.user.role != 2:
+        context={
+            'message': "You do not have access to this page."
+        }
+        return render(request, 'ICE/message.html', context)
+    learner_id = request.user.userID
     course = Course.objects.get(courseID= course_id)
     instructor = course.getInstructor()
+    learnerDetails = Learner.objects.get(userID=learner_id)
     template = loader.get_template("ICE/instructorDetails.html")
     context = {
         'course': course,
-        'instructor': instructor
+        'instructor': instructor,
+        'learnerDetails': learnerDetails,
     }
     return HttpResponse(template.render(context, request))
 
@@ -695,9 +704,6 @@ def courseDescriptionView(request, course_id):
             'message': "You do not have access to this page."
         }
         return render(request, 'ICE/message.html', context)
-    """
-    Added learner_id
-    """
     learner_id = request.user.userID
     if request.method == 'POST':
         learnerC = LearnerTakesCourse.objects.all()
@@ -716,6 +722,7 @@ def courseDescriptionView(request, course_id):
         learnerCourseDet.currentModule = 1
         learnerCourseDet.save()
         return redirect('../../learnerCourse/courseID='+course_id+'&moduleID=1/')
+    learnerDetails = Learner.objects.get(userID=learner_id)
     courseDetails = Course.objects.get(courseID=course_id)
     instructorDetails = Instructor.objects.get(userID=str(courseDetails.instructorID))
     categoryDetails = Category.objects.get(categoryID=str(courseDetails.categoryID))
@@ -730,6 +737,7 @@ def courseDescriptionView(request, course_id):
             'courseDetails': courseDetails,
             'categoryDetails': categoryDetails,
             'instructorDetails': instructorDetails,
+            'learnerDetails': learnerDetails,
             'type': 'View Course',
         }
         return HttpResponse(template.render(context, request))
@@ -738,6 +746,7 @@ def courseDescriptionView(request, course_id):
             'courseDetails': courseDetails,
             'categoryDetails': categoryDetails,
             'instructorDetails': instructorDetails,
+            'learnerDetails': learnerDetails,
             'type': 'Enroll Course',
         }
         return HttpResponse(template.render(context, request))

@@ -81,9 +81,6 @@
     <div id="right" class="col-md-8">
         <nav class="nav navbar-light bg-white">
             <button type="button" class="btn btn-primary btn-sm" onclick="window.location.href = '../../courseDescription/courseID={{course.courseID}}'">Course Info</button>
-            {% if CM.completeStatus == 'N' %}
-                <button type="button" class="btn btn-primary btn-sm" onclick="">Drop Course</button>
-            {% endif %}
         </nav>
         <br>
         <h2>{{title.moduleTitle}}</h2>
