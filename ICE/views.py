@@ -73,9 +73,9 @@ def learner_quiz(request,module_ID):
                 to=[Learner.objects.get(userID=request.user.userID).emailID])
                 email.send()
             numOfQues=Module.objects.get(moduleID=module_ID).getQuiz().numOfQuestions
-            return render(request, 'quiz_result.html', {'result': correct,'numOfQues':numOfQues,'course':course,'moduleID':record.currentModule})
+            return render(request, 'quiz_result.html', {'result': correct,'numOfQues':numOfQues,'courseID':courseID,'moduleID':record.currentModule})
         else:
-            return render(request, 'quiz_result.html', {'result': -1,'course':course,'moduleID':record.currentModule})
+            return render(request, 'quiz_result.html', {'result': -1,'courseID':courseID,'moduleID':record.currentModule})
     if record.currentModule==Module.objects.get(moduleID=module_ID).orderNumber and record.completeStatus!='Y':
         questions=Module.objects.get(moduleID=module_ID).getQuiz().getQuestions()
         return render(request, 'quiz_template.html', {'questions': questions})
