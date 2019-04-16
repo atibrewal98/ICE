@@ -7,6 +7,7 @@ from django.template import loader
 from ICE.models import Module, Category, Component, Course, Instructor, LearnerTakesCourse, Learner, Question, User, Staff, Quiz
 from .forms import ModuleForm, ImportComponentForm, UserForm, InviteForm, SignupFormInstructor, LearnerGetTokenForm, SignupFormLearner, CourseForm, ImportQuizForm, EditModuleForm
 import operator
+import requests
 
 """
 FOR AUTHENTICATION
@@ -677,6 +678,15 @@ def intructor_view_quiz(request, id):
     }
     return HttpResponse(template.render(context, request))
 
+def instructorDetailView(request, course_id):
+    course = Course.objects.get(courseID= course_id)
+    instructor = course.getInstructor()
+    template = loader.get_template("ICE/instructorDetails.html")
+    context = {
+        'course': course,
+        'instructor': instructor
+    }
+    return HttpResponse(template.render(context, request))
 
 @login_required
 def courseDescriptionView(request, course_id):
@@ -823,15 +833,24 @@ def learner_get_token(request):
         if form.is_valid():
             staffID = form.cleaned_data.get('staffID')
             try:
-                staff = Staff.objects.get(staffID = staffID)
+                # staff = Staff.objects.get(staffID = staffID)
+                r = requests.get('https://gibice-hrserver.herokuapp.com/info/' + str(staffID), params=request.GET)
+                x = r.json()
             except:
                 context={
                     'message': "StaffID is invalid! There's no staff record with the staffID you input."
                 }
                 return render(request, 'ICE/message.html', context)
-            staff_firstName = staff.firstName
-            staff_lastName = staff.lastName
-            staff_emailID = staff.emailID
+            staff_firstName = x['first_name']
+            staff_lastName = x['last_name']
+            staff_emailID = x['email']
+            staff = Staff(
+            staffID = x['id'],
+            firstName = staff_firstName,
+            lastName = staff_lastName,
+            emailID = staff_emailID
+            )
+            staff.save()
             # staff = Group
             user = Learner(
                 emailID = staff_emailID,
@@ -842,12 +861,16 @@ def learner_get_token(request):
                 is_active = False
             )
             user.save()
+            domain = get_current_site(request).domain
+            uid = urlsafe_base64_encode(force_bytes(user.pk)).decode()
+            token = account_activation_token.make_token(user)
+            print(domain + '/ICE/signup/' +  uid + '/' + token)
             email = EmailMessage(
                 'Sign up for your ICE Account',
                 render_to_string('ICE/send_email.html', {
-                    'domain': get_current_site(request).domain,
-                    'uid': urlsafe_base64_encode(force_bytes(user.pk)).decode(),
-                    'token': account_activation_token.make_token(user),
+                    'domain': domain,
+                    'uid': uid,
+                    'token': token,
                 }),
                 to=[staff_emailID]
             )
