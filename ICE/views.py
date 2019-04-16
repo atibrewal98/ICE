@@ -423,6 +423,7 @@ def learnerModuleCourseView(request, course_ID, module_ID):
     course = Course.objects.get(courseID = course_ID)
     all_modules = course.getModule()
     all_modules = sorted(all_modules, key=operator.attrgetter('orderNumber'))
+    learnerDetails = Learner.objects.get(userID = learner_ID)
 
     title = Module.objects.none()
     done_Modules=Module.objects.none()
@@ -453,6 +454,7 @@ def learnerModuleCourseView(request, course_ID, module_ID):
 
     template=loader.get_template("ICE/courseContent.html")
     context ={
+        'learnerDetails': learnerDetails,
         'all_modules':all_modules,
         'title': title,
         'instructor': instructor,
@@ -824,6 +826,9 @@ def signup(request, uidb64, token):
                 user.is_staff = False
                 user.is_active = True
                 user.save()
+                instructor = Instructor.objects.get(userID = user.userID)
+                instructor.biography = form.cleaned_data.get('biography')
+                instructor.save()
 
                 login(request, user)
                 return redirect('login_success')
