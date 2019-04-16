@@ -1,18 +1,11 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Quiz</title>
-</head>
-<body>
+{% extends 'ICE/base0.html' %}
+
+{% block content %}
     <form method='POST'>
         {% csrf_token %}
         {% for q in questions %}
         <fieldset id={{q.questionID}}>
-            <h1> {{q.questionStatement}} </h1>
+            <h3> {{q.questionStatement}} </h3>
             <input type="radio" value=1 name={{q.questionID}}> {{q.qOption1}} <br>
             <input type="radio" value=2 name={{q.questionID}}> {{q.qOption2}} <br>
             <input type="radio" value=3 name={{q.questionID}}> {{q.qOption3}} <br>
@@ -21,5 +14,4 @@
         {% endfor %}
         <button>Submit</button>
     </form>
-</body>
-</html>
+{% endblock %}

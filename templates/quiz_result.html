@@ -1,26 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Quiz Result</title>
-</head>
 {% extends 'ICE/base0.html' %}
 
 {% block content %}
-  <div class="container">
-    <div class="row justify-content-center">
-      <div class="col-8">
-        <br>
-        {% if result is -1 %}
-            <h4>Sorry, you failed the quiz. Try again!</h4> <br>
-            <button type = "button" onclick = "window.location.href = '../learnerCourse/courseID={{courseID}}&moduleID={{moduleID}}/';">Back to Course</button>
-          {% else %}
-            <h4>Congratulations! You passed the quiz (Score: {{result}}/{{numOfQues}})</h4> <br>
-            <button type = "button" onclick = "window.location.href = '../learnerCourse/courseID={{courseID}}&moduleID={{moduleID}}/';">Continue to Learn</button>
-          {% endif %}
-        
-      </div>
-    </div>
-  </div>
+    {% if result is -1 %}
+        <h4>Sorry, you failed the quiz. Try again!</h4> <br>
+        <button type="button" onclick="window.location.href = '../learnerCourse/courseID={{courseID}}&moduleID={{moduleID}}/';">Back to Course</button>
+    {% else %}
+        <h4>Congratulations! You passed the quiz (Score: {{result}}/{{numOfQues}})</h4> <br>
+        <button type="button" onclick="window.location.href = '../learnerCourse/courseID={{courseID}}&moduleID={{moduleID}}/';">Continue to Learn</button>
+    {% endif %}
 {% endblock %}
-</html>
