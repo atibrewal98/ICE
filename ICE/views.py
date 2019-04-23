@@ -251,11 +251,9 @@ def edit_module_form(request, module_id):
             for m in modules:
                 if int(m.orderNumber) == int(ordNum):
                     sameOrd = m.orderNumber
-            print(sameOrd, "ORD1")
             if int(sameOrd) != 0 and int(sameOrd) > int(module.orderNumber):
                 for m in modules:
                     if int(m.orderNumber) <= int(sameOrd) and int(m.orderNumber) > int(module.orderNumber):
-                        print(m.orderNumber, "Reorder1")
                         mod = Module.objects.get(moduleID=m.moduleID)
                         mod.orderNumber = mod.orderNumber - 1
                         mod.save()
@@ -264,7 +262,6 @@ def edit_module_form(request, module_id):
             elif int(sameOrd) != 0 and int(sameOrd) < int(module.orderNumber):
                 for m in modules:
                     if int(m.orderNumber) >= int(sameOrd) and int(m.orderNumber) < int(module.orderNumber):
-                        print(m.orderNumber, "Reorder2")
                         mod = Module.objects.get(moduleID=m.moduleID)
                         mod.orderNumber = mod.orderNumber + 1
                         mod.save()
@@ -319,11 +316,9 @@ def edit_component_form(request, component_id):
             for m in components:
                 if int(m.orderNumber) == int(ordNum):
                     sameOrd = m.orderNumber
-            print(sameOrd, "ORD1")
             if int(sameOrd) != 0 and int(sameOrd) > int(component.orderNumber):
                 for c in components:
                     if int(c.orderNumber) <= int(sameOrd) and int(c.orderNumber) > int(component.orderNumber):
-                        print(c.orderNumber, "Reorder1")
                         com = Component.objects.get(componentID = c.componentID)
                         com.orderNumber = com.orderNumber - 1
                         com.save()
@@ -332,7 +327,6 @@ def edit_component_form(request, component_id):
             elif int(sameOrd) != 0 and int(sameOrd) < int(component.orderNumber):
                 for c in components:
                     if int(c.orderNumber) >= int(sameOrd) and int(c.orderNumber) < int(component.orderNumber):
-                        print(c.orderNumber, "Reorder2")
                         com = Component.objects.get(componentID = c.componentID)
                         com.orderNumber = com.orderNumber + 1
                         com.save()
