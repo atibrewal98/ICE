@@ -7,9 +7,6 @@
     <li class="nav-item">
         <a class="nav-link" href="../../instructorDashboard/">Dashboard<span class="sr-only">(current)</span></a>
     </li>
-    <!-- <li class="nav-item">
-        <a class="nav-link" href="../category/categoryID=0">Quiz Question Banks</a>
-    </li> -->
 </ul>
 <ul class="navbar-nav ml-auto">
     <li class="nav-item dropdown">
@@ -75,6 +72,7 @@
         <br>
         {% for com in components %}
             <h6>Component {{com.orderNumber}} - {{com.componentTitle}}</h6>
+            <button type="button" class="btn btn-primary btn-sm" onclick="window.location.href='../../editComponent/componentID={{com.pk}}';">Reorder Component</button>
                 {% if com.componentText is not Null %}
                     <p>{{com.componentText}}</p>
                 {% else %}

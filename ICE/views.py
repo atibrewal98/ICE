@@ -5,7 +5,8 @@ from django.views.generic import View
 from django.template import loader
 
 from ICE.models import Module, Category, Component, Course, Instructor, LearnerTakesCourse, Learner, Question, User, Staff, Quiz
-from .forms import ModuleForm, ImportComponentForm, UserForm, InviteForm, SignupFormInstructor, LearnerGetTokenForm, SignupFormLearner, CourseForm, ImportQuizForm, EditModuleForm
+from .forms import ModuleForm, ImportComponentForm, UserForm, InviteForm, SignupFormInstructor, LearnerGetTokenForm, SignupFormLearner
+from .forms import CourseForm, ImportQuizForm, EditModuleForm, EditComponentForm
 import operator
 import requests
 
@@ -272,6 +273,74 @@ def edit_module_form(request, module_id):
         return redirect('../../instructorCourse/courseID='+str(course.courseID)+'&moduleID=1/')
     form = EditModuleForm()
     return render(request, 'edit_module.html', {'moduleform': form})
+
+@login_required
+def edit_component_form(request, component_id):
+    """
+    Only the instructor who is the creator of the course to which this module belongs can access this.
+    """
+    course = Component.objects.get(componentID=component_id).getModule().getCourse()
+    if request.user.role != 1 or (course.instructorID.userID != request.user.userID):
+        context={
+            'message': "You do not have access to this page."
+        }
+        return render(request, 'ICE/message.html', context)
+    instructor_id = request.user.userID
+    if request.method == 'POST':
+        component=Component.objects.get(componentID=component_id)
+        ordNum = 0
+        for key, value in request.POST.items():
+            if key=='orderNumber':
+                ordNum = value
+        module = component.getModule()
+        components = Component.objects.filter(moduleID=module.moduleID)
+        maxOrd = 0
+        sameOrd = 0
+        for c in components:
+            if c.orderNumber > maxOrd:
+                maxOrd = c.orderNumber
+        if int(maxOrd) < int(ordNum):
+            for c in components:
+                if c.orderNumber > component.orderNumber:
+                    com = Component.objects.get(componentID = c.componentID)
+                    com.orderNumber -= 1
+                    com.save()
+            component.orderNumber=module.numOfComponents
+            component.save()
+        elif int(ordNum) == 0:
+            for c in components:
+                if c.orderNumber < component.orderNumber:
+                    com = Component.objects.get(componentID = c.componentID)
+                    com.orderNumber += 1
+                    com.save()
+            component.orderNumber = 1
+            component.save()
+        else:    
+            for m in components:
+                if int(m.orderNumber) == int(ordNum):
+                    sameOrd = m.orderNumber
+            print(sameOrd, "ORD1")
+            if int(sameOrd) != 0 and int(sameOrd) > int(component.orderNumber):
+                for c in components:
+                    if int(c.orderNumber) <= int(sameOrd) and int(c.orderNumber) > int(component.orderNumber):
+                        print(c.orderNumber, "Reorder1")
+                        com = Component.objects.get(componentID = c.componentID)
+                        com.orderNumber = com.orderNumber - 1
+                        com.save()
+                component.orderNumber = ordNum
+                component.save()
+            elif int(sameOrd) != 0 and int(sameOrd) < int(component.orderNumber):
+                for c in components:
+                    if int(c.orderNumber) >= int(sameOrd) and int(c.orderNumber) < int(component.orderNumber):
+                        print(c.orderNumber, "Reorder2")
+                        com = Component.objects.get(componentID = c.componentID)
+                        com.orderNumber = com.orderNumber + 1
+                        com.save()
+                component.orderNumber = ordNum
+                component.save()
+        return redirect('../../instructorCourse/courseID='+str(course.courseID)+'&moduleID=1/')
+    form = EditComponentForm()
+    return render(request, 'edit_component.html', {'form': form})
 
 @login_required
 def import_component_form(request, module_id):

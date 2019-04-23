@@ -176,7 +176,7 @@ class Module(models.Model):
         return Course.objects.get(courseID=str(self.courseID))
 
     def __str__(self):
-        return str(self.courseID) + ":" + str(self.moduleID) + " : " + self.moduleTitle
+        return str(self.moduleID)
 
 class Component(models.Model):
     componentID = models.AutoField(primary_key = True)
@@ -188,6 +188,10 @@ class Component(models.Model):
     orderNumber = models.IntegerField(null = True, blank = True)
     createdAt = models.DateField(auto_now=False, auto_now_add=True)
     updatedAt = models.DateField(auto_now=True)
+    
+    def getModule(self):
+        return Module.objects.get(moduleID=str(self.moduleID))
+    
     def __str__(self):
         return str(self.componentID)
 
