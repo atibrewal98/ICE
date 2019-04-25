@@ -41,6 +41,10 @@ nav button {
     vertical-align: middle;
 }
 
+.rfloat {
+    float: right;
+}
+
 td img {
     display: block;
     margin-left: auto;

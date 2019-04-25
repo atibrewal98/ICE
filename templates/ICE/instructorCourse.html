@@ -71,13 +71,14 @@
         <h2>{{title.moduleTitle}}</h2>
         <br>
         {% for com in components %}
+            <button type="button" class="btn btn-primary btn-sm rfloat" onclick="window.location.href='../../editComponent/componentID={{com.pk}}';">Reorder Component</button>
             <h6>Component {{com.orderNumber}} - {{com.componentTitle}}</h6>
-            <button type="button" class="btn btn-primary btn-sm" onclick="window.location.href='../../editComponent/componentID={{com.pk}}';">Reorder Component</button>
                 {% if com.componentText is not Null %}
                     <p>{{com.componentText}}</p>
                 {% else %}
-                    <img src="{{com.componentImage.url}}" width="400" height="200"><br>
+                    <img src="{{com.componentImage.url}}" width="400" height="200">
                 {% endif %}
+                <br>
         {% endfor %}
     </div>
 </div>
