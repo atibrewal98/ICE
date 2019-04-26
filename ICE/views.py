@@ -811,7 +811,7 @@ def invite(request):
             return render(request, 'ICE/message.html', context)
     else:
         form = InviteForm()
-    return render(request, 'ICE/signup.html', {'title':'Invite Users','form':form})
+    return render(request, 'ICE/signup.html', {'title':'Invite Instructors','form':form})
 
 
 
