@@ -15,8 +15,6 @@ urlpatterns = [
     url(r'^addModule/courseID=(?P<course_id>[0-9]+)/$', views.module_form),
     url(r'^editModule/moduleID=(?P<module_id>[0-9]+)/$', views.edit_module_form),
     url(r'^editComponent/componentID=(?P<component_id>[0-9]+)/$', views.edit_component_form),
-    # url(r'^addModuleQuiz/(?P<id>[0-9]+)/$',views.quiz_form),
-    # url(r'^addComponent/moduleID=(?P<module_id>[0-9]+)/',views.component_form),
     url(r'^importComponent/moduleID=(?P<module_id>[0-9]+)/',views.import_component_form),
     url(r'^importQuiz/moduleID=(?P<module_ID>[0-9]+)/',views.import_quiz),
     url(r'^dashboard/$',views.course_learner_view, name="course_learner"),

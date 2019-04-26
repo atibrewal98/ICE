@@ -41,7 +41,6 @@ class SignupFormLearner(forms.ModelForm):
 
 class LearnerGetTokenForm(forms.Form):
     staffID = forms.CharField(max_length=100)
-    # staffID = forms.IntegerField(max_value=9999)
 
 class UserForm(forms.ModelForm):
     class Meta:
@@ -68,23 +67,6 @@ class ModuleForm(forms.ModelForm):
         super(ModuleForm, self).__init__(*args, **kwargs)
         self.fields['moduleTitle'].widget.attrs['placeholder'] = 'Module Title'
         self.fields['orderNumber'].widget.attrs['placeholder'] = 'Module#'
-
-# class QuizForm(forms.ModelForm):
-#     class Meta:
-#         model=Quiz
-#         fields=('numOfQuestions','passingMark',)
-
-# class ComponentForm(forms.ModelForm):
-#     class Meta:
-#         model=Component
-#         fields=('componentTitle','componentText','componentImage','orderNumber',)
-        
-#     def __init__(self, *args, **kwargs):
-#         super(ComponentForm, self).__init__(*args, **kwargs)
-#         self.fields['componentTitle'].widget.attrs['placeholder'] = 'Component Title'
-#         self.fields['componentText'].widget.attrs['placeholder'] = 'Component Text Content'
-#         # self.fields['componentImage'].widget.attrs['placeholder'] = 'No Image chosen'
-#         self.fields['orderNumber'].widget.attrs['placeholder'] = 'Component#'
 
 class ImportComponentForm(forms.ModelForm):
     class Meta:

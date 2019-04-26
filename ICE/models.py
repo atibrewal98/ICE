@@ -25,7 +25,7 @@ class MyUserManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
-    def create_superuser(self, password, emailID, userID=None,firstName=None, lastName=None, userName=None):
+    def create_superuser(self, password, emailID='admin@ice.com', userID=None,firstName=None, lastName=None, userName='admin'):
         """
         Creates and saves a superuser with the given email, date of
         birth and password.
@@ -65,7 +65,7 @@ class User(AbstractBaseUser):
     is_active = models.BooleanField(default=False) #for django admin
     role = models.PositiveSmallIntegerField(choices=ROLE_CHOICES, null=True)
 
-    USERNAME_FIELD = 'emailID'
+    USERNAME_FIELD = 'userName'
     REQUIRED_FIELDS = []
 
     objects = MyUserManager()
@@ -82,6 +82,9 @@ class Staff(models.Model):
     emailID = models.EmailField(max_length=50, null=True, unique = True)
     firstName = models.CharField(max_length=50, null=True)
     lastName = models.CharField(max_length=50, null = True)
+
+    def __str__(self):
+        return str(self.staffID)
 
 class Learner(User):
     totalCECU = models.PositiveIntegerField(default=0)

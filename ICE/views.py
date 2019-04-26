@@ -87,16 +87,6 @@ def learner_quiz(request,module_ID):
         }
         return render(request, 'ICE/message.html', context)
 
-# def quiz_form(request,id):
-#     if request.method == 'POST':
-#         instance=Module.objects.get(moduleID=id)
-#         quizform = QuizForm(request.POST,instance=instance)
-#         if quizform.is_valid():
-#             quizform.save()
-#     quizform=QuizForm()
-#     module = Module.objects.filter(moduleID=id)
-#     return render(request, 'quizform.html', {'quizform': quizform, 'module': module})
-
 @login_required
 def course_form(request):
     if request.user.role != 1:
@@ -415,51 +405,6 @@ def import_component_form(request, module_id):
     form = ImportComponentForm(component)
     return render(request, 'import_component.html', {'componentform': form})
 
-# @login_required
-# def component_form(request, module_id):
-#     if request.user.role != 1:
-#         context={
-#             'message': "You do not have access to this page."
-#         }
-#         return render(request, 'ICE/message.html', context)
-#     instructor_id = request.user.userID
-#     if request.method == 'POST':
-#         form = ComponentForm(request.POST,request.FILES)
-#         if form.is_valid():
-#             instance=form.save(commit=False)
-#             module=Module.objects.get(moduleID=module_id)
-#             module.numOfComponents = module.numOfComponents+1
-#             module.save()
-#             instance.moduleID=module
-#             if form.instance.orderNumber is None:
-#                 instance.orderNumber=module.numOfComponents
-#             else:
-#                 components = Component.objects.filter(moduleID=module_id)
-#                 maxOrd = 0
-#                 sameOrd = 0
-#                 for c in components:
-#                     if c.orderNumber > maxOrd:
-#                         maxOrd = c.orderNumber
-#                 print(maxOrd)
-#                 if maxOrd < form.instance.orderNumber:
-#                     instance.orderNumber=module.numOfComponents
-#                 for c in components:
-#                     if c.orderNumber == form.instance.orderNumber:
-#                         sameOrd = c.orderNumber
-#                 if sameOrd != 0:
-#                     for c in components:
-#                         if c.orderNumber >= sameOrd:
-#                             com = Component.objects.get(componentID=c.componentID)
-#                             com.orderNumber = com.orderNumber + 1
-#                             com.save()
-#             instance.save()
-#             mod=Module.objects.get(moduleID=module_id)
-#             courseDet=Course.objects.get(courseID=str(mod.courseID))
-#             print(courseDet.courseID)
-#             return redirect('../../instructorCourse/courseID='+str(courseDet.courseID)+'&moduleID='+str(mod.orderNumber)+'/')
-#     form = ComponentForm()
-#     return render(request, 'add_component.html', {'componentform': form})
-
 @login_required
 def learnerModuleCourseView(request, course_ID, module_ID):
     """
@@ -555,8 +500,12 @@ def instructorCourseModuleView(request, course_ID, module_ID):
     for m in all_modules:
         if(m.orderNumber == int(module_ID)):
             title=Module.objects.get(moduleID = m.moduleID)
+    print(title)
+    if not title:
+        return redirect('../../addModule/courseID=' + course_ID)
+
     if title.numOfComponents != 0:
-        components = title.getComponent()
+            components = title.getComponent()
     else:
         components = Component.objects.none()
     components = sorted(components, key=operator.attrgetter('orderNumber'))
@@ -841,13 +790,17 @@ def invite(request):
                 is_active = False
             )
             user.save()
+            domain = get_current_site(request).domain
+            uid = urlsafe_base64_encode(force_bytes(user.pk)).decode()
+            token = account_activation_token.make_token(user)
+            print(domain + '/ICE/signup/' +  uid + '/' + token)
 
             email = EmailMessage(
                 'Sign up for your ICE Account',
                 render_to_string('ICE/send_email.html', {
-                    'domain': get_current_site(request).domain,
-                    'uid': urlsafe_base64_encode(force_bytes(user.pk)).decode(),
-                    'token': account_activation_token.make_token(user),
+                    'domain': domain,
+                    'uid': uid,
+                    'token': token,
                 }),
                 to=[form.cleaned_data.get('emailID')]
             )
@@ -881,17 +834,25 @@ def signup(request, uidb64, token):
         form = SignupForm(request.POST)
         if form.is_valid():
             if account_activation_token.check_token(user, token):
-                user.userName = form.cleaned_data.get('userName')
-                user.firstName = form.cleaned_data.get('firstName')
-                user.lastName = form.cleaned_data.get('lastName')
-                user.set_password(form.cleaned_data.get('password'))
-                user.biography = form.cleaned_data.get('biography')
-                user.is_staff = False
-                user.is_active = True
-                user.save()
-                instructor = Instructor.objects.get(userID = user.userID)
-                instructor.biography = form.cleaned_data.get('biography')
-                instructor.save()
+                if user.role == User.INSTRUCTOR:
+                    user.userName = form.cleaned_data.get('userName')
+                    user.firstName = form.cleaned_data.get('firstName')
+                    user.lastName = form.cleaned_data.get('lastName')
+                    user.set_password(form.cleaned_data.get('password'))
+                    user.biography = form.cleaned_data.get('biography')
+                    user.is_staff = False
+                    user.is_active = True
+                    user.save()
+                else:
+                    user.userName = form.cleaned_data.get('userName')
+                    user.set_password(form.cleaned_data.get('password'))
+                    user.is_staff = False
+                    user.is_active = True
+                    user.save()
+                if user.role == User.INSTRUCTOR:
+                    instructor = Instructor.objects.get(userID = user.userID)
+                    instructor.biography = form.cleaned_data.get('biography')
+                    instructor.save()
 
                 login(request, user)
                 return redirect('login_success')
@@ -910,7 +871,6 @@ def learner_get_token(request):
         if form.is_valid():
             staffID = form.cleaned_data.get('staffID')
             try:
-                # staff = Staff.objects.get(staffID = staffID)
                 r = requests.get('https://gibice-hrserver.herokuapp.com/info/' + str(staffID), params=request.GET)
                 x = r.json()
             except:
@@ -928,14 +888,13 @@ def learner_get_token(request):
             emailID = staff_emailID
             )
             staff.save()
-            # staff = Group
             user = Learner(
-                emailID = staff_emailID,
-                staff = staff,
                 firstName = staff_firstName,
                 lastName = staff_lastName,
+                emailID = staff_emailID,
                 role = 2,
-                is_active = False
+                is_active = False,
+                staff = staff
             )
             user.save()
             domain = get_current_site(request).domain
@@ -951,8 +910,6 @@ def learner_get_token(request):
                 }),
                 to=[staff_emailID]
             )
-            # subject = "ICE Instructor Registration Token"
-            # message = "".format()
             email.send()
             context={
                 'message': "Registration invite has been sent to " + user.emailID + "."
