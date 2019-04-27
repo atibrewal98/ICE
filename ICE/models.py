@@ -60,7 +60,7 @@ class User(AbstractBaseUser):
     lastName = models.CharField(max_length=50, null = True)
     emailID = models.EmailField(max_length=50, null=True, unique = True)
     userName = models.CharField(max_length=50, unique=True, null = True)
-    password = models.CharField(max_length=50, null = True)
+    password = models.CharField(max_length=100, null = True)
     is_staff = models.BooleanField(default=False) #for django admin
     is_active = models.BooleanField(default=False) #for django admin
     role = models.PositiveSmallIntegerField(choices=ROLE_CHOICES, null=True)

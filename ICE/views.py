@@ -36,14 +36,14 @@ def learner_quiz(request,module_ID):
         return render(request, 'ICE/message.html', context)
     courseID=Module.objects.get(moduleID=module_ID).getCourse().courseID
     learner_ID = request.user.userID
-    print(courseID)
-    print(learner_ID)
+    # print(courseID)
+    # print(learner_ID)
     try:
-        print("HEY")
+        # print("HEY")
         lcs = LearnerTakesCourse.objects.filter(courseID=courseID)
         lc = LearnerTakesCourse.objects.get(courseID=courseID, staffID = learner_ID)        
     except Exception as e :
-        print(e)
+        # print(e)
         """
         The learner doesn't take this course
         """
