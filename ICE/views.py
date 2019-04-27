@@ -684,14 +684,6 @@ def course_development_view(request):
     }
     return HttpResponse(template.render(context,request))
 
-def intructor_view_quiz(request, id):
-    all_questions = Question.objects.filter(moduleID=id)
-    template = loader.get_template("ICE/question_list.html")
-    context = {
-        'all_questions': all_questions,
-    }
-    return HttpResponse(template.render(context, request))
-
 @login_required
 def instructorDetailView(request, course_id):
     if request.user.role != 2:

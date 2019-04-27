@@ -1,9 +1,0 @@
-{% extends 'ICE/base0.html' %}
-{% block content %}
-    <h3>Add Component</h3><br>
-    <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        {{ componentform.as_p }}
-        <button class="btn btn-info">Submit</button>
-    </form>
-{% endblock %}
